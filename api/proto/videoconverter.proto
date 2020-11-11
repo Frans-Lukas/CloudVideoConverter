@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package videoconverter;
+
+service VideoConverter {
+    rpc RequestUploadToken(UploadTokenRequest) returns (UploadTokenResponse) {}
+    rpc Upload(stream Chunk) returns (UploadStatus) {}
+    rpc ConversionStatus(ConversionStatusRequest) returns (ConversionStatusResponse) {}
+    rpc Download(DownloadRequest) returns (stream Chunk) {}
+    rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+}
+
+message UploadTokenRequest{}
+
+message UploadTokenResponse{
+    string Token = 1;
+}
+
+message Chunk {
+    oneof RequestType {
+        string Token = 1;
+        bytes Content = 2;
+    }
+}
+
+enum UploadStatusCode {
+    Unknown = 0;
+    Ok = 1;
+    Interrupted = 2;
+}
+
+enum ConversionStatusCode {
+    InProgress = 0;
+    Done = 1;
+    Failed = 2;
+}
+
+message ConversionStatusResponse {
+    ConversionStatusCode Code = 1;
+    string DownloadId = 2;
+}
+message ConversionStatusRequest {
+    string StatusId = 1;
+}
+
+message UploadStatus {
+    string StatusId = 1;
+    string Message = 2;
+    UploadStatusCode Code = 3;
+}
+
+message DownloadRequest {
+    string Id = 1;
+}
+
+message DeleteRequest{
+    string Id = 1;
+}
+
+message DeleteResponse{
+    UploadStatusCode code = 1;
+}
+
+message DownloadStatus {
+    string Message = 1;
+    UploadStatusCode Code = 2;
+}
