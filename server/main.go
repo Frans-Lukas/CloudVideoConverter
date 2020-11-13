@@ -20,6 +20,7 @@
 package main
 
 import (
+	"context"
 	"github.com/Frans-Lukas/checkerboard/generated"
 	"google.golang.org/grpc"
 	"log"
@@ -33,6 +34,26 @@ const (
 // server is used to implement helloworld.GreeterServer.
 type server struct {
 	videoconverter.UnimplementedVideoConverterServer
+}
+
+func (*server) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
+	return nil, nil
+}
+
+func (*server) Upload(ctx context.Context, in *videoconverter.Chunk) (*videoconverter.UploadStatus, error) {
+	return nil, nil
+}
+
+func (*server) ConversionStatus(ctx context.Context, in *videoconverter.ConversionStatusRequest) (*videoconverter.ConversionStatusResponse, error) {
+	return nil, nil
+}
+
+func (*server) Download(ctx context.Context, in *videoconverter.DownloadRequest) (*videoconverter.Chunk, error) {
+	return nil, nil
+}
+
+func (*server) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
+	return nil, nil
 }
 
 func main() {
