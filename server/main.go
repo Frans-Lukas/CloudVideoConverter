@@ -40,16 +40,16 @@ func (*server) RequestUploadToken(ctx context.Context, in *videoconverter.Upload
 	return nil, nil
 }
 
-func (*server) Upload(ctx context.Context, in *videoconverter.Chunk) (*videoconverter.UploadStatus, error) {
-	return nil, nil
+func (*server) Upload(stream videoconverter.VideoConverter_UploadServer) error {
+	return nil
 }
 
 func (*server) ConversionStatus(ctx context.Context, in *videoconverter.ConversionStatusRequest) (*videoconverter.ConversionStatusResponse, error) {
 	return nil, nil
 }
 
-func (*server) Download(ctx context.Context, in *videoconverter.DownloadRequest) (*videoconverter.Chunk, error) {
-	return nil, nil
+func (*server) Download(request *videoconverter.DownloadRequest, stream videoconverter.VideoConverter_DownloadServer) error {
+	return nil
 }
 
 func (*server) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
