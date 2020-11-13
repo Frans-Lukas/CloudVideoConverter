@@ -44,9 +44,7 @@ message ConversionStatusRequest {
 }
 
 message UploadStatus {
-    string StatusId = 1;
-    string Message = 2;
-    UploadStatusCode Code = 3;
+    string RetrievalToken = 1;
 }
 
 message DownloadRequest {
