@@ -44,12 +44,11 @@ func (*Server) Download(request *videoconverter.DownloadRequest, stream videocon
 
 	buf := make([]byte, chunksize)
 
-	writing := true
-	for writing {
+	for {
 		n, err := file.Read(buf)
 
 		if err == io.EOF {
-			writing = false
+			break
 		} else if err != nil {
 			log.Fatalf("Download, Read: %v", err)
 		}
