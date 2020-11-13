@@ -21,7 +21,7 @@ package main
 
 import (
 	"context"
-	"github.com/Frans-Lukas/checkerboard/generated"
+	"github.com/Frans-Lukas/cloudvideoconverter/generated"
 	"google.golang.org/grpc"
 	"log"
 	"net"

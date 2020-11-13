@@ -1,4 +1,4 @@
-module github.com/Frans-Lukas/checkerboard
+module github.com/Frans-Lukas/cloudvideoconverter
 
 go 1.13
 
