@@ -1,10 +1,12 @@
 package video_converter
 
 import (
+	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
-	"github.com/Frans-Lukas/cloudvideoconverter/server/items"
+	"io"
 	"log"
 	"math/rand"
 	"os"
@@ -13,21 +15,85 @@ import (
 )
 
 const tokenLength = 20
+const tokenTimeOutSeconds = 60 * 2
 
 type Server struct {
 	videoconverter.UnimplementedVideoConverterServer
-	ActiveTokens map[items.Token]bool
+	ActiveTokens map[string]time.Time
 }
 
 func (serv *Server) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
 	tokenString := GenerateRandomString()
-	token := items.Token{CreationTime: time.Now(), TokenString: tokenString}
-	serv.ActiveTokens[token] = true
+	serv.ActiveTokens[tokenString] = time.Now()
 	return &videoconverter.UploadTokenResponse{Token: tokenString}, nil
 }
 
-func (*Server) Upload(stream videoconverter.VideoConverter_UploadServer) error {
+func saveImage(fileName string, imageBytes *bytes.Buffer) error{
+	imagePath := fileName
+	file, err := os.Create(imagePath)
+	if err != nil {
+		return fmt.Errorf("cannot create image file: %w", err)
+	}
+	_, err = imageBytes.WriteTo(file)
+	if err != nil {
+		return fmt.Errorf("cannot write image to file: %w", err)
+	}
 	return nil
+}
+
+func (serv *Server) Upload(stream videoconverter.VideoConverter_UploadServer) error {
+
+	imageData := bytes.Buffer{}
+	tokenString := ""
+
+	for {
+		streamData, err := stream.Recv()
+		switch streamData.RequestType.(type) {
+		case *videoconverter.Chunk_Content:
+			if tokenString == "" {
+				return errors.New("token must be first message")
+			}
+			chunk := streamData.GetContent()
+			imageData.Write(chunk)
+		case *videoconverter.Chunk_Token:
+			token := streamData.GetToken()
+			if serv.tokenIsInvalid(token) {
+				return errors.New("invalid token, either timed out or nonexistant")
+			}
+			tokenString = token
+		}
+
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+
+			err = errors.New("failed unexpectadely while reading chunks from stream")
+			return err
+		}
+	}
+
+	err := saveImage("filename", &imageData)
+	if err != nil {
+		return err
+	}
+
+	// once the transmission finished, send the
+	// confirmation if nothign went wrong
+	err = stream.SendAndClose(&videoconverter.UploadStatus{
+		RetrievalToken: tokenString,
+	})
+	// ...
+
+	return nil
+}
+func (server *Server) tokenIsInvalid(token string) bool {
+	if tokenCreationTime, ok := server.ActiveTokens[token]; ok {
+		if time.Since(tokenCreationTime).Seconds() < tokenTimeOutSeconds {
+			return false
+		}
+	}
+	return true
 }
 
 func (*Server) Download(request *videoconverter.DownloadRequest, stream videoconverter.VideoConverter_DownloadServer) error {
