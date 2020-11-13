@@ -15,5 +15,4 @@ func TestTokenGenerateRandomString(t *testing.T) {
 	if str1 == str2 {
 		fatalFail(errors.New("random string generation is not random"))
 	}
-
 }

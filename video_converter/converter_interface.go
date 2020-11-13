@@ -28,7 +28,7 @@ func (serv *Server) RequestUploadToken(ctx context.Context, in *videoconverter.U
 	return &videoconverter.UploadTokenResponse{Token: tokenString}, nil
 }
 
-func saveImage(fileName string, imageBytes *bytes.Buffer) error{
+func saveImage(fileName string, imageBytes *bytes.Buffer) error {
 	imagePath := fileName
 	file, err := os.Create(imagePath)
 	if err != nil {
@@ -110,13 +110,11 @@ func (*Server) Download(request *videoconverter.DownloadRequest, stream videocon
 
 	buf := make([]byte, chunksize)
 
-	EOFError := errors.New("EOF")
-
 	writing := true
 	for writing {
 		n, err := file.Read(buf)
 
-		if err != nil && errors.Is(err, EOFError) {
+		if err == io.EOF {
 			writing = false
 		} else if err != nil {
 			log.Fatalf("Download, Read: %v", err)
