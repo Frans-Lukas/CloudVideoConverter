@@ -22,11 +22,10 @@ package main
 import (
 	"context"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
-	"log"
-	"os"
-	"time"
-
 	"google.golang.org/grpc"
+	"io"
+	"log"
+	"time"
 )
 
 const (
@@ -37,14 +36,15 @@ const (
 func main() {
 	// Set up a connection to the server.
 
-	for {
+	download()
+
+	/*for {
 		helloWorld()
 		time.Sleep(time.Second * 5)
-	}
+	}*/
 }
 
-func helloWorld() {
-	println("trying to connect")
+func download() {
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -55,9 +55,40 @@ func helloWorld() {
 
 	// Contact the server and print out its response.
 
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	request := videoconverter.DownloadRequest{Id: "test"}
+	stream, err := c.Download(ctx, &request)
+
+	for {
+		data, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			log.Fatalf("Download: %v", err)
+		}
+
+		log.Println(data)
+	}
 }
 
-func (c *videoconverter.VideoConverterClient) UploadFile(ctx context.Context, f string) (stats Stats, err error) {
+/*func helloWorld() {
+	println("trying to connect")
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	println("connected")
+	c := videoconverter.NewVideoConverterClient(conn)
+
+	// Contact the server and print out its response.
+}*/
+
+/*func (c *videoconverter.VideoConverterClient) UploadFile(ctx context.Context, f string) (stats Stats, err error) {
 
 	// Get a file handle for the file we
 	// want to upload
@@ -97,4 +128,4 @@ func (c *videoconverter.VideoConverterClient) UploadFile(ctx context.Context, f 
 
 	// close
 	status, err = stream.CloseAndRecv()
-}
+}*/
