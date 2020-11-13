@@ -20,11 +20,13 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
 	"google.golang.org/grpc"
 	"io"
 	"log"
+	"os"
 	"time"
 )
 
@@ -61,6 +63,8 @@ func download() {
 	request := videoconverter.DownloadRequest{Id: "test"}
 	stream, err := c.Download(ctx, &request)
 
+	buf := bytes.Buffer{}
+
 	for {
 		data, err := stream.Recv()
 		if err == io.EOF {
@@ -71,8 +75,20 @@ func download() {
 			log.Fatalf("Download: %v", err)
 		}
 
-		log.Println(data)
+		buf.Write(data.GetContent())
 	}
+
+	f, err := os.Create("downloaded.mp4")
+	if err != nil {
+		log.Fatalf("Download, create file: %v", err)
+	}
+
+	_, err = f.Write(buf.Bytes())
+	if err != nil {
+		log.Fatalf("Download, write to file: %v", err)
+	}
+
+	f.Close()
 }
 
 /*func helloWorld() {

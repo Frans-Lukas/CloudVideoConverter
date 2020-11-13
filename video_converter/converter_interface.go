@@ -103,7 +103,7 @@ func (*Server) Download(request *videoconverter.DownloadRequest, stream videocon
 	//TODO check if id is valid
 
 	//TODO load corresponding file from directory
-	file, err := os.Open("testFile")
+	file, err := os.Open("koala_eating_2.mp4")
 	if err != nil {
 		log.Fatalf("Download, Open: %v", err)
 	}
