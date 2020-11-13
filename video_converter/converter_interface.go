@@ -83,7 +83,7 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_Up
 		}
 	}
 
-	err := saveImage("filename.jpeg", &imageData)
+	err := saveImage(tokenString, &imageData)
 	if err != nil {
 		return err
 	}
@@ -113,19 +113,18 @@ func (*VideoConverterServer) Download(request *videoconverter.DownloadRequest, s
 	//TODO check if id is valid
 
 	//TODO load corresponding file from directory
-	file, err := os.Open("testFile")
+	file, err := os.Open("koala_eating_2.mp4")
 	if err != nil {
 		log.Fatalf("Download, Open: %v", err)
 	}
 
 	buf := make([]byte, chunksize)
 
-	writing := true
-	for writing {
+	for {
 		n, err := file.Read(buf)
 
 		if err == io.EOF {
-			writing = false
+			break
 		} else if err != nil {
 			log.Fatalf("Download, Read: %v", err)
 		}

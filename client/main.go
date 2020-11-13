@@ -21,6 +21,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
 	"google.golang.org/grpc"
@@ -37,7 +38,7 @@ const (
 
 func main() {
 	// Set up a connection to the server.
-	upload()
+	upload("img.jpeg")
 	//download()
 
 	/*for {
@@ -46,7 +47,7 @@ func main() {
 	}*/
 }
 
-func upload() {
+func upload(fileName string) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -78,8 +79,7 @@ func upload() {
 
 	stream.Send(&req)
 
-	imagePath := "img.mp4"
-	file, err := os.Open(imagePath)
+	file, err := os.Open(fileName)
 	defer file.Close()
 
 	v1, _ := os.Getwd()
@@ -137,6 +137,8 @@ func download() {
 	request := videoconverter.DownloadRequest{Id: "test"}
 	stream, err := c.Download(ctx, &request)
 
+	buf := bytes.Buffer{}
+
 	for {
 		data, err := stream.Recv()
 		if err == io.EOF {
@@ -147,8 +149,20 @@ func download() {
 			log.Fatalf("Download: %v", err)
 		}
 
-		log.Println(data)
+		buf.Write(data.GetContent())
 	}
+
+	f, err := os.Create("downloaded.mp4")
+	if err != nil {
+		log.Fatalf("Download, create file: %v", err)
+	}
+
+	_, err = f.Write(buf.Bytes())
+	if err != nil {
+		log.Fatalf("Download, write to file: %v", err)
+	}
+
+	f.Close()
 }
 
 /*func helloWorld() {
