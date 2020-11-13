@@ -30,7 +30,7 @@ import (
 )
 
 const (
-	port        = ":50051"
+	port = ":50051"
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -42,7 +42,9 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	videoconverter.RegisterVideoConverterServer(s, &video_converter.Server{})
+
+	val := video_converter.CreateNewServer()
+	videoconverter.RegisterVideoConverterServer(s, &val)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

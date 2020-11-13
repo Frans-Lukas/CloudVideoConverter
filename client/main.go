@@ -20,11 +20,13 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
 	"google.golang.org/grpc"
 	"io"
 	"log"
+	"os"
 	"time"
 )
 
@@ -35,13 +37,87 @@ const (
 
 func main() {
 	// Set up a connection to the server.
-
-	download()
+	upload()
+	//download()
 
 	/*for {
 		helloWorld()
 		time.Sleep(time.Second * 5)
 	}*/
+}
+
+func upload() {
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	println("connected")
+	c := videoconverter.NewVideoConverterClient(conn)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	stream, err := c.Upload(ctx)
+
+	if err != nil {
+		log.Fatal("cannot upload image: ", err)
+	}
+
+	ctx2, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	token, err := c.RequestUploadToken(ctx2, &videoconverter.UploadTokenRequest{})
+	if err != nil {
+		println(err)
+		return
+	}
+
+	req := videoconverter.Chunk{
+		RequestType: &videoconverter.Chunk_Token{Token: token.Token},
+	}
+
+	stream.Send(&req)
+
+	imagePath := "img.mp4"
+	file, err := os.Open(imagePath)
+	defer file.Close()
+
+	v1, _ := os.Getwd()
+	println(v1)
+
+	if err != nil {
+		println("cannot open file", err.Error())
+	}
+
+	reader := bufio.NewReader(file)
+	buffer := make([]byte, 1024)
+
+	for {
+		n, err := reader.Read(buffer)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("cannot read chunk to buffer: ", err)
+		}
+
+		req := &videoconverter.Chunk{
+			RequestType: &videoconverter.Chunk_Content{Content: buffer[:n]},
+		}
+
+		err = stream.Send(req)
+		if err != nil {
+			log.Fatal("cannot send chunk to server: ", err)
+		}
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatal("cannot receive response: ", err)
+	}
+
+	log.Printf("image uploaded with id: %s, size: %d", res.RetrievalToken)
+
 }
 
 func download() {
