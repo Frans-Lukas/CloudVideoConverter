@@ -43,7 +43,7 @@ type server struct {
 }
 
 func (serv *server) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
-	tokenString := generateRandomString()
+	tokenString := GenerateRandomString()
 	token := items.Token{CreationTime: time.Now(), TokenString: tokenString}
 	serv.ActiveTokens[token] = true
 	return &videoconverter.UploadTokenResponse{Token: tokenString}, nil
@@ -78,7 +78,7 @@ func main() {
 	}
 }
 
-func generateRandomString() string {
+func GenerateRandomString() string {
 	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
 		"abcdefghijklmnopqrstuvwxyz" +
 		"0123456789")
