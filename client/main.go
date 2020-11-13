@@ -21,7 +21,7 @@ package main
 
 import (
 	"context"
-	"github.com/Frans-Lukas/checkerboard/generated"
+	"github.com/Frans-Lukas/cloudvideoconverter/generated"
 	"log"
 	"os"
 	"time"
@@ -51,18 +51,50 @@ func helloWorld() {
 	}
 	defer conn.Close()
 	println("connected")
-	c := helloworld.NewGreeterClient(conn)
+	c := videoconverter.NewVideoConverterClient(conn)
 
 	// Contact the server and print out its response.
-	name := defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
+
+}
+
+func (c *videoconverter.VideoConverterClient) UploadFile(ctx context.Context, f string) (stats Stats, err error) {
+
+	// Get a file handle for the file we
+	// want to upload
+	file, err = os.Open(f)
+
+	// Open a stream-based connection with the
+	// gRPC server
+	stream, err := c.client.Upload(ctx)
+
+	// Start timing the execution
+	stats.StartedAt = time.Now()
+
+	// Allocate a buffer with `chunkSize` as the capacity
+	// and length (making a 0 array of the size of `chunkSize`)
+	buf = make([]byte, c.chunkSize)
+	for writing {
+		// put as many bytes as `chunkSize` into the
+		// buf array.
+		n, err = file.Read(buf)
+
+		// ... if `eof` --> `writing=false`...
+
+		stream.Send(&messaging.Chunk{
+			// because we might've read less than
+			// `chunkSize` we want to only send up to
+			// `n` (amount of bytes read).
+			// note: slicing (`:n`) won't copy the
+			// underlying data, so this as fast as taking
+			// a "pointer" to the underlying storage.
+			Content: buf[:n],
+		})
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.SayHello(ctx, &helloworld.HelloRequest{Name: name})
-	if err != nil || ctx.Err() != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-	log.Printf("Greeting: %s", r.GetMessage())
+
+	// keep track of the end time so that we can take the elapsed
+	// time later
+	stats.FinishedAt = time.Now()
+
+	// close
+	status, err = stream.CloseAndRecv()
 }

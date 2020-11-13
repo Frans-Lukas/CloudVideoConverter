@@ -22,22 +22,31 @@ package main
 import (
 	"context"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
+	"github.com/Frans-Lukas/cloudvideoconverter/server/items"
 	"google.golang.org/grpc"
 	"log"
+	"math/rand"
 	"net"
+	"strings"
+	"time"
 )
 
 const (
-	port = ":50051"
+	port        = ":50051"
+	tokenLength = 20
 )
 
 // server is used to implement helloworld.GreeterServer.
 type server struct {
 	videoconverter.UnimplementedVideoConverterServer
+	ActiveTokens map[items.Token]bool
 }
 
-func (*server) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
-	return nil, nil
+func (serv *server) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
+	tokenString := generateRandomString()
+	token := items.Token{CreationTime: time.Now(), TokenString: tokenString}
+	serv.ActiveTokens[token] = true
+	return &videoconverter.UploadTokenResponse{Token: tokenString}, nil
 }
 
 func (*server) Upload(stream videoconverter.VideoConverter_UploadServer) error {
@@ -57,6 +66,7 @@ func (*server) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*v
 }
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -66,4 +76,15 @@ func main() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+}
+
+func generateRandomString() string {
+	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+		"abcdefghijklmnopqrstuvwxyz" +
+		"0123456789")
+	var b strings.Builder
+	for i := 0; i < tokenLength; i++ {
+		b.WriteRune(chars[rand.Intn(len(chars))])
+	}
+	return b.String() // E.g. "ExcbsVQs"
 }
