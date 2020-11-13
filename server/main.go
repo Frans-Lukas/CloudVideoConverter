@@ -21,10 +21,12 @@ package main
 
 import (
 	"context"
+	"errors"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
 )
 
 const (
@@ -49,6 +51,36 @@ func (*server) ConversionStatus(ctx context.Context, in *videoconverter.Conversi
 }
 
 func (*server) Download(request *videoconverter.DownloadRequest, stream videoconverter.VideoConverter_DownloadServer) error {
+	//TODO set chunksize in a global way
+	chunksize := 1000
+
+	//TODO check if id is valid
+
+	//TODO load corresponding file from directory
+	file, err := os.Open("testFile")
+	if err != nil {
+		log.Fatalf("Download, Open: %v", err)
+	}
+
+	buf := make([]byte, chunksize)
+
+	EOFError := errors.New("EOF")
+
+	writing := true
+	for writing {
+		n, err := file.Read(buf)
+
+		if err != nil && errors.Is(err, EOFError) {
+			writing = false
+		} else if err != nil {
+			log.Fatalf("Download, Read: %v", err)
+		}
+
+		stream.Send(&videoconverter.Chunk{
+			RequestType: &videoconverter.Chunk_Content{Content: buf[:n]},
+		})
+	}
+
 	return nil
 }
 
