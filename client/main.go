@@ -38,8 +38,8 @@ const (
 
 func main() {
 	// Set up a connection to the server.
-	upload("img.jpeg")
-	//download()
+	token := upload("koala_eating_2.mp4")
+	download(token)
 
 	/*for {
 		helloWorld()
@@ -47,7 +47,7 @@ func main() {
 	}*/
 }
 
-func upload(fileName string) {
+func upload(fileName string) string {
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -56,7 +56,7 @@ func upload(fileName string) {
 	println("connected")
 	c := videoconverter.NewVideoConverterClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
 	stream, err := c.Upload(ctx)
@@ -70,7 +70,7 @@ func upload(fileName string) {
 	token, err := c.RequestUploadToken(ctx2, &videoconverter.UploadTokenRequest{})
 	if err != nil {
 		println(err)
-		return
+		return ""
 	}
 
 	req := videoconverter.Chunk{
@@ -79,7 +79,7 @@ func upload(fileName string) {
 
 	stream.Send(&req)
 
-	file, err := os.Open(fileName)
+	file, err := os.Open("localStorage/" + fileName)
 	defer file.Close()
 
 	v1, _ := os.Getwd()
@@ -118,9 +118,10 @@ func upload(fileName string) {
 
 	log.Printf("image uploaded with id: %s, size: %d", res.RetrievalToken)
 
+	return res.RetrievalToken
 }
 
-func download() {
+func download(token string) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -134,7 +135,7 @@ func download() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	request := videoconverter.DownloadRequest{Id: "test"}
+	request := videoconverter.DownloadRequest{Id: token}
 	stream, err := c.Download(ctx, &request)
 
 	buf := bytes.Buffer{}
@@ -152,7 +153,7 @@ func download() {
 		buf.Write(data.GetContent())
 	}
 
-	f, err := os.Create("downloaded.mp4")
+	f, err := os.Create("localStorage/downloaded.mp4")
 	if err != nil {
 		log.Fatalf("Download, create file: %v", err)
 	}

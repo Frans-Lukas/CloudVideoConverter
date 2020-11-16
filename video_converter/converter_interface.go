@@ -37,7 +37,7 @@ func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *vi
 }
 
 func saveImage(fileName string, imageBytes *bytes.Buffer) error {
-	imagePath := fileName
+	imagePath := "localStorage/" + fileName
 	file, err := os.Create(imagePath)
 	defer file.Close()
 	if err != nil {
@@ -111,9 +111,10 @@ func (*VideoConverterServer) Download(request *videoconverter.DownloadRequest, s
 	chunksize := 1000
 
 	//TODO check if id is valid
+	id := request.Id
 
 	//TODO load corresponding file from directory
-	file, err := os.Open("koala_eating_2.mp4")
+	file, err := os.Open("localStorage/" + id)
 	if err != nil {
 		log.Fatalf("Download, Open: %v", err)
 	}
