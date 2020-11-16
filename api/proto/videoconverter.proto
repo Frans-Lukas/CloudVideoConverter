@@ -5,6 +5,7 @@ package videoconverter;
 service VideoConverter {
     rpc RequestUploadToken(UploadTokenRequest) returns (UploadTokenResponse) {}
     rpc Upload(stream Chunk) returns (UploadStatus) {}
+    rpc StartConversion(ConversionRequest) returns (ConversionResponse) {}
     rpc ConversionStatus(ConversionStatusRequest) returns (ConversionStatusResponse) {}
     rpc Download(DownloadRequest) returns (stream Chunk) {}
     rpc Delete(DeleteRequest) returns (DeleteResponse) {}
@@ -13,6 +14,15 @@ service VideoConverter {
 message UploadTokenRequest{}
 
 message UploadTokenResponse{
+    string Token = 1;
+}
+message ConversionRequest{
+    string Token = 1;
+    string InputType = 2;
+    string OutputType = 3;
+}
+
+message ConversionResponse{
     string Token = 1;
 }
 

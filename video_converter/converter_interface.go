@@ -10,6 +10,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 )
@@ -37,7 +38,7 @@ func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *vi
 }
 
 func saveImage(fileName string, imageBytes *bytes.Buffer) error {
-	imagePath := "localStorage/" + fileName
+	imagePath := "localStorage/" + fileName + ".mp4"
 	file, err := os.Create(imagePath)
 	defer file.Close()
 	if err != nil {
@@ -48,6 +49,42 @@ func saveImage(fileName string, imageBytes *bytes.Buffer) error {
 		return fmt.Errorf("cannot write image to file: %w", err)
 	}
 	return nil
+}
+
+func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
+	filePath := "localStorage/" + in.Token + ".mp4"
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return nil, errors.New("invalid token")
+	}
+	file, err := os.Open(filePath)
+	defer file.Close()
+	if err != nil {
+		return nil, errors.New("failed to open file")
+	}
+	app := "ffmpeg"
+	arg0 := "-i"
+	arg1 := filePath
+	arg2 := "localStorage/" + in.Token + "." + in.OutputType
+
+	go func() {
+		cmd := exec.Command(app, arg0, arg1, arg2)
+		stdout, err := cmd.Output()
+		cmd.Run()
+		if err != nil {
+			println("error: " + err.Error())
+		}
+		println("converted: ", stdout)
+
+		file, err := os.Open(arg2)
+		defer file.Close()
+		if err != nil {
+			println(err.Error())
+			return
+		}
+		os.Rename(arg2, "localStorage/"+in.Token)
+	}()
+
+	return &videoconverter.ConversionResponse{}, nil
 }
 
 func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_UploadServer) error {
@@ -66,7 +103,6 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_Up
 			err = errors.New("failed unexpectadely while reading chunks from stream")
 			return err
 		}
-		println(streamData)
 		switch streamData.RequestType.(type) {
 		case *videoconverter.Chunk_Content:
 			if tokenString == "" {
@@ -116,7 +152,7 @@ func (*VideoConverterServer) Download(request *videoconverter.DownloadRequest, s
 	//TODO load corresponding file from directory
 	file, err := os.Open("localStorage/" + id)
 	if err != nil {
-		log.Fatalf("Download, Open: %v", err)
+		log.Fatalf("Download, Open failed: %v", err)
 	}
 
 	buf := make([]byte, chunksize)
@@ -143,7 +179,11 @@ func (*VideoConverterServer) Delete(ctx context.Context, in *videoconverter.Dele
 }
 
 func (*VideoConverterServer) ConversionStatus(ctx context.Context, in *videoconverter.ConversionStatusRequest) (*videoconverter.ConversionStatusResponse, error) {
-	return nil, nil
+	filePath := "localStorage/" + in.StatusId
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_InProgress}, nil
+	}
+	return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Done}, nil
 }
 
 func GenerateRandomString() string {
