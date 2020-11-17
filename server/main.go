@@ -43,8 +43,11 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	val := video_converter.CreateNewServer()
-	videoconverter.RegisterVideoConverterServer(s, &val)
+	videoServer := video_converter.CreateNewServer()
+	videoconverter.RegisterVideoConverterServer(s, &videoServer)
+	go func() {
+		videoServer.DeleteTimedOutVideosLoop()
+	}()
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

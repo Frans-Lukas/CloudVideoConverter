@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
+	"github.com/Frans-Lukas/cloudvideoconverter/server/items"
 	"io"
 	"log"
 	"math/rand"
@@ -16,15 +17,15 @@ import (
 )
 
 const tokenLength = 20
-const tokenTimeOutSeconds = 60 * 2
+const tokenTimeOutSeconds = 30
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterServer
-	ActiveTokens *map[string]time.Time
+	ActiveTokens *map[string]items.Token
 }
 
 func CreateNewServer() VideoConverterServer {
-	activeTokens := make(map[string]time.Time, 0)
+	activeTokens := make(map[string]items.Token, 0)
 	val := VideoConverterServer{
 		ActiveTokens: &activeTokens,
 	}
@@ -33,7 +34,16 @@ func CreateNewServer() VideoConverterServer {
 
 func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
 	tokenString := GenerateRandomString()
-	(*serv.ActiveTokens)[tokenString] = time.Now()
+	creationTime := time.Now()
+	isStarted := false
+	isDone := false
+	isFailed := false
+	(*serv.ActiveTokens)[tokenString] = items.Token{
+		CreationTime:      &creationTime,
+		ConversionStarted: &isStarted,
+		ConversionDone:    &isDone,
+		ConversionFailed:  &isFailed,
+	}
 	return &videoconverter.UploadTokenResponse{Token: tokenString}, nil
 }
 
@@ -52,6 +62,14 @@ func saveImage(fileName string, imageBytes *bytes.Buffer) error {
 }
 
 func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
+	if serv.tokenIsInvalid(in.Token) {
+		return nil, errors.New("token is invalid or has timed out: " + in.Token)
+	}
+
+	if serv.conversionIsInProgressForToken(in.Token) {
+		return nil, errors.New("conversion is already in progress for token: " + in.Token)
+	}
+
 	filePath := "localStorage/" + in.Token + ".mp4"
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return nil, errors.New("invalid token")
@@ -65,26 +83,37 @@ func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *video
 	arg0 := "-i"
 	arg1 := filePath
 	arg2 := "localStorage/" + in.Token + "." + in.OutputType
+	serv.resetConversionStatus(in.Token)
 
 	go func() {
-		cmd := exec.Command(app, arg0, arg1, arg2)
-		stdout, err := cmd.Output()
-		cmd.Run()
-		if err != nil {
-			println("error: " + err.Error())
-		}
-		println("converted: ", stdout)
-
-		file, err := os.Open(arg2)
-		defer file.Close()
-		if err != nil {
-			println(err.Error())
-			return
-		}
-		os.Rename(arg2, "localStorage/"+in.Token)
+		serv.performConversion(app, arg0, arg1, arg2, in)
 	}()
 
 	return &videoconverter.ConversionResponse{}, nil
+}
+
+func (serv *VideoConverterServer) conversionIsInProgressForToken(token string) bool {
+	// conversion is started but not done or failed
+	return *(*serv.ActiveTokens)[token].ConversionStarted && !*(*serv.ActiveTokens)[token].ConversionDone && !*(*serv.ActiveTokens)[token].ConversionFailed
+}
+
+func (serv *VideoConverterServer) performConversion(app string, arg0 string, arg1 string, arg2 string, in *videoconverter.ConversionRequest) {
+	cmd := exec.Command(app, arg0, arg1, arg2)
+	*(*serv.ActiveTokens)[in.Token].ConversionStarted = true
+	err := cmd.Run()
+	if err != nil {
+		*(*serv.ActiveTokens)[in.Token].ConversionFailed = true
+		return
+	} else {
+		*(*serv.ActiveTokens)[in.Token].ConversionDone = true
+	}
+	file, err := os.Open(arg2)
+	defer file.Close()
+	if err != nil {
+		println(err.Error())
+		return
+	}
+	os.Rename(arg2, "localStorage/"+in.Token)
 }
 
 func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_UploadServer) error {
@@ -113,7 +142,7 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_Up
 		case *videoconverter.Chunk_Token:
 			token := streamData.GetToken()
 			if serv.tokenIsInvalid(token) {
-				return errors.New("invalid token, either timed out or nonexistant")
+				return errors.New("token is invalid or has timed out: " + token)
 			}
 			tokenString = token
 		}
@@ -135,14 +164,17 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_Up
 }
 func (server *VideoConverterServer) tokenIsInvalid(token string) bool {
 	if tokenCreationTime, ok := (*server.ActiveTokens)[token]; ok {
-		if time.Since(tokenCreationTime).Seconds() < tokenTimeOutSeconds {
+		if time.Since(*tokenCreationTime.CreationTime).Seconds() < tokenTimeOutSeconds {
 			return false
 		}
 	}
 	return true
 }
 
-func (*VideoConverterServer) Download(request *videoconverter.DownloadRequest, stream videoconverter.VideoConverter_DownloadServer) error {
+func (serv *VideoConverterServer) Download(request *videoconverter.DownloadRequest, stream videoconverter.VideoConverter_DownloadServer) error {
+	if serv.tokenIsInvalid(request.Id) {
+		return errors.New("token is invalid or has timed out: " + request.Id)
+	}
 	//TODO set chunksize in a global way
 	chunksize := 1000
 
@@ -174,16 +206,45 @@ func (*VideoConverterServer) Download(request *videoconverter.DownloadRequest, s
 	return nil
 }
 
-func (*VideoConverterServer) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
-	return nil, nil
+func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
+	if serv.tokenIsInvalid(in.Id) {
+		return nil, errors.New("token is invalid or has timed out: " + in.Id)
+	}
+	filePath := "localStorage/" + in.Id + ".mp4"
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return nil, errors.New("video to delete does not exist")
+	}
+	err := os.Remove(filePath)
+	if err != nil {
+		print(err.Error())
+	}
+	filePath = "localStorage/" + in.Id
+	_, err = os.Stat(filePath)
+	if err == nil {
+		err = os.Remove(filePath)
+		if err != nil {
+			print(err.Error())
+		}
+	}
+	return &videoconverter.DeleteResponse{}, nil
 }
 
-func (*VideoConverterServer) ConversionStatus(ctx context.Context, in *videoconverter.ConversionStatusRequest) (*videoconverter.ConversionStatusResponse, error) {
-	filePath := "localStorage/" + in.StatusId
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+func (serv *VideoConverterServer) ConversionStatus(ctx context.Context, in *videoconverter.ConversionStatusRequest) (*videoconverter.ConversionStatusResponse, error) {
+	if *(*serv.ActiveTokens)[in.StatusId].ConversionDone {
+		return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Done}, nil
+	}
+	if *(*serv.ActiveTokens)[in.StatusId].ConversionStarted {
+		if *(*serv.ActiveTokens)[in.StatusId].ConversionFailed {
+			return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Failed}, nil
+		}
 		return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_InProgress}, nil
 	}
-	return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Done}, nil
+	return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_NotStarted}, nil
+}
+func (serv *VideoConverterServer) resetConversionStatus(token string) {
+	*(*serv.ActiveTokens)[token].ConversionStarted = false
+	*(*serv.ActiveTokens)[token].ConversionFailed = false
+	*(*serv.ActiveTokens)[token].ConversionDone = false
 }
 
 func GenerateRandomString() string {
@@ -195,4 +256,31 @@ func GenerateRandomString() string {
 		b.WriteRune(chars[rand.Intn(len(chars))])
 	}
 	return b.String() // E.g. "ExcbsVQs"
+}
+
+func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
+	for {
+		println("Checking to delete tokens")
+		for token, _ := range *serv.ActiveTokens {
+			if serv.tokenIsInvalid(token) {
+				filePath := "localStorage/" + token + ".mp4"
+				_, err := os.Stat(filePath)
+				if err == nil {
+					err := os.Remove(filePath)
+					if err != nil {
+						println(err.Error())
+					}
+				}
+				filePath = "localStorage/" + token
+				_, err = os.Stat(filePath)
+				if err == nil {
+					err := os.Remove(filePath)
+					if err != nil {
+						println(err.Error())
+					}
+				}
+			}
+		}
+		time.Sleep(time.Second * 5)
+	}
 }
