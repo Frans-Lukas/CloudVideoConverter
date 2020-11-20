@@ -44,6 +44,7 @@ func main() {
 	ip := os.Args[1]
 	port := os.Args[2]
 	address := ip + ":" + port
+	println("trying to connect to: ", address)
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {

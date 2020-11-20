@@ -10,4 +10,5 @@ sudo apt-get install git -y
 go get -u google.golang.org/grpc
 git clone https://github.com/Frans-Lukas/CloudVideoConverter.git
 cd CloudVideoConverter
+mkdir localStorage
 go run server/main.go 50051
