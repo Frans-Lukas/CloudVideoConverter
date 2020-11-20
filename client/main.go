@@ -23,6 +23,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"errors"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
 	"google.golang.org/grpc"
 	"io"
@@ -31,14 +32,19 @@ import (
 	"time"
 )
 
-const (
-	address = "localhost:50051"
-)
-
 var c videoconverter.VideoConverterClient
 
 func main() {
 	// Set up a connection to the server.
+
+	if len(os.Args) != 3 {
+		println(errors.New("invalid command line arguments, use ./worker {ip} {port}").Error())
+		return
+	}
+	ip := os.Args[1]
+	port := os.Args[2]
+	address := ip + ":" + port
+
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)

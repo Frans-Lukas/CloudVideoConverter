@@ -20,12 +20,14 @@
 package main
 
 import (
+	"errors"
 	"github.com/Frans-Lukas/cloudvideoconverter/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/video_converter"
 	"google.golang.org/grpc"
 	"log"
 	"math/rand"
 	"net"
+	"os"
 	"time"
 )
 
@@ -36,6 +38,14 @@ const (
 // server is used to implement helloworld.GreeterServer.
 
 func main() {
+
+	if len(os.Args) != 2 {
+		println(errors.New("invalid command line arguments, use ./worker {port}").Error())
+		return
+	}
+	port := os.Args[1]
+	port = ":" + port
+	println("running on port: " + port)
 	rand.Seed(time.Now().UnixNano())
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
