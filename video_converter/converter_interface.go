@@ -17,7 +17,7 @@ import (
 )
 
 const tokenLength = 20
-const tokenTimeOutSeconds = 30
+const tokenTimeOutSeconds = 60 * 20
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterServer

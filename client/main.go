@@ -54,7 +54,7 @@ func main() {
 	println("connected")
 	c = videoconverter.NewVideoConverterClient(conn)
 
-	outputExtension := "webm"
+	outputExtension := "mkv"
 
 	token := upload("video.mp4")
 	requestConversion(token, outputExtension)
