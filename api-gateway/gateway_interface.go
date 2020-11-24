@@ -5,6 +5,7 @@ import (
 	"errors"
 	api_gateway "github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/items"
+	"strconv"
 )
 
 type APIGatewayServer struct {
@@ -26,6 +27,7 @@ func (serv *APIGatewayServer) AddServiceEndpoint(
 		Port: int(in.Port),
 	}
 	(*serv.endPoints)[newEndPoint] = true
+	println("added service: " + in.Ip + ":" + strconv.Itoa(int(in.Port)))
 	return &api_gateway.AddedServiceEndPoint{}, nil
 }
 
@@ -50,7 +52,9 @@ func (serv *APIGatewayServer) GetActiveServiceEndpoints(
 	outList := make([]*api_gateway.ServiceEndPoint, 0)
 	for endPoint, isActive := range *serv.endPoints {
 		if isActive {
-			outList = append(outList, &api_gateway.ServiceEndPoint{Ip: endPoint.Ip, Port: int32(endPoint.Port)})
+			outList = append(
+				outList, &api_gateway.ServiceEndPoint{Ip: endPoint.Ip, Port: int32(endPoint.Port)},
+			)
 		}
 	}
 	return &api_gateway.ServiceEndPointList{EndPoint: outList}, nil
