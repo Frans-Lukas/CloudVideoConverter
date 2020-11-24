@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package api_gateway;
+
+service APIGateWay {
+  rpc AddServiceEndpoint(ServiceEndPoint) returns (AddedServiceEndPoint) {}
+  rpc DisableServiceEndpoint(DisableServiceEndPoint) returns (DisabledServiceEndPoint) {}
+  rpc GetActiveServiceEndpoints(ServiceEndPointsRequest) returns (ServiceEndPointList) {}
+}
+
+message ServiceEndPoint {
+  string ip = 1;
+  int32 port = 2;
+}
+message ServiceEndPointsRequest {}
+message ServiceEndPointList {
+  repeated ServiceEndPoint endPoint = 1;
+}
+message AddedServiceEndPoint{}
+message DisabledServiceEndPoint{}
+message DisableServiceEndPoint {
+  string ip = 1;
+  string port = 2;
+}
+
+message UploadTokenRequest{}
+
+message UploadTokenResponse{
+  string Token = 1;
+}
+message ConversionRequest{
+  string Token = 1;
+  string InputType = 2;
+  string OutputType = 3;
+}
+
+message ConversionResponse{
+  string Token = 1;
+}
+
+message Chunk {
+  oneof RequestType {
+    string Token = 1;
+    bytes Content = 2;
+  }
+}
+
+enum UploadStatusCode {
+  Unknown = 0;
+  Ok = 1;
+  Interrupted = 2;
+}
+
+enum ConversionStatusCode {
+  InProgress = 0;
+  Done = 1;
+  Failed = 2;
+  NotStarted = 3;
+}
+
+message ConversionStatusResponse {
+  ConversionStatusCode Code = 1;
+  string DownloadId = 2;
+}
+message ConversionStatusRequest {
+  string StatusId = 1;
+}
+
+message UploadStatus {
+  string RetrievalToken = 1;
+}
+
+message DownloadRequest {
+  string Id = 1;
+}
+
+message DeleteRequest{
+  string Id = 1;
+}
+
+message DeleteResponse{
+  UploadStatusCode code = 1;
+}
+
+message DownloadStatus {
+  string Message = 1;
+  UploadStatusCode Code = 2;
+}
