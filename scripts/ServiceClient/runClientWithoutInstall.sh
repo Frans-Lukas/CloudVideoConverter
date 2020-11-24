@@ -4,5 +4,6 @@ if [ "$#" -ne 2 ]; then
   exit 1
 fi
 cd CloudVideoConverter
+export PATH=$PATH:/usr/local/go/bin
 git pull
 go run client/main.go $1 $2

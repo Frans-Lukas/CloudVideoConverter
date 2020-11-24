@@ -20,7 +20,7 @@ message AddedServiceEndPoint{}
 message DisabledServiceEndPoint{}
 message DisableServiceEndPoint {
   string ip = 1;
-  string port = 2;
+  int32 port = 2;
 }
 
 message UploadTokenRequest{}
