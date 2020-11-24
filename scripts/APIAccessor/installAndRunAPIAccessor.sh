@@ -1,7 +1,7 @@
 #!/bin/bash
-if [ "$#" -ne 5 ]; then
-  echo "Usage: $0 API_IP API_PORT {-add|-remove} THISIP THISPORT " >&2
-  echo "EX: $0 localhost 1337 -add 132.13.3.7 50041 " >&2
+if [ "$#" -ne 3 ]; then
+  echo "Usage: $0 API_IP API_PORT THISPORT " >&2
+  echo "EX: $0 localhost 1337 50041 " >&2
   exit 1
 fi
 
@@ -14,4 +14,6 @@ go get -u google.golang.org/grpc
 git clone https://github.com/Frans-Lukas/CloudVideoConverter.git
 cd CloudVideoConverter
 #download video to localStorage
-go run api-gateway/client/main.go $1 $2 $3 $4
+
+publicIp=$(curl -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip)
+go run api-gateway/client/main.go $1 $2 $publicIp $3
