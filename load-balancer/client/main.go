@@ -24,7 +24,8 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"github.com/Frans-Lukas/cloudvideoconverter/generated"
+	"github.com/Frans-Lukas/cloudvideoconverter/constants"
+	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"google.golang.org/grpc"
 	"io"
 	"log"
@@ -119,7 +120,7 @@ func upload(fileName string) string {
 
 	stream.Send(&req)
 
-	file, err := os.Open("localStorage/" + fileName)
+	file, err := os.Open(constants.FileDirectory + fileName)
 	defer file.Close()
 
 	v1, _ := os.Getwd()
@@ -183,7 +184,7 @@ func download(token string, extension string) {
 		buf.Write(data.GetContent())
 	}
 
-	f, err := os.Create("localStorage/downloaded" + "." + extension)
+	f, err := os.Create(constants.FileDirectory + "downloaded" + "." + extension)
 	if err != nil {
 		log.Fatalf("Download, create file: %v", err)
 	}

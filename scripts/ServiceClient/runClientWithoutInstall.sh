@@ -6,4 +6,4 @@ fi
 cd CloudVideoConverter
 export PATH=$PATH:/usr/local/go/bin
 git pull
-go run client/main.go $1 $2
+go run load-balancer/client/main.go $1 $2

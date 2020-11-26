@@ -5,19 +5,24 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/Frans-Lukas/cloudvideoconverter/generated"
-	"github.com/Frans-Lukas/cloudvideoconverter/server/items"
+	"github.com/Frans-Lukas/cloudvideoconverter/constants"
+	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
+	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/server/items"
 	"io"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 )
 
 const tokenLength = 20
 const tokenTimeOutSeconds = 60 * 20
+const megaByte = 1000000
+const sizeLimit = megaByte * 1
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterServer
@@ -48,7 +53,7 @@ func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *vi
 }
 
 func saveImage(fileName string, imageBytes *bytes.Buffer) error {
-	imagePath := "localStorage/" + fileName + ".mp4"
+	imagePath := constants.FileDirectory + fileName + ".mp4"
 	file, err := os.Create(imagePath)
 	defer file.Close()
 	if err != nil {
@@ -70,7 +75,7 @@ func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *video
 		return nil, errors.New("conversion is already in progress for token: " + in.Token)
 	}
 
-	filePath := "localStorage/" + in.Token + ".mp4"
+	filePath := constants.FileDirectory + in.Token + ".mp4"
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return nil, errors.New("invalid token")
 	}
@@ -82,7 +87,7 @@ func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *video
 	app := "ffmpeg"
 	arg0 := "-i"
 	arg1 := filePath
-	arg2 := "localStorage/" + in.Token + "." + in.OutputType
+	arg2 := constants.FileDirectory + in.Token + "." + in.OutputType
 	serv.resetConversionStatus(in.Token)
 
 	go func() {
@@ -113,7 +118,7 @@ func (serv *VideoConverterServer) performConversion(app string, arg0 string, arg
 		println(err.Error())
 		return
 	}
-	os.Rename(arg2, "localStorage/"+in.Token)
+	os.Rename(arg2, constants.FileDirectory+in.Token)
 }
 
 func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_UploadServer) error {
@@ -148,20 +153,94 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_Up
 		}
 	}
 
-	err := saveImage(tokenString, &imageData)
+	// once the transmission finished, send the
+	// confirmation if nothign went wrong
+	err := stream.SendAndClose(&videoconverter.UploadStatus{
+		RetrievalToken: tokenString,
+	})
+
+	err = saveImage(tokenString, &imageData)
 	if err != nil {
 		return err
 	}
 
-	// once the transmission finished, send the
-	// confirmation if nothign went wrong
-	err = stream.SendAndClose(&videoconverter.UploadStatus{
-		RetrievalToken: tokenString,
-	})
+	splitVideo(tokenString)
+
 	// ...
 
 	return nil
 }
+func splitVideo(token string) {
+	filePath := constants.FileDirectory + token + ".mp4"
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		log.Fatalf(errors.New("video to split does not exist").Error())
+	}
+	timeInSeconds, timeInSecondsString := getVideoTimeInSeconds(filePath)
+	size := getVideoSize(filePath)
+	numberOfSplits := int(math.Round(float64(size)/float64(sizeLimit) + 0.49))
+	slizeSize := int(timeInSeconds) / numberOfSplits
+	println("number of seconds: " + strconv.Itoa(int(timeInSeconds)))
+
+	startTime := 0
+	endTime := slizeSize
+	for i := 1; i <= numberOfSplits; i++ {
+		// must be string because of potential double inprecision
+		println("start: ", startTime)
+		println("end: ", endTime)
+		performSplit(startTime, strconv.Itoa(endTime), filePath, i, numberOfSplits, token)
+
+		startTime = endTime
+		endTime += slizeSize
+		if endTime > int(timeInSeconds)-slizeSize/2 {
+			performSplit(startTime, timeInSecondsString, filePath, i+1, numberOfSplits, token)
+			break
+		}
+	}
+
+}
+func getVideoSize(filePath string) int {
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatalf("invalid file " + filePath)
+	}
+	defer file.Close()
+	fi, err := file.Stat()
+	if err != nil {
+		log.Fatalf("could not get file stats " + filePath)
+	}
+	return int(fi.Size())
+}
+func getVideoTimeInSeconds(filePath string) (float64, string) {
+	println(filePath)
+	cmd := exec.Command("ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", filePath)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf(errors.New("failed to get video time in seconds").Error())
+	}
+	timeString := out.String()
+	timeString = strings.Replace(timeString, "\n", "", -1)
+	timeInSec, err := strconv.ParseFloat(timeString, 64)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	return timeInSec, timeString
+}
+
+func performSplit(startTime int, endTime string, filePath string, index int, total int, token string) error {
+	targetFileName := constants.FileDirectory + token + "-" + strconv.Itoa(index) + "_" + strconv.Itoa(total) + ".mp4"
+	str := "ffmpeg" + " -ss " + strconv.Itoa(startTime) + " -t " + endTime + " -i " + filePath + " -acodec " + " copy " + " -vcodec " + " copy " + targetFileName
+	println(str)
+	out, err := exec.Command("ffmpeg", "-ss", strconv.Itoa(startTime), "-t", endTime, "-i", filePath, "-acodec", "copy", "-vcodec", "copy", targetFileName).Output()
+	println(string(out))
+	if err != nil {
+		println("failed to split video: " + err.Error() + ", file: " + filePath)
+		return errors.New("failed to split video: " + filePath)
+	}
+	return nil
+}
+
 func (server *VideoConverterServer) tokenIsInvalid(token string) bool {
 	if tokenCreationTime, ok := (*server.ActiveTokens)[token]; ok {
 		if time.Since(*tokenCreationTime.CreationTime).Seconds() < tokenTimeOutSeconds {
@@ -182,7 +261,7 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 	id := request.Id
 
 	//TODO load corresponding file from directory
-	file, err := os.Open("localStorage/" + id)
+	file, err := os.Open(constants.FileDirectory + id)
 	if err != nil {
 		log.Fatalf("Download, Open failed: %v", err)
 	}
@@ -210,7 +289,7 @@ func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter
 	if serv.tokenIsInvalid(in.Id) {
 		return nil, errors.New("token is invalid or has timed out: " + in.Id)
 	}
-	filePath := "localStorage/" + in.Id + ".mp4"
+	filePath := constants.FileDirectory + in.Id + ".mp4"
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return nil, errors.New("video to delete does not exist")
 	}
@@ -218,7 +297,7 @@ func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter
 	if err != nil {
 		print(err.Error())
 	}
-	filePath = "localStorage/" + in.Id
+	filePath = constants.FileDirectory + in.Id
 	_, err = os.Stat(filePath)
 	if err == nil {
 		err = os.Remove(filePath)
@@ -260,20 +339,21 @@ func GenerateRandomString() string {
 
 func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 	for {
-		println("Checking to delete tokens")
 		for token, _ := range *serv.ActiveTokens {
 			if serv.tokenIsInvalid(token) {
-				filePath := "localStorage/" + token + ".mp4"
+				filePath := constants.FileDirectory + token + ".mp4"
 				_, err := os.Stat(filePath)
 				if err == nil {
+					println("deleting " + filePath)
 					err := os.Remove(filePath)
 					if err != nil {
 						println(err.Error())
 					}
 				}
-				filePath = "localStorage/" + token
+				filePath = constants.FileDirectory + token
 				_, err = os.Stat(filePath)
 				if err == nil {
+					println("deleting " + filePath)
 					err := os.Remove(filePath)
 					if err != nil {
 						println(err.Error())

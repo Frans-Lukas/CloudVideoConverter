@@ -21,8 +21,8 @@ package main
 
 import (
 	"errors"
-	"github.com/Frans-Lukas/cloudvideoconverter/generated"
-	"github.com/Frans-Lukas/cloudvideoconverter/video_converter"
+	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer"
+	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"google.golang.org/grpc"
 	"log"
 	"math/rand"

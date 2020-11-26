@@ -14,4 +14,4 @@ go get -u google.golang.org/grpc
 git clone https://github.com/Frans-Lukas/CloudVideoConverter.git
 cd CloudVideoConverter
 mkdir localStorage
-go run server/main.go $1
+go run load-balancer/server/main.go $1

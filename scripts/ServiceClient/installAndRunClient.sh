@@ -14,4 +14,4 @@ git clone https://github.com/Frans-Lukas/CloudVideoConverter.git
 cd CloudVideoConverter
 mkdir localStorage
 #download video to localStorage
-go run client/main.go $1 $2
+go run load-balancer/client/main.go $1 $2
