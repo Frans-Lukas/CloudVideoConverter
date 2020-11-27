@@ -19,27 +19,29 @@ func splitVideo(token string) {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		log.Fatalf(errors.New("video to split does not exist").Error())
 	}
-	timeInSeconds, timeInSecondsString := getVideoTimeInSeconds(filePath)
+	timeInSeconds, _ := getVideoTimeInSeconds(filePath)
 	size := getVideoSize(filePath)
 	numberOfSplits := int(math.Round(float64(size)/float64(sizeLimit) + 0.49))
+	println(numberOfSplits)
 	slizeSize := int(timeInSeconds) / numberOfSplits
 	println("number of seconds: " + strconv.Itoa(int(timeInSeconds)))
 
-	startTime := 0
-	endTime := slizeSize
-	for i := 1; i <= numberOfSplits; i++ {
-		// must be string because of potential double inprecision
-		println("start: ", startTime)
-		println("end: ", endTime)
-		performSplit(startTime, strconv.Itoa(endTime), filePath, i, numberOfSplits, token)
-
-		startTime = endTime
-		endTime += slizeSize
-		if endTime > int(timeInSeconds)-slizeSize/2 {
-			performSplit(startTime, timeInSecondsString, filePath, i+1, numberOfSplits, token)
-			break
-		}
-	}
+	//startTime := 0
+	//endTime := slizeSize
+	performSmartSplit(slizeSize, filePath, numberOfSplits, token)
+	//for i := 1; i <= numberOfSplits; i++ {
+	//	// must be string because of potential double inprecision
+	//	println("start: ", startTime)
+	//	println("end: ", endTime)
+	//	performSplit(startTime, strconv.Itoa(endTime), filePath, i, numberOfSplits, token)
+	//
+	//	startTime = endTime
+	//	endTime += slizeSize
+	//	if endTime > int(timeInSeconds)-slizeSize/2 {
+	//		performSplit(startTime, timeInSecondsString, filePath, i+1, numberOfSplits, token)
+	//		break
+	//	}
+	//}
 
 }
 
@@ -47,14 +49,18 @@ func mergeVideo(token string) error {
 	videoParts, err := getVideoParts(token)
 
 	if err != nil {
-		return err
+		log.Fatalf("failed mergeVideo: " + err.Error())
 	}
 
 	println("checking if parts are correctr")
-	if correctVideoParts(videoParts) {
-		println("parts are correct, merging")
+	//if correctVideoParts(videoParts) {
+	//	println("parts are correct, merging")
+	//	performMerge(videoParts, token)
+	//	return nil
+	//}
+	if len(videoParts) > 0 {
+		println("merging")
 		performMerge(videoParts, token)
-		return nil
 	}
 
 	return errors.New("video parts are invalid")
@@ -125,7 +131,7 @@ func getVideoParts(token string) ([]string, error) {
 }
 
 func isAPart(token string, potentialPart string) bool {
-	matched, _ := regexp.MatchString(token+"-[0-9]+_[0-9]+", potentialPart)
+	matched, _ := regexp.MatchString(token+"-[0-9]+", potentialPart)
 	return matched
 }
 
@@ -172,11 +178,27 @@ func getVideoTimeInSeconds(filePath string) (float64, string) {
 	return timeInSec, timeString
 }
 
+func performSmartSplit(splitSize int, filePath string, total int, token string) error {
+	targetFileName2 := constants.LocalStorage + token + "-%d" + ".mp4"
+	command := "ffmpeg -i " + filePath + " -c copy -map 0 -segment_time " + strconv.Itoa(splitSize) + " -f segment -reset_timestamps 1 " + targetFileName2
+	println(command)
+	out, err := exec.Command("ffmpeg", "-i", filePath, "-c", "copy", "-map", "0", "-segment_time", strconv.Itoa(splitSize), "-f", "segment", "-reset_timestamps", "1", targetFileName2).Output()
+	println(string(out))
+	if err != nil {
+		println("failed to split video: " + err.Error() + ", file: " + filePath)
+		return errors.New("failed to split video: " + filePath)
+	}
+	return nil
+}
+
 func performSplit(startTime int, endTime string, filePath string, index int, total int, token string) error {
 	targetFileName := constants.LocalStorage + token + "-" + strconv.Itoa(index) + "_" + strconv.Itoa(total) + ".mp4"
+	targetFileName2 := constants.LocalStorage + token + "-%d" + "_" + strconv.Itoa(total) + ".mp4"
 	str := "ffmpeg" + " -ss " + strconv.Itoa(startTime) + " -t " + endTime + " -i " + filePath + " -acodec " + " copy " + " -vcodec " + " copy " + targetFileName
 	println(str)
-	out, err := exec.Command("ffmpeg", "-ss", strconv.Itoa(startTime), "-t", endTime, "-i", filePath, "-acodec", "copy", "-vcodec", "copy", targetFileName).Output()
+
+	//out, err := exec.Command("ffmpeg", "-ss", strconv.Itoa(startTime), "-t", endTime, "-i", filePath, "-acodec", "copy", "-vcodec", "copy", targetFileName).Output()
+	out, err := exec.Command("ffmpeg", "-i", filePath, "-c", "copy", "-map", "0", "-segment_time", "3", "-f", "segment", "-reset_timestamps", "1", targetFileName2).Output()
 	println(string(out))
 	if err != nil {
 		println("failed to split video: " + err.Error() + ", file: " + filePath)
