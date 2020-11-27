@@ -10,11 +10,9 @@ import (
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/server/items"
 	"io"
 	"log"
-	"math"
 	"math/rand"
 	"os"
 	"os/exec"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -53,7 +51,7 @@ func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *vi
 }
 
 func saveImage(fileName string, imageBytes *bytes.Buffer) error {
-	imagePath := constants.FileDirectory + fileName + ".mp4"
+	imagePath := constants.LocalStorage + fileName + ".mp4"
 	file, err := os.Create(imagePath)
 	defer file.Close()
 	if err != nil {
@@ -75,7 +73,7 @@ func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *video
 		return nil, errors.New("conversion is already in progress for token: " + in.Token)
 	}
 
-	filePath := constants.FileDirectory + in.Token + ".mp4"
+	filePath := constants.LocalStorage + in.Token + ".mp4"
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return nil, errors.New("invalid token")
 	}
@@ -87,7 +85,7 @@ func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *video
 	app := "ffmpeg"
 	arg0 := "-i"
 	arg1 := filePath
-	arg2 := constants.FileDirectory + in.Token + "." + in.OutputType
+	arg2 := constants.LocalStorage + in.Token + "." + in.OutputType
 	serv.resetConversionStatus(in.Token)
 
 	go func() {
@@ -118,7 +116,7 @@ func (serv *VideoConverterServer) performConversion(app string, arg0 string, arg
 		println(err.Error())
 		return
 	}
-	os.Rename(arg2, constants.FileDirectory+in.Token)
+	os.Rename(arg2, constants.LocalStorage+in.Token)
 }
 
 func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_UploadServer) error {
@@ -165,79 +163,10 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_Up
 	}
 
 	splitVideo(tokenString)
+	mergeVideo(tokenString)
 
 	// ...
 
-	return nil
-}
-func splitVideo(token string) {
-	filePath := constants.FileDirectory + token + ".mp4"
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		log.Fatalf(errors.New("video to split does not exist").Error())
-	}
-	timeInSeconds, timeInSecondsString := getVideoTimeInSeconds(filePath)
-	size := getVideoSize(filePath)
-	numberOfSplits := int(math.Round(float64(size)/float64(sizeLimit) + 0.49))
-	slizeSize := int(timeInSeconds) / numberOfSplits
-	println("number of seconds: " + strconv.Itoa(int(timeInSeconds)))
-
-	startTime := 0
-	endTime := slizeSize
-	for i := 1; i <= numberOfSplits; i++ {
-		// must be string because of potential double inprecision
-		println("start: ", startTime)
-		println("end: ", endTime)
-		performSplit(startTime, strconv.Itoa(endTime), filePath, i, numberOfSplits, token)
-
-		startTime = endTime
-		endTime += slizeSize
-		if endTime > int(timeInSeconds)-slizeSize/2 {
-			performSplit(startTime, timeInSecondsString, filePath, i+1, numberOfSplits, token)
-			break
-		}
-	}
-
-}
-func getVideoSize(filePath string) int {
-	file, err := os.Open(filePath)
-	if err != nil {
-		log.Fatalf("invalid file " + filePath)
-	}
-	defer file.Close()
-	fi, err := file.Stat()
-	if err != nil {
-		log.Fatalf("could not get file stats " + filePath)
-	}
-	return int(fi.Size())
-}
-func getVideoTimeInSeconds(filePath string) (float64, string) {
-	println(filePath)
-	cmd := exec.Command("ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", filePath)
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err := cmd.Run()
-	if err != nil {
-		log.Fatalf(errors.New("failed to get video time in seconds").Error())
-	}
-	timeString := out.String()
-	timeString = strings.Replace(timeString, "\n", "", -1)
-	timeInSec, err := strconv.ParseFloat(timeString, 64)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-	return timeInSec, timeString
-}
-
-func performSplit(startTime int, endTime string, filePath string, index int, total int, token string) error {
-	targetFileName := constants.FileDirectory + token + "-" + strconv.Itoa(index) + "_" + strconv.Itoa(total) + ".mp4"
-	str := "ffmpeg" + " -ss " + strconv.Itoa(startTime) + " -t " + endTime + " -i " + filePath + " -acodec " + " copy " + " -vcodec " + " copy " + targetFileName
-	println(str)
-	out, err := exec.Command("ffmpeg", "-ss", strconv.Itoa(startTime), "-t", endTime, "-i", filePath, "-acodec", "copy", "-vcodec", "copy", targetFileName).Output()
-	println(string(out))
-	if err != nil {
-		println("failed to split video: " + err.Error() + ", file: " + filePath)
-		return errors.New("failed to split video: " + filePath)
-	}
 	return nil
 }
 
@@ -261,7 +190,7 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 	id := request.Id
 
 	//TODO load corresponding file from directory
-	file, err := os.Open(constants.FileDirectory + id)
+	file, err := os.Open(constants.LocalStorage + id)
 	if err != nil {
 		log.Fatalf("Download, Open failed: %v", err)
 	}
@@ -289,7 +218,7 @@ func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter
 	if serv.tokenIsInvalid(in.Id) {
 		return nil, errors.New("token is invalid or has timed out: " + in.Id)
 	}
-	filePath := constants.FileDirectory + in.Id + ".mp4"
+	filePath := constants.LocalStorage + in.Id + ".mp4"
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return nil, errors.New("video to delete does not exist")
 	}
@@ -297,7 +226,7 @@ func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter
 	if err != nil {
 		print(err.Error())
 	}
-	filePath = constants.FileDirectory + in.Id
+	filePath = constants.LocalStorage + in.Id
 	_, err = os.Stat(filePath)
 	if err == nil {
 		err = os.Remove(filePath)
@@ -341,7 +270,7 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 	for {
 		for token, _ := range *serv.ActiveTokens {
 			if serv.tokenIsInvalid(token) {
-				filePath := constants.FileDirectory + token + ".mp4"
+				filePath := constants.LocalStorage + token + ".mp4"
 				_, err := os.Stat(filePath)
 				if err == nil {
 					println("deleting " + filePath)
@@ -350,7 +279,7 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 						println(err.Error())
 					}
 				}
-				filePath = constants.FileDirectory + token
+				filePath = constants.LocalStorage + token
 				_, err = os.Stat(filePath)
 				if err == nil {
 					println("deleting " + filePath)

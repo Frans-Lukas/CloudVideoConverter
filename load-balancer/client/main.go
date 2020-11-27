@@ -120,7 +120,7 @@ func upload(fileName string) string {
 
 	stream.Send(&req)
 
-	file, err := os.Open(constants.FileDirectory + fileName)
+	file, err := os.Open(constants.LocalStorage + fileName)
 	defer file.Close()
 
 	v1, _ := os.Getwd()
@@ -184,7 +184,7 @@ func download(token string, extension string) {
 		buf.Write(data.GetContent())
 	}
 
-	f, err := os.Create(constants.FileDirectory + "downloaded" + "." + extension)
+	f, err := os.Create(constants.LocalStorage + "downloaded" + "." + extension)
 	if err != nil {
 		log.Fatalf("Download, create file: %v", err)
 	}

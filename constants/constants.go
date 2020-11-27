@@ -1,4 +1,4 @@
 package constants
 
 
-const FileDirectory = "localStorage/"
+const LocalStorage = "localStorage/"
