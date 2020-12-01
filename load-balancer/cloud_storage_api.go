@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -64,6 +65,8 @@ func (cli *StorageClient) getConvertedVideos() []string {
 func (cli *StorageClient) UploadConvertedPart(fileName string) {
 	//open local file
 	f, err := os.Open(constants.LocalStorage + fileName)
+	i, _ := f.Stat()
+	println("size of file: " + strconv.Itoa(int(i.Size())))
 
 	if err != nil {
 		log.Fatalf("failed to open local file before uploading: " + err.Error())
@@ -85,7 +88,7 @@ func (cli *StorageClient) UploadConvertedPart(fileName string) {
 		var bytes []byte
 		readBytes, err := f.Read(bytes)
 
-		if err == io.EOF {
+		if readBytes == 0 || err == io.EOF {
 			println("readbytes is nil or eof")
 			break
 		}
