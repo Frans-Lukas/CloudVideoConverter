@@ -158,8 +158,6 @@ func ImplicitAuth(bucketId string) {
 	// For API packages whose import path is starting with "cloud.google.com/go",
 	// such as cloud.google.com/go/storage in this case, if there are no credentials
 	// provided, the client library will look for credentials in the environment.
-
-	projectID
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {
 		println("new client failed")
