@@ -31,7 +31,6 @@ func main() {
 			println("uploaded part! ")
 
 		}
-		break
 	}
 	println("downloading part... ")
 	client.DownloadSpecificParts(strings.Split(filename, "-")[0])
