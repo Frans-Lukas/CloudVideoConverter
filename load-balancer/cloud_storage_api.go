@@ -82,40 +82,47 @@ func (cli *StorageClient) UploadConvertedPart(fileName string) {
 	obj := bkt.Object(fileName)
 
 	w := obj.NewWriter(ctx)
-
-	//TODO write data (what form)
-	for {
-		var bytes []byte
-		readBytes, err := f.Read(bytes)
-
-		if readBytes == 0 || err == io.EOF {
-			println("readbytes is nil or eof")
-			break
-		}
-		if err != nil {
-			println("err when reading file: " + err.Error())
-		}
-
-		println("writing bytes")
-
-		writtenBytes, err := w.Write(bytes)
-
-		// if write not completed in one write
-		for writtenBytes < readBytes {
-			newWrite, err := w.Write(bytes[writtenBytes:])
-
-			if err != nil {
-				w.Close()
-				log.Fatalf("write failed: " + err.Error())
-			}
-
-			writtenBytes += newWrite
-		}
+	if _, err = io.Copy(w, f); err != nil {
+		log.Fatalf("io.Copy: %v", err)
 	}
-
-	if err = w.Close(); err != nil {
-		log.Fatalf("close failed after write: " + err.Error())
+	if err := w.Close(); err != nil {
+		log.Fatalf("Writer.Close: %v", err)
 	}
+	println("file uploaded!")
+	//
+	////TODO write data (what form)
+	//for {
+	//	var bytes []byte = make()
+	//	readBytes, err := f.Read(bytes)
+	//
+	//	if readBytes == 0 || err == io.EOF {
+	//		println("readbytes is nil or eof")
+	//		break
+	//	}
+	//	if err != nil {
+	//		println("err when reading file: " + err.Error())
+	//	}
+	//
+	//	println("writing bytes")
+	//
+	//	writtenBytes, err := w.Write(bytes)
+	//
+	//	// if write not completed in one write
+	//	for writtenBytes < readBytes {
+	//		newWrite, err := w.Write(bytes[writtenBytes:])
+	//
+	//		if err != nil {
+	//			w.Close()
+	//			log.Fatalf("write failed: " + err.Error())
+	//		}
+	//
+	//		writtenBytes += newWrite
+	//	}
+	//}
+	//
+	//if err = w.Close(); err != nil {
+	//	log.Fatalf("close failed after write: " + err.Error())
+	//}
 }
 
 func (cli *StorageClient) DownloadSpecificParts(token string) {
