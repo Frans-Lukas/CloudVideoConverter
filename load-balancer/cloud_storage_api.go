@@ -73,7 +73,7 @@ func (cli *StorageClient) UploadConvertedPart(fileName string) {
 
 	bkt := cli.getConvertedBucketHandle()
 	//TODO will probably need more than a second
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
 	obj := bkt.Object(fileName)
