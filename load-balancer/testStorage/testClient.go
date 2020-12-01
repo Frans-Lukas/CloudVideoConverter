@@ -25,6 +25,7 @@ func main() {
 	for _, f := range files {
 		println(filename)
 		filename = f.Name()
+		break
 	}
 	println("uploading part: " + filename)
 	client.UploadConvertedPart(filename)
