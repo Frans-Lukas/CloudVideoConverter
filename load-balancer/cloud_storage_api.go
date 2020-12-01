@@ -158,8 +158,11 @@ func ImplicitAuth(bucketId string) {
 	// For API packages whose import path is starting with "cloud.google.com/go",
 	// such as cloud.google.com/go/storage in this case, if there are no credentials
 	// provided, the client library will look for credentials in the environment.
+
+	projectID
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {
+		println("new client failed")
 		log.Fatal(err)
 	}
 
@@ -170,6 +173,7 @@ func ImplicitAuth(bucketId string) {
 			break
 		}
 		if err != nil {
+			println("buckets failed")
 			log.Fatal(err)
 		}
 		fmt.Println(bucketAttrs.Name)
@@ -179,6 +183,7 @@ func ImplicitAuth(bucketId string) {
 	// such as google.golang.org/api/cloudkms/v1, use NewService to create the client.
 	kmsService, err := cloudkms.NewService(ctx)
 	if err != nil {
+		println("kms service failed!")
 		log.Fatal(err)
 	}
 
