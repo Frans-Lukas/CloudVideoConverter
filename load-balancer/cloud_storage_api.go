@@ -135,8 +135,10 @@ func (cli *StorageClient) DownloadSpecificParts(token string) {
 	for {
 		attrs, err := objectIterator.Next()
 		if err == iterator.Done {
+			println("iterator done")
 			break
 		}
+		println("downloading part")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -148,6 +150,7 @@ func (cli *StorageClient) DownloadSpecificParts(token string) {
 		}
 		defer rc.Close()
 		slurp, err := ioutil.ReadAll(rc)
+		println("read " + strconv.Itoa(len(slurp)) + " bytes from downloaded file")
 		if err != nil {
 			log.Fatalf("DownloadSpecificParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
 			return
