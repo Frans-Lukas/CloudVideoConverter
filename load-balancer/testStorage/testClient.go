@@ -9,17 +9,28 @@ import (
 )
 
 func main() {
+	println("authenticating...")
 	video_converter.ImplicitAuth(constants.ConvertedVideosBucketName)
+	println("authenticated!")
+	println("creating storage client...")
+
 	client := video_converter.CreateStorageClient()
+	println("created storage client!")
+	println("listing files")
 	files, err := ioutil.ReadDir(constants.LocalStorage)
 	if err != nil {
 		log.Fatal(err)
 	}
 	filename := "sdf"
 	for _, f := range files {
+		println(filename)
 		filename = f.Name()
 		break
 	}
+	println("uploading part: " + filename)
 	client.UploadConvertedPart(filename)
+	println("uploaded part! ")
+	println("downloading part... ")
 	client.DownloadSpecificParts(strings.Split(filename, "-")[0])
+	println("downloaded part!")
 }
