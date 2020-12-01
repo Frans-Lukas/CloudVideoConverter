@@ -89,6 +89,7 @@ func (cli *StorageClient) UploadConvertedPart(fileName string) {
 			println("readbytes is nil or eof")
 			break
 		}
+		println("writing bytes")
 
 		writtenBytes, err := w.Write(bytes)
 
