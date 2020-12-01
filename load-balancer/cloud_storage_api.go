@@ -164,6 +164,8 @@ func ImplicitAuth(bucketId string) {
 		log.Fatal(err)
 	}
 
+	println("using bucketid: " + bucketId)
+
 	it := storageClient.Buckets(ctx, bucketId)
 	for {
 		bucketAttrs, err := it.Next()
