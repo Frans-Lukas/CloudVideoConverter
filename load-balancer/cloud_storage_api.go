@@ -152,7 +152,7 @@ func (cli *StorageClient) DownloadSpecificParts(token string) {
 }
 
 // implicit uses Application Default Credentials to authenticate.
-func ImplicitAuth(bucketId string) {
+func ImplicitAuth(projectID string) {
 	ctx := context.Background()
 
 	// For API packages whose import path is starting with "cloud.google.com/go",
@@ -164,9 +164,9 @@ func ImplicitAuth(bucketId string) {
 		log.Fatal(err)
 	}
 
-	println("using bucketid: " + bucketId)
+	println("using bucketid: " + projectID)
 
-	it := storageClient.Buckets(ctx, bucketId)
+	it := storageClient.Buckets(ctx, projectID)
 	for {
 		bucketAttrs, err := it.Next()
 		if err == iterator.Done {

@@ -10,7 +10,7 @@ import (
 
 func main() {
 	println("authenticating...")
-	video_converter.ImplicitAuth(constants.ConvertedVideosBucketName)
+	video_converter.ImplicitAuth(constants.ProjectID)
 	println("authenticated!")
 	println("creating storage client...")
 
