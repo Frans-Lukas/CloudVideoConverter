@@ -127,7 +127,7 @@ func (cli *StorageClient) UploadConvertedPart(fileName string) {
 
 func (cli *StorageClient) DownloadSpecificParts(token string) {
 	bkt := cli.getConvertedBucketHandle()
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	query := storage.Query{Prefix: token}
 	objectIterator := bkt.Objects(ctx, &query)
@@ -140,7 +140,7 @@ func (cli *StorageClient) DownloadSpecificParts(token string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		ctx, _ := context.WithTimeout(context.Background(), time.Second)
+		ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 		rc, err := bkt.Object(attrs.Name).NewReader(ctx)
 		if err != nil {
 			log.Fatalf("DownloadSpecificParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
