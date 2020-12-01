@@ -85,7 +85,7 @@ func (cli *StorageClient) UploadConvertedPart(fileName string) {
 		var bytes []byte
 		readBytes, err := f.Read(bytes)
 
-		if readBytes == 0 || err == io.EOF {
+		if err == io.EOF {
 			println("readbytes is nil or eof")
 			break
 		}
