@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/Frans-Lukas/cloudvideoconverter/constants"
 	"google.golang.org/api/iterator"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -32,6 +33,11 @@ func (cli *StorageClient) getConvertedBucketHandle() *storage.BucketHandle {
 	return bkt
 }
 
+func (cli *StorageClient) getUnconvertedBuketHandle() *storage.BucketHandle {
+	bkt := cli.Bucket(constants.UnconvertedVideosBucketName)
+	return bkt
+}
+
 func (cli *StorageClient) getConvertedVideos() []string {
 	bkt := cli.getConvertedBucketHandle()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -51,6 +57,54 @@ func (cli *StorageClient) getConvertedVideos() []string {
 		names = append(names, attrs.Name)
 	}
 	return names
+}
+
+func (cli *StorageClient) UploadConvertedPart(fileName string) {
+	//open local file
+	f, err := os.Open(constants.LocalStorage + fileName)
+
+	if err != nil {
+		log.Fatalf("failed to open local file before uploading: " + err.Error())
+	}
+
+	defer f.Close()
+
+	bkt := cli.getConvertedBucketHandle()
+	//TODO will probably need more than a second
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	obj := bkt.Object(fileName)
+
+	w := obj.NewWriter(ctx)
+
+	//TODO write data (what form)
+	for {
+		var bytes []byte
+		readBytes, err := f.Read(bytes)
+
+		if readBytes == 0 || err == io.EOF {
+			break
+		}
+
+		writtenBytes, err := w.Write(bytes)
+
+		// if write not completed in one write
+		for writtenBytes < readBytes {
+			newWrite, err := w.Write(bytes[writtenBytes:])
+
+			if err != nil {
+				w.Close()
+				log.Fatalf("write failed: " + err.Error())
+			}
+
+			writtenBytes += newWrite
+		}
+	}
+
+	if err = w.Close(); err != nil {
+		log.Fatalf("close failed after write: " + err.Error())
+	}
 }
 
 func (cli *StorageClient) DownloadSpecificParts(token string) {
