@@ -18,7 +18,7 @@ type StorageClient struct {
 	*storage.Client
 }
 
-func storageClient() StorageClient {
+func CreateStorageClient() StorageClient {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
