@@ -33,6 +33,6 @@ func main() {
 		}
 	}
 	println("downloading part... ")
-	client.DownloadSpecificParts(strings.Split(filename, "-")[0])
+	client.DownloadSpecificParts("cyD86dl4yHJ91govrQWzAAAAB")
 	println("downloaded part!")
 }
