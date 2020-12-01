@@ -33,6 +33,6 @@ func main() {
 		}
 	}
 	println("downloading part... ")
-	client.DownloadSpecificParts("cyD86dl4yHJ91govrQWzAAAAB")
+	client.DownloadSpecificParts("cyD86dl4yHJ91govrQWz")
 	println("downloaded part!")
 }
