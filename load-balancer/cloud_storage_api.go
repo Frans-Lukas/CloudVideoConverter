@@ -126,6 +126,7 @@ func (cli *StorageClient) UploadConvertedPart(fileName string) {
 }
 
 func (cli *StorageClient) DownloadSpecificParts(token string) {
+	println("using token: " + token)
 	bkt := cli.getConvertedBucketHandle()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
