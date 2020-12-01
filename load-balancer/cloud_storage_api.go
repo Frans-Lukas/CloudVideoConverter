@@ -156,7 +156,7 @@ func (cli *StorageClient) DownloadSpecificParts(token string) {
 			return
 		}
 
-		f, err := os.Create(constants.LocalStorage + token + "." + "converted")
+		f, err := os.Create(constants.LocalStorage + attrs.Name + ".converted")
 		if err != nil {
 			log.Fatalf("DownloadSpecificParts, create file: %v", err)
 		}

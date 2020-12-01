@@ -25,11 +25,14 @@ func main() {
 	for _, f := range files {
 		println(filename)
 		filename = f.Name()
+		if len(strings.Split(filename, "-")) > 1 {
+			println("uploading part: " + filename)
+			client.UploadConvertedPart(filename)
+			println("uploaded part! ")
+
+		}
 		break
 	}
-	println("uploading part: " + filename)
-	client.UploadConvertedPart(filename)
-	println("uploaded part! ")
 	println("downloading part... ")
 	client.DownloadSpecificParts(strings.Split(filename, "-")[0])
 	println("downloaded part!")
