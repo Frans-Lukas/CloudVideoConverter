@@ -43,6 +43,15 @@ func (cli *StorageClient) getUnconvertedBuketHandle() *storage.BucketHandle {
 
 func (cli *StorageClient) getConvertedVideos() []string {
 	bkt := cli.getConvertedBucketHandle()
+	return cli.getVideos(bkt)
+}
+
+func (cli *StorageClient) getUnconvertedVideos() []string {
+	bkt := cli.getUnconvertedBuketHandle()
+	return cli.getVideos(bkt)
+}
+
+func (cli *StorageClient) getVideos(bkt *storage.BucketHandle) []string {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
