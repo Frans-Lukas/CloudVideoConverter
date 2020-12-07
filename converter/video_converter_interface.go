@@ -61,9 +61,16 @@ func (serv *VideoConverterServiceServer) performConversion(app string, arg0 stri
 	os.Rename(arg2, constants.LocalStorage+token)
 }
 
-func (serv *VideoConverterServiceServer) ConversionStatus(ctx context.Context, in *videoconverter.ConversionStatusRequest) (*videoconverter.ConversionStatusResponse, error) {
-	//TODO check if we need this method
-	return &videoconverter.ConversionStatusResponse{}, nil
+func (serv *VideoConverterServiceServer) ConversionStatus(ctx context.Context, in *videoconverter.AvailableForWorkRequest) (*videoconverter.AvailableForWorkResponse, error) {
+	for _, v := range *serv.ActiveTokens {
+		if !*v.ConversionDone {
+			//TODO decide if inProgress is a good response
+			return &videoconverter.AvailableForWorkResponse{AvailableForWork: false}, nil
+		}
+	}
+
+	//TODO decide if notStarted is a good default response
+	return &videoconverter.AvailableForWorkResponse{AvailableForWork: true}, nil
 }
 
 func (serv *VideoConverterServiceServer) downloadFileToConvert(token string) {

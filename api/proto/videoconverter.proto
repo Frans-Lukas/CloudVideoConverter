@@ -14,7 +14,7 @@ service VideoConverterLoadBalancer {
 service VideoConverterService {
     rpc StartConversion(ConversionRequest) returns (ConversionResponse) {}
     rpc IsAlive(IsAliveRequest) returns (IsAliveResponse) {}
-    rpc ConversionStatus(ConversionStatusRequest) returns (ConversionStatusResponse) {}
+    rpc AvailableForWork(AvailableForWorkRequest) returns (AvailableForWorkResponse) {}
 }
 
 message IsAliveRequest{}
@@ -62,6 +62,13 @@ message ConversionStatusResponse {
 }
 message ConversionStatusRequest {
     string StatusId = 1;
+}
+
+message AvailableForWorkResponse {
+    bool AvailableForWork = 1;
+}
+message AvailableForWorkRequest {
+
 }
 
 message UploadStatus {
