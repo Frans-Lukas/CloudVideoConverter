@@ -13,8 +13,13 @@ service VideoConverterLoadBalancer {
 
 service VideoConverterService {
     rpc StartConversion(ConversionRequest) returns (ConversionResponse) {}
+    rpc IsAlive(IsAliveRequest) returns (IsAliveResponse) {}
     rpc ConversionStatus(ConversionStatusRequest) returns (ConversionStatusResponse) {}
 }
+
+message IsAliveRequest{}
+
+message IsAliveResponse{}
 
 message UploadTokenRequest{}
 

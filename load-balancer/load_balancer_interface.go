@@ -5,14 +5,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/constants"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/server/items"
+	"google.golang.org/grpc"
 	"io"
 	"log"
 	"math/rand"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -24,15 +27,92 @@ const sizeLimit = megaByte * 1
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
-	ActiveTokens *map[string]items.Token
+	ActiveTokens    *map[string]items.Token
+	ConversionQueue *[]items.Token
+	ActiveServices  *map[string]VideoConverterClient
+}
+
+type VideoConverterClient struct {
+	client  videoconverter.VideoConverterServiceClient
+	address string
 }
 
 func CreateNewServer() VideoConverterServer {
 	activeTokens := make(map[string]items.Token, 0)
+	conversionQueue := make([]items.Token, 0)
+	activeServices := make(map[string]VideoConverterClient, 0)
 	val := VideoConverterServer{
-		ActiveTokens: &activeTokens,
+		ActiveTokens:    &activeTokens,
+		ConversionQueue: &conversionQueue,
+		ActiveServices:  &activeServices,
 	}
 	return val
+}
+
+func (serv *VideoConverterServer) UpdateActiveServices(address string) {
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	println("connected")
+	apiGateway := api_gateway.NewAPIGateWayClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	endPoints, err := apiGateway.GetActiveServiceEndpoints(ctx, &api_gateway.ServiceEndPointsRequest{})
+	*serv.ActiveServices = make(map[string]VideoConverterClient)
+	for _, v := range endPoints.EndPoint {
+		address := strconv.Itoa(int(v.Port)) + ":" + v.Ip
+		if _, ok := (*serv.ActiveServices)[address]; !ok {
+			(*serv.ActiveServices)[address] = makeServiceConnection(address)
+		}
+	}
+}
+
+func (serv *VideoConverterServer) PollActiveServices(address string) {
+	unresponsiveClients := make([]string, 0)
+	for i, v := range *serv.ActiveServices {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+		_, err := v.client.IsAlive(ctx, &videoconverter.IsAliveRequest{})
+		if err != nil {
+			log.Println("unresponsive client: " + v.address + " " + err.Error())
+			unresponsiveClients = append(unresponsiveClients, i)
+		}
+	}
+
+	for _, v := range unresponsiveClients {
+		delete(*serv.ActiveServices, v)
+		notifyAPIGatewayOfDeadClient(v)
+	}
+}
+func notifyAPIGatewayOfDeadClient(address string) {
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	println("connected")
+	apiGateway := api_gateway.NewAPIGateWayClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	ip := strings.Split(address, ":")[0]
+	portString := strings.Split(address, ":")[1]
+	port, err := strconv.Atoi(portString)
+	if err != nil {
+		log.Println("Failed to split address: " + address)
+		return
+	}
+	apiGateway.DisableServiceEndpoint(ctx, &api_gateway.DisableServiceEndPoint{Ip: ip, Port: int32(port)})
+}
+
+func makeServiceConnection(address string) VideoConverterClient {
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	println("connected")
+	return VideoConverterClient{client: videoconverter.NewVideoConverterServiceClient(conn), address: address}
 }
 
 func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
@@ -65,34 +145,7 @@ func saveImage(fileName string, imageBytes *bytes.Buffer) error {
 }
 
 func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
-	if serv.tokenIsInvalid(in.Token) {
-		return nil, errors.New("token is invalid or has timed out: " + in.Token)
-	}
 
-	if serv.conversionIsInProgressForToken(in.Token) {
-		return nil, errors.New("conversion is already in progress for token: " + in.Token)
-	}
-
-	filePath := constants.LocalStorage + in.Token + ".mp4"
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return nil, errors.New("invalid token")
-	}
-	file, err := os.Open(filePath)
-	defer file.Close()
-	if err != nil {
-		return nil, errors.New("failed to open file")
-	}
-	app := "ffmpeg"
-	arg0 := "-i"
-	arg1 := filePath
-	arg2 := constants.LocalStorage + in.Token + "." + in.OutputType
-	serv.resetConversionStatus(in.Token)
-
-	go func() {
-		serv.performConversion(app, arg0, arg1, arg2, in)
-	}()
-
-	return &videoconverter.ConversionResponse{}, nil
 }
 
 func (serv *VideoConverterServer) conversionIsInProgressForToken(token string) bool {
