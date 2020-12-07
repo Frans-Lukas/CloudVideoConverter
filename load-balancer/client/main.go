@@ -33,7 +33,7 @@ import (
 	"time"
 )
 
-var c videoconverter.VideoConverterClient
+var c videoconverter.VideoConverterLoadBalancerClient
 
 func main() {
 	// Set up a connection to the server.
@@ -53,7 +53,7 @@ func main() {
 	}
 	defer conn.Close()
 	println("connected")
-	c = videoconverter.NewVideoConverterClient(conn)
+	c = videoconverter.NewVideoConverterLoadBalancerClient(conn)
 
 	outputExtension := "mkv"
 

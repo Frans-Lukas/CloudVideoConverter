@@ -54,7 +54,7 @@ func main() {
 	s := grpc.NewServer()
 
 	videoServer := video_converter.CreateNewServer()
-	videoconverter.RegisterVideoConverterServer(s, &videoServer)
+	videoconverter.RegisterVideoConverterLoadBalancerServer(s, &videoServer)
 	go func() {
 		videoServer.DeleteTimedOutVideosLoop()
 	}()

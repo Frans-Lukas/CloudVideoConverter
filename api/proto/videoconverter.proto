@@ -2,13 +2,18 @@ syntax = "proto3";
 
 package videoconverter;
 
-service VideoConverter {
+service VideoConverterLoadBalancer {
     rpc RequestUploadToken(UploadTokenRequest) returns (UploadTokenResponse) {}
     rpc Upload(stream Chunk) returns (UploadStatus) {}
     rpc StartConversion(ConversionRequest) returns (ConversionResponse) {}
     rpc ConversionStatus(ConversionStatusRequest) returns (ConversionStatusResponse) {}
     rpc Download(DownloadRequest) returns (stream Chunk) {}
     rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+}
+
+service VideoConverterService {
+    rpc StartConversion(ConversionRequest) returns (ConversionResponse) {}
+    rpc ConversionStatus(ConversionStatusRequest) returns (ConversionStatusResponse) {}
 }
 
 message UploadTokenRequest{}

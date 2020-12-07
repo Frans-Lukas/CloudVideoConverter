@@ -23,7 +23,7 @@ const megaByte = 1000000
 const sizeLimit = megaByte * 1
 
 type VideoConverterServer struct {
-	videoconverter.UnimplementedVideoConverterServer
+	videoconverter.UnimplementedVideoConverterLoadBalancerServer
 	ActiveTokens *map[string]items.Token
 }
 
@@ -119,7 +119,7 @@ func (serv *VideoConverterServer) performConversion(app string, arg0 string, arg
 	os.Rename(arg2, constants.LocalStorage+in.Token)
 }
 
-func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_UploadServer) error {
+func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoadBalancer_UploadServer) error {
 
 	imageData := bytes.Buffer{}
 	tokenString := ""
@@ -165,7 +165,6 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverter_Up
 	splitVideo(tokenString)
 	mergeVideo(tokenString)
 
-
 	// ...
 
 	return nil
@@ -180,7 +179,7 @@ func (server *VideoConverterServer) tokenIsInvalid(token string) bool {
 	return true
 }
 
-func (serv *VideoConverterServer) Download(request *videoconverter.DownloadRequest, stream videoconverter.VideoConverter_DownloadServer) error {
+func (serv *VideoConverterServer) Download(request *videoconverter.DownloadRequest, stream videoconverter.VideoConverterLoadBalancer_DownloadServer) error {
 	if serv.tokenIsInvalid(request.Id) {
 		return errors.New("token is invalid or has timed out: " + request.Id)
 	}

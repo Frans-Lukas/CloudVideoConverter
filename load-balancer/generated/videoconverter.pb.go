@@ -811,40 +811,55 @@ var file_videoconverter_proto_rawDesc = []byte{
 	0x0e, 0x0a, 0x0a, 0x49, 0x6e, 0x50, 0x72, 0x6f, 0x67, 0x72, 0x65, 0x73, 0x73, 0x10, 0x00, 0x12,
 	0x08, 0x0a, 0x04, 0x44, 0x6f, 0x6e, 0x65, 0x10, 0x01, 0x12, 0x0a, 0x0a, 0x06, 0x46, 0x61, 0x69,
 	0x6c, 0x65, 0x64, 0x10, 0x02, 0x12, 0x0e, 0x0a, 0x0a, 0x4e, 0x6f, 0x74, 0x53, 0x74, 0x61, 0x72,
-	0x74, 0x65, 0x64, 0x10, 0x03, 0x32, 0x8c, 0x04, 0x0a, 0x0e, 0x56, 0x69, 0x64, 0x65, 0x6f, 0x43,
-	0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x12, 0x5f, 0x0a, 0x12, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x22,
-	0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e,
-	0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x23, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72,
-	0x74, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x41, 0x0a, 0x06, 0x55, 0x70, 0x6c,
-	0x6f, 0x61, 0x64, 0x12, 0x15, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65,
-	0x72, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x1a, 0x1c, 0x2e, 0x76, 0x69, 0x64,
+	0x74, 0x65, 0x64, 0x10, 0x03, 0x32, 0x98, 0x04, 0x0a, 0x1a, 0x56, 0x69, 0x64, 0x65, 0x6f, 0x43,
+	0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x4c, 0x6f, 0x61, 0x64, 0x42, 0x61, 0x6c, 0x61,
+	0x6e, 0x63, 0x65, 0x72, 0x12, 0x5f, 0x0a, 0x12, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x55,
+	0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x22, 0x2e, 0x76, 0x69, 0x64,
 	0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x6c, 0x6f,
-	0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x00, 0x28, 0x01, 0x12, 0x5a, 0x0a, 0x0f,
-	0x53, 0x74, 0x61, 0x72, 0x74, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12,
-	0x21, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72,
-	0x2e, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x22, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72,
-	0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x67, 0x0a, 0x10, 0x43, 0x6f, 0x6e, 0x76,
-	0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x27, 0x2e, 0x76,
-	0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f,
-	0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e,
-	0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f,
-	0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x12, 0x46, 0x0a, 0x08, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x12, 0x1f, 0x2e,
-	0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x44,
-	0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15,
+	0x61, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x23,
 	0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e,
-	0x43, 0x68, 0x75, 0x6e, 0x6b, 0x22, 0x00, 0x30, 0x01, 0x12, 0x49, 0x0a, 0x06, 0x44, 0x65, 0x6c,
-	0x65, 0x74, 0x65, 0x12, 0x1d, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65,
-	0x72, 0x74, 0x65, 0x72, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72,
-	0x74, 0x65, 0x72, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x41, 0x0a, 0x06, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x12,
+	0x15, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72,
+	0x2e, 0x43, 0x68, 0x75, 0x6e, 0x6b, 0x1a, 0x1c, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f,
+	0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x22, 0x00, 0x28, 0x01, 0x12, 0x5a, 0x0a, 0x0f, 0x53, 0x74, 0x61, 0x72,
+	0x74, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x21, 0x2e, 0x76, 0x69,
+	0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6e,
+	0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x22,
+	0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e,
+	0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x67, 0x0a, 0x10, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69,
+	0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x27, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f,
+	0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72,
+	0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x28, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74,
+	0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61,
+	0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x46, 0x0a,
+	0x08, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x12, 0x1f, 0x2e, 0x76, 0x69, 0x64, 0x65,
+	0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x44, 0x6f, 0x77, 0x6e, 0x6c,
+	0x6f, 0x61, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x76, 0x69, 0x64,
+	0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x68, 0x75, 0x6e,
+	0x6b, 0x22, 0x00, 0x30, 0x01, 0x12, 0x49, 0x0a, 0x06, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12,
+	0x1d, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72,
+	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e,
+	0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e,
+	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00,
+	0x32, 0xdc, 0x01, 0x0a, 0x15, 0x56, 0x69, 0x64, 0x65, 0x6f, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72,
+	0x74, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x5a, 0x0a, 0x0f, 0x53, 0x74,
+	0x61, 0x72, 0x74, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x21, 0x2e,
+	0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x43,
+	0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x22, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65,
+	0x72, 0x2e, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x67, 0x0a, 0x10, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72,
+	0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x27, 0x2e, 0x76, 0x69, 0x64,
+	0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6e, 0x76,
+	0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65,
+	0x72, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53,
+	0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -881,20 +896,24 @@ var file_videoconverter_proto_depIdxs = []int32{
 	1,  // 0: videoconverter.ConversionStatusResponse.Code:type_name -> videoconverter.ConversionStatusCode
 	0,  // 1: videoconverter.DeleteResponse.code:type_name -> videoconverter.UploadStatusCode
 	0,  // 2: videoconverter.DownloadStatus.Code:type_name -> videoconverter.UploadStatusCode
-	2,  // 3: videoconverter.VideoConverter.RequestUploadToken:input_type -> videoconverter.UploadTokenRequest
-	6,  // 4: videoconverter.VideoConverter.Upload:input_type -> videoconverter.Chunk
-	4,  // 5: videoconverter.VideoConverter.StartConversion:input_type -> videoconverter.ConversionRequest
-	8,  // 6: videoconverter.VideoConverter.ConversionStatus:input_type -> videoconverter.ConversionStatusRequest
-	10, // 7: videoconverter.VideoConverter.Download:input_type -> videoconverter.DownloadRequest
-	11, // 8: videoconverter.VideoConverter.Delete:input_type -> videoconverter.DeleteRequest
-	3,  // 9: videoconverter.VideoConverter.RequestUploadToken:output_type -> videoconverter.UploadTokenResponse
-	9,  // 10: videoconverter.VideoConverter.Upload:output_type -> videoconverter.UploadStatus
-	5,  // 11: videoconverter.VideoConverter.StartConversion:output_type -> videoconverter.ConversionResponse
-	7,  // 12: videoconverter.VideoConverter.ConversionStatus:output_type -> videoconverter.ConversionStatusResponse
-	6,  // 13: videoconverter.VideoConverter.Download:output_type -> videoconverter.Chunk
-	12, // 14: videoconverter.VideoConverter.Delete:output_type -> videoconverter.DeleteResponse
-	9,  // [9:15] is the sub-list for method output_type
-	3,  // [3:9] is the sub-list for method input_type
+	2,  // 3: videoconverter.VideoConverterLoadBalancer.RequestUploadToken:input_type -> videoconverter.UploadTokenRequest
+	6,  // 4: videoconverter.VideoConverterLoadBalancer.Upload:input_type -> videoconverter.Chunk
+	4,  // 5: videoconverter.VideoConverterLoadBalancer.StartConversion:input_type -> videoconverter.ConversionRequest
+	8,  // 6: videoconverter.VideoConverterLoadBalancer.ConversionStatus:input_type -> videoconverter.ConversionStatusRequest
+	10, // 7: videoconverter.VideoConverterLoadBalancer.Download:input_type -> videoconverter.DownloadRequest
+	11, // 8: videoconverter.VideoConverterLoadBalancer.Delete:input_type -> videoconverter.DeleteRequest
+	4,  // 9: videoconverter.VideoConverterService.StartConversion:input_type -> videoconverter.ConversionRequest
+	8,  // 10: videoconverter.VideoConverterService.ConversionStatus:input_type -> videoconverter.ConversionStatusRequest
+	3,  // 11: videoconverter.VideoConverterLoadBalancer.RequestUploadToken:output_type -> videoconverter.UploadTokenResponse
+	9,  // 12: videoconverter.VideoConverterLoadBalancer.Upload:output_type -> videoconverter.UploadStatus
+	5,  // 13: videoconverter.VideoConverterLoadBalancer.StartConversion:output_type -> videoconverter.ConversionResponse
+	7,  // 14: videoconverter.VideoConverterLoadBalancer.ConversionStatus:output_type -> videoconverter.ConversionStatusResponse
+	6,  // 15: videoconverter.VideoConverterLoadBalancer.Download:output_type -> videoconverter.Chunk
+	12, // 16: videoconverter.VideoConverterLoadBalancer.Delete:output_type -> videoconverter.DeleteResponse
+	5,  // 17: videoconverter.VideoConverterService.StartConversion:output_type -> videoconverter.ConversionResponse
+	7,  // 18: videoconverter.VideoConverterService.ConversionStatus:output_type -> videoconverter.ConversionStatusResponse
+	11, // [11:19] is the sub-list for method output_type
+	3,  // [3:11] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name
 	3,  // [3:3] is the sub-list for extension extendee
 	0,  // [0:3] is the sub-list for field type_name
@@ -1063,7 +1082,7 @@ func file_videoconverter_proto_init() {
 			NumEnums:      2,
 			NumMessages:   12,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_videoconverter_proto_goTypes,
 		DependencyIndexes: file_videoconverter_proto_depIdxs,
@@ -1084,59 +1103,59 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// VideoConverterClient is the client API for VideoConverter service.
+// VideoConverterLoadBalancerClient is the client API for VideoConverterLoadBalancer service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type VideoConverterClient interface {
+type VideoConverterLoadBalancerClient interface {
 	RequestUploadToken(ctx context.Context, in *UploadTokenRequest, opts ...grpc.CallOption) (*UploadTokenResponse, error)
-	Upload(ctx context.Context, opts ...grpc.CallOption) (VideoConverter_UploadClient, error)
+	Upload(ctx context.Context, opts ...grpc.CallOption) (VideoConverterLoadBalancer_UploadClient, error)
 	StartConversion(ctx context.Context, in *ConversionRequest, opts ...grpc.CallOption) (*ConversionResponse, error)
 	ConversionStatus(ctx context.Context, in *ConversionStatusRequest, opts ...grpc.CallOption) (*ConversionStatusResponse, error)
-	Download(ctx context.Context, in *DownloadRequest, opts ...grpc.CallOption) (VideoConverter_DownloadClient, error)
+	Download(ctx context.Context, in *DownloadRequest, opts ...grpc.CallOption) (VideoConverterLoadBalancer_DownloadClient, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 }
 
-type videoConverterClient struct {
+type videoConverterLoadBalancerClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewVideoConverterClient(cc grpc.ClientConnInterface) VideoConverterClient {
-	return &videoConverterClient{cc}
+func NewVideoConverterLoadBalancerClient(cc grpc.ClientConnInterface) VideoConverterLoadBalancerClient {
+	return &videoConverterLoadBalancerClient{cc}
 }
 
-func (c *videoConverterClient) RequestUploadToken(ctx context.Context, in *UploadTokenRequest, opts ...grpc.CallOption) (*UploadTokenResponse, error) {
+func (c *videoConverterLoadBalancerClient) RequestUploadToken(ctx context.Context, in *UploadTokenRequest, opts ...grpc.CallOption) (*UploadTokenResponse, error) {
 	out := new(UploadTokenResponse)
-	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverter/RequestUploadToken", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverterLoadBalancer/RequestUploadToken", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *videoConverterClient) Upload(ctx context.Context, opts ...grpc.CallOption) (VideoConverter_UploadClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_VideoConverter_serviceDesc.Streams[0], "/videoconverter.VideoConverter/Upload", opts...)
+func (c *videoConverterLoadBalancerClient) Upload(ctx context.Context, opts ...grpc.CallOption) (VideoConverterLoadBalancer_UploadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_VideoConverterLoadBalancer_serviceDesc.Streams[0], "/videoconverter.VideoConverterLoadBalancer/Upload", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &videoConverterUploadClient{stream}
+	x := &videoConverterLoadBalancerUploadClient{stream}
 	return x, nil
 }
 
-type VideoConverter_UploadClient interface {
+type VideoConverterLoadBalancer_UploadClient interface {
 	Send(*Chunk) error
 	CloseAndRecv() (*UploadStatus, error)
 	grpc.ClientStream
 }
 
-type videoConverterUploadClient struct {
+type videoConverterLoadBalancerUploadClient struct {
 	grpc.ClientStream
 }
 
-func (x *videoConverterUploadClient) Send(m *Chunk) error {
+func (x *videoConverterLoadBalancerUploadClient) Send(m *Chunk) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *videoConverterUploadClient) CloseAndRecv() (*UploadStatus, error) {
+func (x *videoConverterLoadBalancerUploadClient) CloseAndRecv() (*UploadStatus, error) {
 	if err := x.ClientStream.CloseSend(); err != nil {
 		return nil, err
 	}
@@ -1147,30 +1166,30 @@ func (x *videoConverterUploadClient) CloseAndRecv() (*UploadStatus, error) {
 	return m, nil
 }
 
-func (c *videoConverterClient) StartConversion(ctx context.Context, in *ConversionRequest, opts ...grpc.CallOption) (*ConversionResponse, error) {
+func (c *videoConverterLoadBalancerClient) StartConversion(ctx context.Context, in *ConversionRequest, opts ...grpc.CallOption) (*ConversionResponse, error) {
 	out := new(ConversionResponse)
-	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverter/StartConversion", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverterLoadBalancer/StartConversion", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *videoConverterClient) ConversionStatus(ctx context.Context, in *ConversionStatusRequest, opts ...grpc.CallOption) (*ConversionStatusResponse, error) {
+func (c *videoConverterLoadBalancerClient) ConversionStatus(ctx context.Context, in *ConversionStatusRequest, opts ...grpc.CallOption) (*ConversionStatusResponse, error) {
 	out := new(ConversionStatusResponse)
-	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverter/ConversionStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverterLoadBalancer/ConversionStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *videoConverterClient) Download(ctx context.Context, in *DownloadRequest, opts ...grpc.CallOption) (VideoConverter_DownloadClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_VideoConverter_serviceDesc.Streams[1], "/videoconverter.VideoConverter/Download", opts...)
+func (c *videoConverterLoadBalancerClient) Download(ctx context.Context, in *DownloadRequest, opts ...grpc.CallOption) (VideoConverterLoadBalancer_DownloadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_VideoConverterLoadBalancer_serviceDesc.Streams[1], "/videoconverter.VideoConverterLoadBalancer/Download", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &videoConverterDownloadClient{stream}
+	x := &videoConverterLoadBalancerDownloadClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -1180,16 +1199,16 @@ func (c *videoConverterClient) Download(ctx context.Context, in *DownloadRequest
 	return x, nil
 }
 
-type VideoConverter_DownloadClient interface {
+type VideoConverterLoadBalancer_DownloadClient interface {
 	Recv() (*Chunk, error)
 	grpc.ClientStream
 }
 
-type videoConverterDownloadClient struct {
+type videoConverterLoadBalancerDownloadClient struct {
 	grpc.ClientStream
 }
 
-func (x *videoConverterDownloadClient) Recv() (*Chunk, error) {
+func (x *videoConverterLoadBalancerDownloadClient) Recv() (*Chunk, error) {
 	m := new(Chunk)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -1197,89 +1216,89 @@ func (x *videoConverterDownloadClient) Recv() (*Chunk, error) {
 	return m, nil
 }
 
-func (c *videoConverterClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+func (c *videoConverterLoadBalancerClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
 	out := new(DeleteResponse)
-	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverter/Delete", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverterLoadBalancer/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// VideoConverterServer is the server API for VideoConverter service.
-type VideoConverterServer interface {
+// VideoConverterLoadBalancerServer is the server API for VideoConverterLoadBalancer service.
+type VideoConverterLoadBalancerServer interface {
 	RequestUploadToken(context.Context, *UploadTokenRequest) (*UploadTokenResponse, error)
-	Upload(VideoConverter_UploadServer) error
+	Upload(VideoConverterLoadBalancer_UploadServer) error
 	StartConversion(context.Context, *ConversionRequest) (*ConversionResponse, error)
 	ConversionStatus(context.Context, *ConversionStatusRequest) (*ConversionStatusResponse, error)
-	Download(*DownloadRequest, VideoConverter_DownloadServer) error
+	Download(*DownloadRequest, VideoConverterLoadBalancer_DownloadServer) error
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 }
 
-// UnimplementedVideoConverterServer can be embedded to have forward compatible implementations.
-type UnimplementedVideoConverterServer struct {
+// UnimplementedVideoConverterLoadBalancerServer can be embedded to have forward compatible implementations.
+type UnimplementedVideoConverterLoadBalancerServer struct {
 }
 
-func (*UnimplementedVideoConverterServer) RequestUploadToken(context.Context, *UploadTokenRequest) (*UploadTokenResponse, error) {
+func (*UnimplementedVideoConverterLoadBalancerServer) RequestUploadToken(context.Context, *UploadTokenRequest) (*UploadTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestUploadToken not implemented")
 }
-func (*UnimplementedVideoConverterServer) Upload(VideoConverter_UploadServer) error {
+func (*UnimplementedVideoConverterLoadBalancerServer) Upload(VideoConverterLoadBalancer_UploadServer) error {
 	return status.Errorf(codes.Unimplemented, "method Upload not implemented")
 }
-func (*UnimplementedVideoConverterServer) StartConversion(context.Context, *ConversionRequest) (*ConversionResponse, error) {
+func (*UnimplementedVideoConverterLoadBalancerServer) StartConversion(context.Context, *ConversionRequest) (*ConversionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StartConversion not implemented")
 }
-func (*UnimplementedVideoConverterServer) ConversionStatus(context.Context, *ConversionStatusRequest) (*ConversionStatusResponse, error) {
+func (*UnimplementedVideoConverterLoadBalancerServer) ConversionStatus(context.Context, *ConversionStatusRequest) (*ConversionStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConversionStatus not implemented")
 }
-func (*UnimplementedVideoConverterServer) Download(*DownloadRequest, VideoConverter_DownloadServer) error {
+func (*UnimplementedVideoConverterLoadBalancerServer) Download(*DownloadRequest, VideoConverterLoadBalancer_DownloadServer) error {
 	return status.Errorf(codes.Unimplemented, "method Download not implemented")
 }
-func (*UnimplementedVideoConverterServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+func (*UnimplementedVideoConverterLoadBalancerServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 
-func RegisterVideoConverterServer(s *grpc.Server, srv VideoConverterServer) {
-	s.RegisterService(&_VideoConverter_serviceDesc, srv)
+func RegisterVideoConverterLoadBalancerServer(s *grpc.Server, srv VideoConverterLoadBalancerServer) {
+	s.RegisterService(&_VideoConverterLoadBalancer_serviceDesc, srv)
 }
 
-func _VideoConverter_RequestUploadToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _VideoConverterLoadBalancer_RequestUploadToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UploadTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoConverterServer).RequestUploadToken(ctx, in)
+		return srv.(VideoConverterLoadBalancerServer).RequestUploadToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/videoconverter.VideoConverter/RequestUploadToken",
+		FullMethod: "/videoconverter.VideoConverterLoadBalancer/RequestUploadToken",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoConverterServer).RequestUploadToken(ctx, req.(*UploadTokenRequest))
+		return srv.(VideoConverterLoadBalancerServer).RequestUploadToken(ctx, req.(*UploadTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VideoConverter_Upload_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(VideoConverterServer).Upload(&videoConverterUploadServer{stream})
+func _VideoConverterLoadBalancer_Upload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(VideoConverterLoadBalancerServer).Upload(&videoConverterLoadBalancerUploadServer{stream})
 }
 
-type VideoConverter_UploadServer interface {
+type VideoConverterLoadBalancer_UploadServer interface {
 	SendAndClose(*UploadStatus) error
 	Recv() (*Chunk, error)
 	grpc.ServerStream
 }
 
-type videoConverterUploadServer struct {
+type videoConverterLoadBalancerUploadServer struct {
 	grpc.ServerStream
 }
 
-func (x *videoConverterUploadServer) SendAndClose(m *UploadStatus) error {
+func (x *videoConverterLoadBalancerUploadServer) SendAndClose(m *UploadStatus) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *videoConverterUploadServer) Recv() (*Chunk, error) {
+func (x *videoConverterLoadBalancerUploadServer) Recv() (*Chunk, error) {
 	m := new(Chunk)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -1287,113 +1306,221 @@ func (x *videoConverterUploadServer) Recv() (*Chunk, error) {
 	return m, nil
 }
 
-func _VideoConverter_StartConversion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _VideoConverterLoadBalancer_StartConversion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConversionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoConverterServer).StartConversion(ctx, in)
+		return srv.(VideoConverterLoadBalancerServer).StartConversion(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/videoconverter.VideoConverter/StartConversion",
+		FullMethod: "/videoconverter.VideoConverterLoadBalancer/StartConversion",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoConverterServer).StartConversion(ctx, req.(*ConversionRequest))
+		return srv.(VideoConverterLoadBalancerServer).StartConversion(ctx, req.(*ConversionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VideoConverter_ConversionStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _VideoConverterLoadBalancer_ConversionStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConversionStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoConverterServer).ConversionStatus(ctx, in)
+		return srv.(VideoConverterLoadBalancerServer).ConversionStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/videoconverter.VideoConverter/ConversionStatus",
+		FullMethod: "/videoconverter.VideoConverterLoadBalancer/ConversionStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoConverterServer).ConversionStatus(ctx, req.(*ConversionStatusRequest))
+		return srv.(VideoConverterLoadBalancerServer).ConversionStatus(ctx, req.(*ConversionStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VideoConverter_Download_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _VideoConverterLoadBalancer_Download_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(DownloadRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(VideoConverterServer).Download(m, &videoConverterDownloadServer{stream})
+	return srv.(VideoConverterLoadBalancerServer).Download(m, &videoConverterLoadBalancerDownloadServer{stream})
 }
 
-type VideoConverter_DownloadServer interface {
+type VideoConverterLoadBalancer_DownloadServer interface {
 	Send(*Chunk) error
 	grpc.ServerStream
 }
 
-type videoConverterDownloadServer struct {
+type videoConverterLoadBalancerDownloadServer struct {
 	grpc.ServerStream
 }
 
-func (x *videoConverterDownloadServer) Send(m *Chunk) error {
+func (x *videoConverterLoadBalancerDownloadServer) Send(m *Chunk) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _VideoConverter_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _VideoConverterLoadBalancer_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VideoConverterServer).Delete(ctx, in)
+		return srv.(VideoConverterLoadBalancerServer).Delete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/videoconverter.VideoConverter/Delete",
+		FullMethod: "/videoconverter.VideoConverterLoadBalancer/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VideoConverterServer).Delete(ctx, req.(*DeleteRequest))
+		return srv.(VideoConverterLoadBalancerServer).Delete(ctx, req.(*DeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _VideoConverter_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "videoconverter.VideoConverter",
-	HandlerType: (*VideoConverterServer)(nil),
+var _VideoConverterLoadBalancer_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "videoconverter.VideoConverterLoadBalancer",
+	HandlerType: (*VideoConverterLoadBalancerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "RequestUploadToken",
-			Handler:    _VideoConverter_RequestUploadToken_Handler,
+			Handler:    _VideoConverterLoadBalancer_RequestUploadToken_Handler,
 		},
 		{
 			MethodName: "StartConversion",
-			Handler:    _VideoConverter_StartConversion_Handler,
+			Handler:    _VideoConverterLoadBalancer_StartConversion_Handler,
 		},
 		{
 			MethodName: "ConversionStatus",
-			Handler:    _VideoConverter_ConversionStatus_Handler,
+			Handler:    _VideoConverterLoadBalancer_ConversionStatus_Handler,
 		},
 		{
 			MethodName: "Delete",
-			Handler:    _VideoConverter_Delete_Handler,
+			Handler:    _VideoConverterLoadBalancer_Delete_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Upload",
-			Handler:       _VideoConverter_Upload_Handler,
+			Handler:       _VideoConverterLoadBalancer_Upload_Handler,
 			ClientStreams: true,
 		},
 		{
 			StreamName:    "Download",
-			Handler:       _VideoConverter_Download_Handler,
+			Handler:       _VideoConverterLoadBalancer_Download_Handler,
 			ServerStreams: true,
 		},
 	},
+	Metadata: "videoconverter.proto",
+}
+
+// VideoConverterServiceClient is the client API for VideoConverterService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type VideoConverterServiceClient interface {
+	StartConversion(ctx context.Context, in *ConversionRequest, opts ...grpc.CallOption) (*ConversionResponse, error)
+	ConversionStatus(ctx context.Context, in *ConversionStatusRequest, opts ...grpc.CallOption) (*ConversionStatusResponse, error)
+}
+
+type videoConverterServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewVideoConverterServiceClient(cc grpc.ClientConnInterface) VideoConverterServiceClient {
+	return &videoConverterServiceClient{cc}
+}
+
+func (c *videoConverterServiceClient) StartConversion(ctx context.Context, in *ConversionRequest, opts ...grpc.CallOption) (*ConversionResponse, error) {
+	out := new(ConversionResponse)
+	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverterService/StartConversion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *videoConverterServiceClient) ConversionStatus(ctx context.Context, in *ConversionStatusRequest, opts ...grpc.CallOption) (*ConversionStatusResponse, error) {
+	out := new(ConversionStatusResponse)
+	err := c.cc.Invoke(ctx, "/videoconverter.VideoConverterService/ConversionStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// VideoConverterServiceServer is the server API for VideoConverterService service.
+type VideoConverterServiceServer interface {
+	StartConversion(context.Context, *ConversionRequest) (*ConversionResponse, error)
+	ConversionStatus(context.Context, *ConversionStatusRequest) (*ConversionStatusResponse, error)
+}
+
+// UnimplementedVideoConverterServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedVideoConverterServiceServer struct {
+}
+
+func (*UnimplementedVideoConverterServiceServer) StartConversion(context.Context, *ConversionRequest) (*ConversionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartConversion not implemented")
+}
+func (*UnimplementedVideoConverterServiceServer) ConversionStatus(context.Context, *ConversionStatusRequest) (*ConversionStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConversionStatus not implemented")
+}
+
+func RegisterVideoConverterServiceServer(s *grpc.Server, srv VideoConverterServiceServer) {
+	s.RegisterService(&_VideoConverterService_serviceDesc, srv)
+}
+
+func _VideoConverterService_StartConversion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConversionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoConverterServiceServer).StartConversion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/videoconverter.VideoConverterService/StartConversion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoConverterServiceServer).StartConversion(ctx, req.(*ConversionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VideoConverterService_ConversionStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConversionStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoConverterServiceServer).ConversionStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/videoconverter.VideoConverterService/ConversionStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoConverterServiceServer).ConversionStatus(ctx, req.(*ConversionStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _VideoConverterService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "videoconverter.VideoConverterService",
+	HandlerType: (*VideoConverterServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "StartConversion",
+			Handler:    _VideoConverterService_StartConversion_Handler,
+		},
+		{
+			MethodName: "ConversionStatus",
+			Handler:    _VideoConverterService_ConversionStatus_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "videoconverter.proto",
 }
