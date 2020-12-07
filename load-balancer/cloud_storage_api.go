@@ -108,6 +108,37 @@ func (cli *StorageClient) uploadFile(bkt *storage.BucketHandle, fileName string)
 	println("file uploaded!")
 }
 
+func (cli *StorageClient) DownloadUnconvertedPart(token string) {
+	bkt := cli.getUnconvertedBuketHandle()
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*50)
+	defer cancel()
+
+	rc, err := bkt.Object(token).NewReader(ctx)
+	if err != nil {
+		log.Fatalf("DownloadUnconvertedPart: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, token, err)
+		return
+	}
+	defer rc.Close()
+
+	data, err := ioutil.ReadAll(rc)
+	if err != nil {
+		log.Fatalf("DownloadUnconvertedPart: ioutil.ReadAll: %v", err)
+		return
+	}
+
+	f, err := os.Create(constants.LocalStorage + token)
+	if err != nil {
+		log.Fatalf("DownloadUnconvertedPart, create file: %v", err)
+	}
+	_, err = f.Write(data)
+	if err != nil {
+		log.Fatalf("DownloadUnconvertedPart, write to file: %v", err)
+	}
+
+	f.Close()
+}
+
 func (cli *StorageClient) DownloadSpecificParts(token string) {
 	println("using token: " + token)
 	bkt := cli.getConvertedBucketHandle()
