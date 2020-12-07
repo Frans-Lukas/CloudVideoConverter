@@ -7,4 +7,5 @@ type Token struct {
 	ConversionStarted *bool
 	ConversionDone *bool
 	ConversionFailed *bool
+	ConvertTo *string
 }
