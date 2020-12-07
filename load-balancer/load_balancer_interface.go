@@ -161,11 +161,11 @@ func (serv *VideoConverterServer) SendWorkToClients() {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		response, err := client.client.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{})
+		response, err := client.client.AvailableForWork(ctx, &videoconverter.AvailableForWorkRequest{})
 		if err != nil {
 			println(" conv check err: ", err.Error())
 		}
-		if response.Code == videoconverter.ConversionStatusCode_Done {
+		if response.AvailableForWork {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 			defer cancel()
 			nextJob := (*serv.ConversionQueue)[0]
