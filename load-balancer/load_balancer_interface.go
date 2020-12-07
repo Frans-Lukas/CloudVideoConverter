@@ -28,8 +28,9 @@ const sizeLimit = megaByte * 1
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
 	ActiveTokens    *map[string]items.Token
-	ConversionQueue *[]items.Token
+	ConversionQueue *[]string
 	ActiveServices  *map[string]VideoConverterClient
+	databaseClient  *ConversionObjectsClient
 }
 
 type VideoConverterClient struct {
@@ -39,12 +40,14 @@ type VideoConverterClient struct {
 
 func CreateNewServer() VideoConverterServer {
 	activeTokens := make(map[string]items.Token, 0)
-	conversionQueue := make([]items.Token, 0)
+	conversionQueue := make([]string, 0)
 	activeServices := make(map[string]VideoConverterClient, 0)
+	dataBaseClient := NewConversionObjectsClient()
 	val := VideoConverterServer{
 		ActiveTokens:    &activeTokens,
 		ConversionQueue: &conversionQueue,
 		ActiveServices:  &activeServices,
+		databaseClient:  &dataBaseClient,
 	}
 	return val
 }
@@ -144,8 +147,50 @@ func saveImage(fileName string, imageBytes *bytes.Buffer) error {
 	return nil
 }
 
-func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
+func (serv *VideoConverterServer) SendWorkLoop() {
+	for {
+		time.Sleep(time.Millisecond * 100)
+		serv.SendWorkToClients()
+	}
+}
 
+func (serv *VideoConverterServer) SendWorkToClients() {
+	for _, client := range *serv.ActiveServices {
+		if len(*serv.ConversionQueue) == 0 {
+			return
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+		response, err := client.client.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{})
+		if err != nil {
+			println(" conv check err: ", err.Error())
+		}
+		if response.Code == videoconverter.ConversionStatusCode_Done {
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+			defer cancel()
+			nextJob := (*serv.ConversionQueue)[0]
+			*serv.ConversionQueue = (*serv.ConversionQueue)[1:]
+			client.client.StartConversion(ctx, &videoconverter.ConversionRequest{Token: nextJob})
+		}
+	}
+}
+
+func (serv *VideoConverterServer) LoadQueueFromDB() {
+	filesToConvert := serv.databaseClient.GetPartsInProgress()
+	for _, v := range filesToConvert {
+		*serv.ConversionQueue = append(*serv.ConversionQueue, v)
+	}
+}
+
+func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
+	err, filesToConvert := serv.databaseClient.StartConversionForParts(in.Token, in.OutputType)
+	if err != nil {
+		return &videoconverter.ConversionResponse{}, err
+	}
+	for _, v := range *filesToConvert {
+		*serv.ConversionQueue = append(*serv.ConversionQueue, v)
+	}
+	return &videoconverter.ConversionResponse{}, nil
 }
 
 func (serv *VideoConverterServer) conversionIsInProgressForToken(token string) bool {

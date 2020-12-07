@@ -53,31 +53,42 @@ func (store *ConversionObjectsClient) AddParts(files []string, count int, conver
 	}
 }
 
-func (store *ConversionObjectsClient) StartConversionForParts(token string) {
+func (store *ConversionObjectsClient) StartConversionForParts(token string, outputType string) (error, *[]string) {
 	ctx := context.Background()
 	q := datastore.NewQuery(KIND).Filter("Token =", token)
 	var objects []ConversionObject
 	keys, err := store.GetAll(ctx, q, &objects)
 	if err != nil {
 		log.Println("could not update conversion status for token ", token, " because: ", err.Error())
+		return err, nil
 	}
+	fileNames := make([]string, 0)
 	for i, v := range objects {
 		v.InProgress = true
+		v.ConversionType = outputType
 		v.ConversionStartTime = time.Now()
+		fileNames = append(fileNames, keys[i].Name)
 		_, err := store.Put(ctx, keys[i], &v)
 		if err != nil {
 			log.Println("failed to add ", keys[i], " to datastore")
+			return err, nil
 		}
 	}
+
+	return nil, &fileNames
 }
 
-func (store *ConversionObjectsClient) GetPartsInProgress(token string) []ConversionObject {
+func (store *ConversionObjectsClient) GetPartsInProgress() []string {
 	ctx := context.Background()
 	q := datastore.NewQuery(KIND).Filter("InProgress =", true)
 	var objects []ConversionObject
-	_, err := store.GetAll(ctx, q, &objects)
+	keys, err := store.GetAll(ctx, q, &objects)
 	if err != nil {
-		log.Println("could not update conversion status for token ", token, " because: ", err.Error())
+		log.Println("Could not get parts in progress")
 	}
-	return objects
+	fileNames := make([]string, 0)
+	for _, v := range keys {
+		fileNames = append(fileNames, v.Name)
+	}
+	return fileNames
 }
