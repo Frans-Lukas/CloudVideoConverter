@@ -59,8 +59,8 @@ func main() {
 
 	token := upload("video.mp4")
 	requestConversion(token, outputExtension)
-	loopUntilConverted(token)
-	download(token, outputExtension)
+	//loopUntilConverted(token)
+	//download(token, outputExtension)
 
 	/*for {
 		helloWorld()

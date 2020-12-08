@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	api_gateway "github.com/Frans-Lukas/cloudvideoconverter/api-gateway"
+	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway"
 	api_gateway2 "github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"google.golang.org/grpc"
 	"log"
@@ -19,7 +19,7 @@ func main() {
 	}
 	port := os.Args[1]
 	port = ":" + port
-	println("running on port: " + port)
+	println("running on port" + port)
 	rand.Seed(time.Now().UnixNano())
 	lis, err := net.Listen("tcp", port)
 	if err != nil {

@@ -28,13 +28,12 @@ func NewConversionObjectsClient() ConversionObjectsClient {
 	ctx := context.Background()
 	dsClient, err := datastore.NewClient(ctx, constants.ProjectID)
 	if err != nil {
-		log.Fatalf("datastore client was not accessible")
+		log.Fatalf("datastore client was not accessible, ", err.Error())
 	}
 	return ConversionObjectsClient{Client: *dsClient}
 }
 
 func (store *ConversionObjectsClient) AddParts(files []string, count int, conversionType string, token string) {
-	ctx := context.Background()
 	for _, v := range files {
 		objectToAdd := ConversionObject{
 			ConversionStartTime: time.Now(),

@@ -36,7 +36,7 @@ func (cli *StorageClient) getConvertedBucketHandle() *storage.BucketHandle {
 	return bkt
 }
 
-func (cli *StorageClient) getUnconvertedBuketHandle() *storage.BucketHandle {
+func (cli *StorageClient) getUnconvertedBucketHandle() *storage.BucketHandle {
 	bkt := cli.Bucket(constants.UnconvertedVideosBucketName)
 	return bkt
 }
@@ -47,7 +47,7 @@ func (cli *StorageClient) getConvertedVideos() []string {
 }
 
 func (cli *StorageClient) getUnconvertedVideos() []string {
-	bkt := cli.getUnconvertedBuketHandle()
+	bkt := cli.getUnconvertedBucketHandle()
 	return cli.getVideos(bkt)
 }
 
@@ -77,12 +77,17 @@ func (cli *StorageClient) UploadConvertedPart(fileName string) {
 }
 
 func (cli *StorageClient) UploadUnconvertedPart(fileName string) {
-	bkt := cli.getUnconvertedBuketHandle()
+	bkt := cli.getUnconvertedBucketHandle()
 	cli.uploadFile(bkt, fileName)
 }
 
 func (cli *StorageClient) uploadFile(bkt *storage.BucketHandle, fileName string) {
+	//if fileExists(bkt, fileName) {
+	//	log.Println("file ", fileName, " already exists in cloud storage, not uploading.")
+	//}
+
 	//open local file
+	println(constants.LocalStorage + fileName)
 	f, err := os.Open(constants.LocalStorage + fileName)
 	i, _ := f.Stat()
 	println("size of file: " + strconv.Itoa(int(i.Size())))
@@ -96,8 +101,10 @@ func (cli *StorageClient) uploadFile(bkt *storage.BucketHandle, fileName string)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
+	println("loading object: ")
 	obj := bkt.Object(fileName)
 
+	println("new writer: ")
 	w := obj.NewWriter(ctx)
 	if _, err = io.Copy(w, f); err != nil {
 		log.Fatalf("io.Copy: %v", err)
@@ -107,16 +114,35 @@ func (cli *StorageClient) uploadFile(bkt *storage.BucketHandle, fileName string)
 	}
 	println("file uploaded!")
 }
+func fileExists(bkt *storage.BucketHandle, fileName string) bool {
+	query := &storage.Query{Prefix: fileName}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	println("checking if file exists")
+	it := bkt.Objects(ctx, query)
+	for {
+		_, err := it.Next()
+		if err == iterator.Done {
+			println("file does not exist")
+			return false
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+		println("file exists")
+		return true
+	}
+}
 
 func (cli *StorageClient) DownloadUnconvertedPart(token string) {
-	bkt := cli.getUnconvertedBuketHandle()
+	bkt := cli.getUnconvertedBucketHandle()
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*50)
 	defer cancel()
 
 	rc, err := bkt.Object(token).NewReader(ctx)
 	if err != nil {
-		log.Fatalf("DownloadUnconvertedPart: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, token, err)
+		log.Fatalf("DownloadUnconvertedPart: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, token, err.Error())
 		return
 	}
 	defer rc.Close()
@@ -222,4 +248,32 @@ func ImplicitAuth(projectID string) {
 	}
 
 	_ = kmsService
+}
+
+func (cli *StorageClient) listBuckets() ([]string, error) {
+	// projectID := "my-project-id"
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("storage.NewClient: %v", err)
+	}
+	defer client.Close()
+
+	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
+	defer cancel()
+
+	var buckets []string
+	it := client.Buckets(ctx, constants.ProjectID)
+	for {
+		battrs, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		buckets = append(buckets, battrs.Name)
+		fmt.Println("Bucket: ", battrs.Name)
+	}
+	return buckets, nil
 }

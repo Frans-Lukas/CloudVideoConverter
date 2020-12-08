@@ -60,14 +60,17 @@ func main() {
 
 	//1. Load active services
 	videoServer.UpdateActiveServices(apiGatewayAddress)
+
 	//2. Load work from database
+	println("loading queue from DB")
 	videoServer.LoadQueueFromDB()
 	//3. Send work to services loop
+	println("starting worker loop")
 	go func() {
 		videoServer.SendWorkLoop()
 	}()
 
-
+	println("starting server")
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

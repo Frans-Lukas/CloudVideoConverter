@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-func splitVideo(token string) {
+func splitVideo(token string) error {
 	filePath := constants.LocalStorage + token + ".mp4"
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		log.Fatalf(errors.New("video to split does not exist").Error())
@@ -28,7 +28,8 @@ func splitVideo(token string) {
 
 	//startTime := 0
 	//endTime := slizeSize
-	performSmartSplit(slizeSize, filePath, numberOfSplits, token)
+	return performSmartSplit(slizeSize, filePath, numberOfSplits, token)
+
 	//for i := 1; i <= numberOfSplits; i++ {
 	//	// must be string because of potential double inprecision
 	//	println("start: ", startTime)

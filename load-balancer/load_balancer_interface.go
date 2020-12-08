@@ -53,6 +53,7 @@ func CreateNewServer() VideoConverterServer {
 }
 
 func (serv *VideoConverterServer) UpdateActiveServices(address string) {
+	println("Trying to update active services with address: ", address)
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -62,14 +63,17 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 	apiGateway := api_gateway.NewAPIGateWayClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
+	println("requesting service endpoints:")
 	endPoints, err := apiGateway.GetActiveServiceEndpoints(ctx, &api_gateway.ServiceEndPointsRequest{})
 	*serv.ActiveServices = make(map[string]VideoConverterClient)
 	for _, v := range endPoints.EndPoint {
-		address := strconv.Itoa(int(v.Port)) + ":" + v.Ip
+		address := v.Ip + ":" + strconv.Itoa(int(v.Port))
+		println("got service endpoint: ", address)
 		if _, ok := (*serv.ActiveServices)[address]; !ok {
 			(*serv.ActiveServices)[address] = makeServiceConnection(address)
 		}
 	}
+	println("done updating service endpoints")
 }
 
 func (serv *VideoConverterServer) PollActiveServices(address string) {
@@ -110,7 +114,9 @@ func notifyAPIGatewayOfDeadClient(address string) {
 }
 
 func makeServiceConnection(address string) VideoConverterClient {
+	println("connecting to service endpoint: ", address)
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	println("connected to service endpoint!")
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -155,17 +161,19 @@ func (serv *VideoConverterServer) SendWorkLoop() {
 }
 
 func (serv *VideoConverterServer) SendWorkToClients() {
-	for _, client := range *serv.ActiveServices {
+	for addr, client := range *serv.ActiveServices {
 		if len(*serv.ConversionQueue) == 0 {
 			return
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
+		println("Checking if ", addr, " can work")
 		response, err := client.client.AvailableForWork(ctx, &videoconverter.AvailableForWorkRequest{})
 		if err != nil {
 			println(" conv check err: ", err.Error())
 		}
 		if response.AvailableForWork {
+			println("sending work to ", addr)
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 			defer cancel()
 			nextJob := (*serv.ConversionQueue)[0]
@@ -260,12 +268,38 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoa
 		return err
 	}
 
-	splitVideo(tokenString)
-	mergeVideo(tokenString)
+	err = splitVideo(tokenString)
+	if err != nil {
+		return err
+	}
+	deleteFullVideo(tokenString)
+	sendVideosToCloudStorage(tokenString)
+
+	//mergeVideo(tokenString)
 
 	// ...
 
 	return nil
+}
+func deleteFullVideo(token string) {
+
+}
+func sendVideosToCloudStorage(token string) {
+	println("uploading files to cloud storage, token: ", token)
+	fileNames, err := getVideoParts(token)
+	if err != nil {
+		log.Println("failed to get video parts, " + err.Error())
+	}
+	uploadFiles(fileNames)
+	println("files uploaded to cloud storage")
+
+}
+func uploadFiles(fileNames []string) {
+	storageClient := CreateStorageClient()
+	storageClient.listBuckets()
+	for _, fileName := range fileNames {
+		storageClient.UploadUnconvertedPart(fileName)
+	}
 }
 
 func (server *VideoConverterServer) tokenIsInvalid(token string) bool {
