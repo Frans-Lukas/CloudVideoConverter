@@ -39,12 +39,14 @@ const (
 
 func main() {
 
-	if len(os.Args) != 2 {
-		println(errors.New("invalid command line arguments, use ./worker {port}").Error())
+	if len(os.Args) != 3 {
+		println(errors.New("invalid command line arguments, use ./loadBalancer {port} {api-gateway ip:port}").Error())
 		return
 	}
 	port := os.Args[1]
 	port = ":" + port
+	apiGatewayAddress := os.Args[2]
+
 	println("running on port: " + port)
 	rand.Seed(time.Now().UnixNano())
 	lis, err := net.Listen("tcp", port)
@@ -55,9 +57,17 @@ func main() {
 
 	videoServer := video_converter.CreateNewServer()
 	videoconverter.RegisterVideoConverterLoadBalancerServer(s, &videoServer)
+
+	//1. Load active services
+	videoServer.UpdateActiveServices(apiGatewayAddress)
+	//2. Load work from database
+	videoServer.LoadQueueFromDB()
+	//3. Send work to services loop
 	go func() {
-		videoServer.DeleteTimedOutVideosLoop()
+		videoServer.SendWorkLoop()
 	}()
+
+
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
