@@ -90,10 +90,12 @@ func loopUntilConverted(token string) {
 func requestConversion(token string, outputType string) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
+	println("starting conversion for ", token)
 	_, err := c.StartConversion(ctx, &videoconverter.ConversionRequest{Token: token, InputType: "mp4", OutputType: outputType})
 	if err != nil {
 		println(err.Error())
 	}
+	println("conversion started")
 }
 
 func upload(fileName string) string {

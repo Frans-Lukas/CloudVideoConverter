@@ -192,6 +192,7 @@ func (serv *VideoConverterServer) LoadQueueFromDB() {
 
 func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
 	err, filesToConvert := serv.databaseClient.StartConversionForParts(in.Token, in.OutputType)
+	println("starting conversion for ", in.Token)
 	if err != nil {
 		return &videoconverter.ConversionResponse{}, err
 	}
@@ -274,6 +275,7 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoa
 	}
 	deleteFullVideo(tokenString)
 	sendVideosToCloudStorage(tokenString)
+	serv.sendVideoInformationToDatabase(tokenString)
 
 	//mergeVideo(tokenString)
 
@@ -281,6 +283,14 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoa
 
 	return nil
 }
+func (serv *VideoConverterServer) sendVideoInformationToDatabase(token string) {
+	fileNames, err := getVideoParts(token)
+	if err != nil {
+		log.Println("failed to get video parts, " + err.Error())
+	}
+	serv.databaseClient.AddParts(fileNames, len(fileNames), "mkv", token)
+}
+
 func deleteFullVideo(token string) {
 
 }
@@ -297,6 +307,8 @@ func sendVideosToCloudStorage(token string) {
 func uploadFiles(fileNames []string) {
 	storageClient := CreateStorageClient()
 	storageClient.listBuckets()
+	println("fsgsfdgsddgs")
+	println(constants.UnconvertedVideosBucketName)
 	for _, fileName := range fileNames {
 		storageClient.UploadUnconvertedPart(fileName)
 	}

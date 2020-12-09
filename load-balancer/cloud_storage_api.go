@@ -82,9 +82,9 @@ func (cli *StorageClient) UploadUnconvertedPart(fileName string) {
 }
 
 func (cli *StorageClient) uploadFile(bkt *storage.BucketHandle, fileName string) {
-	//if fileExists(bkt, fileName) {
-	//	log.Println("file ", fileName, " already exists in cloud storage, not uploading.")
-	//}
+	if fileExists(bkt, fileName) {
+		log.Println("file ", fileName, " already exists in cloud storage, not uploading.")
+	}
 
 	//open local file
 	println(constants.LocalStorage + fileName)
