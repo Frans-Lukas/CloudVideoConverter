@@ -54,11 +54,7 @@ func mergeVideo(token string) error {
 	}
 
 	println("checking if parts are correctr")
-	//if correctVideoParts(videoParts) {
-	//	println("parts are correct, merging")
-	//	performMerge(videoParts, token)
-	//	return nil
-	//}
+
 	if len(videoParts) > 0 {
 		println("merging")
 		performMerge(videoParts, token)
@@ -72,13 +68,17 @@ func performMerge(videoParts []string, token string) {
 
 	format := extractFormat(videoParts[0])
 
-	destinationFile := constants.LocalStorage + token + "AAAAB." + format
+	destinationFile := constants.LocalStorage + token + "." + format
 	command := "ffmpeg -f concat -safe 0 -i " + filePath + " -c copy " + destinationFile
 	println(command)
 	cmd := exec.Command("ffmpeg", "-f", "concat", "-safe", "0", "-i", filePath, "-c", "copy", destinationFile)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("could not pergormMerge: " + err.Error())
+	}
+	err = os.Rename(destinationFile, constants.LocalStorage+token+constants.FinishedConversionExtension)
+	if err != nil {
+		log.Fatalf("could not rename in performMerge: " + err.Error())
 	}
 }
 
@@ -134,6 +134,22 @@ func getVideoParts(token string) ([]string, error) {
 func isAPart(token string, potentialPart string) bool {
 	matched, _ := regexp.MatchString(token+"-[0-9]+", potentialPart)
 	return matched
+}
+
+func convertedFileExists(token string) bool {
+	files := getFiles()
+	for _, v := range files {
+		if isConvertedFile(v, token) {
+			return true
+		}
+	}
+	return false
+
+}
+func isConvertedFile(file string, token string) bool {
+	fileName := strings.Split(file, ".")[0]
+	fileExtension := strings.Split(file, ".")[1]
+	return fileName == token && fileExtension == "converted"
 }
 
 func getFiles() []string {

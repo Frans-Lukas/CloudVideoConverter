@@ -14,7 +14,6 @@ import (
 	"log"
 	"math/rand"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -28,9 +27,15 @@ const sizeLimit = megaByte * 1
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
 	ActiveTokens    *map[string]items.Token
-	ConversionQueue *[]string
+	ConversionQueue *[]ConversionObjectInfo
 	ActiveServices  *map[string]VideoConverterClient
 	databaseClient  *ConversionObjectsClient
+	storageClient   *StorageClient
+}
+
+type ConversionObjectInfo struct {
+	name       string
+	outputType string
 }
 
 type VideoConverterClient struct {
@@ -40,14 +45,16 @@ type VideoConverterClient struct {
 
 func CreateNewServer() VideoConverterServer {
 	activeTokens := make(map[string]items.Token, 0)
-	conversionQueue := make([]string, 0)
+	conversionQueue := make([]ConversionObjectInfo, 0)
 	activeServices := make(map[string]VideoConverterClient, 0)
 	dataBaseClient := NewConversionObjectsClient()
+	storageClient := CreateStorageClient()
 	val := VideoConverterServer{
 		ActiveTokens:    &activeTokens,
 		ConversionQueue: &conversionQueue,
 		ActiveServices:  &activeServices,
 		databaseClient:  &dataBaseClient,
+		storageClient:   &storageClient,
 	}
 	return val
 }
@@ -153,10 +160,22 @@ func saveImage(fileName string, imageBytes *bytes.Buffer) error {
 	return nil
 }
 
-func (serv *VideoConverterServer) SendWorkLoop() {
+func (serv *VideoConverterServer) WorkManagementLoop() {
 	for {
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(constants.WorkManagementLoopSleepTime)
 		serv.SendWorkToClients()
+		tokens := serv.databaseClient.CheckForMergeableFiles()
+		if len(tokens) > 0 {
+			for _, token := range tokens {
+				if convertedFileExists(token) {
+					println(token, " is already merged, skipping.")
+					continue
+				}
+				serv.downloadAndMergeFiles(token)
+				println("conversion for ", token, " is done and merged!")
+				*(*serv.ActiveTokens)[token].ConversionDone = true
+			}
+		}
 	}
 }
 
@@ -178,7 +197,7 @@ func (serv *VideoConverterServer) SendWorkToClients() {
 			defer cancel()
 			nextJob := (*serv.ConversionQueue)[0]
 			*serv.ConversionQueue = (*serv.ConversionQueue)[1:]
-			client.client.StartConversion(ctx, &videoconverter.ConversionRequest{Token: nextJob})
+			client.client.StartConversion(ctx, &videoconverter.ConversionRequest{Token: nextJob.name, OutputType: nextJob.outputType})
 		}
 	}
 }
@@ -207,24 +226,24 @@ func (serv *VideoConverterServer) conversionIsInProgressForToken(token string) b
 	return *(*serv.ActiveTokens)[token].ConversionStarted && !*(*serv.ActiveTokens)[token].ConversionDone && !*(*serv.ActiveTokens)[token].ConversionFailed
 }
 
-func (serv *VideoConverterServer) performConversion(app string, arg0 string, arg1 string, arg2 string, in *videoconverter.ConversionRequest) {
-	cmd := exec.Command(app, arg0, arg1, arg2)
-	*(*serv.ActiveTokens)[in.Token].ConversionStarted = true
-	err := cmd.Run()
-	if err != nil {
-		*(*serv.ActiveTokens)[in.Token].ConversionFailed = true
-		return
-	} else {
-		*(*serv.ActiveTokens)[in.Token].ConversionDone = true
-	}
-	file, err := os.Open(arg2)
-	defer file.Close()
-	if err != nil {
-		println(err.Error())
-		return
-	}
-	os.Rename(arg2, constants.LocalStorage+in.Token)
-}
+//func (serv *VideoConverterServer) performConversion(app string, arg0 string, arg1 string, arg2 string, in *videoconverter.ConversionRequest) {
+//	cmd := exec.Command(app, arg0, arg1, arg2)
+//	*(*serv.ActiveTokens)[in.Token].ConversionStarted = true
+//	err := cmd.Run()
+//	if err != nil {
+//		*(*serv.ActiveTokens)[in.Token].ConversionFailed = true
+//		return
+//	} else {
+//		*(*serv.ActiveTokens)[in.Token].ConversionDone = true
+//	}
+//	file, err := os.Open(arg2)
+//	defer file.Close()
+//	if err != nil {
+//		println(err.Error())
+//		return
+//	}
+//	os.Rename(arg2, constants.LocalStorage+in.Token)
+//}
 
 func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoadBalancer_UploadServer) error {
 
@@ -324,22 +343,19 @@ func (server *VideoConverterServer) tokenIsInvalid(token string) bool {
 }
 
 func (serv *VideoConverterServer) Download(request *videoconverter.DownloadRequest, stream videoconverter.VideoConverterLoadBalancer_DownloadServer) error {
-	if serv.tokenIsInvalid(request.Id) {
+
+	token := request.Id
+	if serv.tokenIsInvalid(token) {
 		return errors.New("token is invalid or has timed out: " + request.Id)
 	}
-	//TODO set chunksize in a global way
-	chunksize := 1000
-
-	//TODO check if id is valid
-	id := request.Id
 
 	//TODO load corresponding file from directory
-	file, err := os.Open(constants.LocalStorage + id)
+	file, err := os.Open(constants.LocalStorage + token + constants.FinishedConversionExtension)
 	if err != nil {
 		log.Fatalf("Download, Open failed: %v", err)
 	}
 
-	buf := make([]byte, chunksize)
+	buf := make([]byte, constants.DownloadChunkSizeInBytes)
 
 	for {
 		n, err := file.Read(buf)
@@ -354,6 +370,10 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 			RequestType: &videoconverter.Chunk_Content{Content: buf[:n]},
 		})
 	}
+
+
+	serv.storageClient.DeleteConvertedParts(token)
+	serv.databaseClient.DeleteConvertedParts(token)
 
 	return nil
 }
@@ -436,4 +456,9 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 		}
 		time.Sleep(time.Second * 5)
 	}
+}
+
+func (serv *VideoConverterServer) downloadAndMergeFiles(token string) {
+	serv.storageClient.DownloadConvertedParts(token)
+	mergeVideo(token)
 }

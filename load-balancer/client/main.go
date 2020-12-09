@@ -33,7 +33,7 @@ import (
 	"time"
 )
 
-var c videoconverter.VideoConverterLoadBalancerClient
+var loadBalancerConnection videoconverter.VideoConverterLoadBalancerClient
 
 func main() {
 	// Set up a connection to the server.
@@ -53,14 +53,14 @@ func main() {
 	}
 	defer conn.Close()
 	println("connected")
-	c = videoconverter.NewVideoConverterLoadBalancerClient(conn)
+	loadBalancerConnection = videoconverter.NewVideoConverterLoadBalancerClient(conn)
 
 	outputExtension := "mkv"
 
 	token := upload("video.mp4")
 	requestConversion(token, outputExtension)
-	//loopUntilConverted(token)
-	//download(token, outputExtension)
+	loopUntilConverted(token)
+	download(token, outputExtension)
 
 	/*for {
 		helloWorld()
@@ -71,15 +71,15 @@ func loopUntilConverted(token string) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	status, err := c.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
+	status, err := loadBalancerConnection.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
 	if err != nil {
 		println(" conv check err: ", err.Error())
 	}
 	print("in progres..")
-	for status.Code == videoconverter.ConversionStatusCode_InProgress {
+	for status.Code != videoconverter.ConversionStatusCode_Done {
 		print(".")
 		ctx, cancel = context.WithTimeout(context.Background(), time.Minute)
-		status, err = c.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
+		status, err = loadBalancerConnection.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
 		if err != nil {
 			println("conv check err: ", err.Error())
 		}
@@ -91,7 +91,7 @@ func requestConversion(token string, outputType string) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	println("starting conversion for ", token)
-	_, err := c.StartConversion(ctx, &videoconverter.ConversionRequest{Token: token, InputType: "mp4", OutputType: outputType})
+	_, err := loadBalancerConnection.StartConversion(ctx, &videoconverter.ConversionRequest{Token: token, InputType: "mp4", OutputType: outputType})
 	if err != nil {
 		println(err.Error())
 	}
@@ -102,7 +102,7 @@ func upload(fileName string) string {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-	stream, err := c.Upload(ctx)
+	stream, err := loadBalancerConnection.Upload(ctx)
 
 	if err != nil {
 		log.Fatal("cannot upload image: ", err)
@@ -110,7 +110,7 @@ func upload(fileName string) string {
 
 	ctx2, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	token, err := c.RequestUploadToken(ctx2, &videoconverter.UploadTokenRequest{})
+	token, err := loadBalancerConnection.RequestUploadToken(ctx2, &videoconverter.UploadTokenRequest{})
 	if err != nil {
 		println(err)
 		return ""
@@ -169,7 +169,7 @@ func download(token string, extension string) {
 	defer cancel()
 
 	request := videoconverter.DownloadRequest{Id: token}
-	stream, err := c.Download(ctx, &request)
+	stream, err := loadBalancerConnection.Download(ctx, &request)
 
 	buf := bytes.Buffer{}
 

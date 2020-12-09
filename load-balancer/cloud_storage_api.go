@@ -12,6 +12,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -81,6 +82,16 @@ func (cli *StorageClient) UploadUnconvertedPart(fileName string) {
 	cli.uploadFile(bkt, fileName)
 }
 
+func (cli *StorageClient) DeleteConvertedPart(fileName string) {
+	bkt := cli.getConvertedBucketHandle()
+	cli.deleteFile(bkt, fileName)
+}
+
+func (cli *StorageClient) DeleteUnconvertedPart(fileName string) {
+	bkt := cli.getUnconvertedBucketHandle()
+	cli.deleteFile(bkt, fileName)
+}
+
 func (cli *StorageClient) uploadFile(bkt *storage.BucketHandle, fileName string) {
 	if fileExists(bkt, fileName) {
 		log.Println("file ", fileName, " already exists in cloud storage, not uploading.")
@@ -114,6 +125,21 @@ func (cli *StorageClient) uploadFile(bkt *storage.BucketHandle, fileName string)
 	}
 	println("file uploaded!")
 }
+
+func (cli *StorageClient) deleteFile(bkt *storage.BucketHandle, fileName string) error {
+	ctx := context.Background()
+
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+
+	o := bkt.Object(fileName)
+	if err := o.Delete(ctx); err != nil {
+		return fmt.Errorf("Object(%q).Delete: %v", fileName, err)
+	}
+	fmt.Println("blob deleted", fileName)
+	return nil
+}
+
 func fileExists(bkt *storage.BucketHandle, fileName string) bool {
 	query := &storage.Query{Prefix: fileName}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
@@ -142,7 +168,7 @@ func (cli *StorageClient) DownloadUnconvertedPart(token string) {
 
 	rc, err := bkt.Object(token).NewReader(ctx)
 	if err != nil {
-		log.Fatalf("DownloadUnconvertedPart: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, token, err.Error())
+		log.Fatalf("DownloadUnconvertedPart: unable to open file from bucket %q, file %q: %v", constants.UnconvertedVideosBucketName, token, err.Error())
 		return
 	}
 	defer rc.Close()
@@ -165,7 +191,7 @@ func (cli *StorageClient) DownloadUnconvertedPart(token string) {
 	f.Close()
 }
 
-func (cli *StorageClient) DownloadSpecificParts(token string) {
+func (cli *StorageClient) DownloadConvertedParts(token string) {
 	println("using token: " + token)
 	bkt := cli.getConvertedBucketHandle()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
@@ -186,24 +212,24 @@ func (cli *StorageClient) DownloadSpecificParts(token string) {
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 		rc, err := bkt.Object(attrs.Name).NewReader(ctx)
 		if err != nil {
-			log.Fatalf("DownloadSpecificParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
+			log.Fatalf("DownloadConvertedParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
 			return
 		}
 		defer rc.Close()
 		slurp, err := ioutil.ReadAll(rc)
 		println("read " + strconv.Itoa(len(slurp)) + " bytes from downloaded file")
 		if err != nil {
-			log.Fatalf("DownloadSpecificParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
+			log.Fatalf("DownloadConvertedParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
 			return
 		}
 
 		f, err := os.Create(constants.LocalStorage + attrs.Name + ".converted")
 		if err != nil {
-			log.Fatalf("DownloadSpecificParts, create file: %v", err)
+			log.Fatalf("DownloadConvertedParts, create file: %v", err)
 		}
 		_, err = f.Write(slurp)
 		if err != nil {
-			log.Fatalf("DownloadSpecificParts, write to file: %v", err)
+			log.Fatalf("DownloadConvertedParts, write to file: %v", err)
 		}
 
 		f.Close()
@@ -276,4 +302,13 @@ func (cli *StorageClient) listBuckets() ([]string, error) {
 		fmt.Println("Bucket: ", battrs.Name)
 	}
 	return buckets, nil
+}
+
+func (cli *StorageClient) DeleteConvertedParts(token string) {
+	allFiles := cli.getConvertedVideos()
+	for _, file := range allFiles {
+		if strings.Split(file, "-")[0] == token {
+			cli.DeleteConvertedPart(file)
+		}
+	}
 }
