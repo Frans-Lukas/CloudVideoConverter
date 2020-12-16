@@ -55,7 +55,17 @@ resource "google_compute_instance" "vm_instance" {
     source = "startEverything.sh"
     destination = "/tmp/startEverything.sh"
   }
+
+  provisioner "file" {
+    source = "~/.ssh/cloud/id_rsa.pub"
+    destination = "~/.ssh/cloud/id_rsa.pub"
+  }
   
+  provisioner "file" {
+    source = "~/.ssh/cloud/id_rsa"
+    destination = "~/.ssh/cloud/id_rsa"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/*",
