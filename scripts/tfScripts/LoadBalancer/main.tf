@@ -57,13 +57,13 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "~/.ssh/cloud/id_rsa.pub"
-    destination = "~/.ssh/cloud/id_rsa.pub"
+    source = "~/id_rsa.pub"
+    destination = "~/id_rsa.pub"
   }
   
   provisioner "file" {
-    source = "~/.ssh/cloud/id_rsa"
-    destination = "~/.ssh/cloud/id_rsa"
+    source = "~/id_rsa"
+    destination = "~/id_rsa"
   }
 
   provisioner "remote-exec" {
