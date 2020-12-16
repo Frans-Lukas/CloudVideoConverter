@@ -50,6 +50,16 @@ resource "google_compute_instance" "vm_instance" {
     source = "/tmp/SSDNIA.sh"
     destination = "/tmp/SSDNIA.sh"
   }
+
+  provisioner "file" {
+    source = "~/.ssh/cloud/id_rsa.pub"
+    destination = "~/.ssh/cloud/id_rsa.pub"
+  }
+  
+  provisioner "file" {
+    source = "~/.ssh/cloud/id_rsa"
+    destination = "~/.ssh/cloud/id_rsa"
+  }
   
   provisioner "remote-exec" {
     inline = [
