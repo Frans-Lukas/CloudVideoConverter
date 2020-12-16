@@ -39,6 +39,12 @@ overs JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, And
 # *.iml
 # *.ipr
 
+*SSDNIA*
+*terraform*
+*ssh-key*
+
+
+
 # CMake
 cmake-build-*/
 
