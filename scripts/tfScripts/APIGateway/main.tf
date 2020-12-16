@@ -12,7 +12,7 @@ provider "google" {
 
 resource "google_compute_instance" "vm_instance" {
   count        = var.instance_count
-  name         = "virtual-machine-${count.index}"
+  name         = "api-gateway-${count.index}"
   machine_type = "f1-micro"
 
 
