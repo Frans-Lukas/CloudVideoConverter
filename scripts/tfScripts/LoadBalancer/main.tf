@@ -48,7 +48,7 @@ resource "google_compute_instance" "vm_instance" {
 
   provisioner "file" {
     source = "SSDNIA.json"
-    destination = "~/SSDNIA.json"
+    destination = "/tmp/SSDNIA.json"
   }
 
   provisioner "file" {

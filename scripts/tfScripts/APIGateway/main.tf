@@ -4,7 +4,7 @@ variable "instance_count" {
 }
 
 provider "google" {
-  credentials = file("SSDNIA.json")
+  credentials = file("/tmp/SSDNIA.json")
   project     = var.project
   region      = var.region
   zone        = var.zone
@@ -47,8 +47,8 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "~/SSDNIA.sh"
-    destination = "~/SSDNIA.sh"
+    source = "/tmp/SSDNIA.sh"
+    destination = "/tmp/SSDNIA.sh"
   }
   
   provisioner "remote-exec" {
