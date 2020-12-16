@@ -18,9 +18,9 @@ variable "gce_ssh_user" {
 }
 
 variable "gce_ssh_key_location" {
-  default = "~/id_rsa.pub"
+  default = "/tmp/id_rsa.pub"
 }
 
 variable "gce_ssh_private_key_location" {
-  default = "~/id_rsa"
+  default = "/tmp/id_rsa"
 }
