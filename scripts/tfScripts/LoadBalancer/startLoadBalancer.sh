@@ -1,9 +1,4 @@
 #!/bin/bash
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 PORT" >&2
-  exit 1
-fi
-
 sudo apt-get install wget -y
 sudo apt-get install ffmpeg -y
 wget https://golang.org/dl/go1.15.5.linux-amd64.tar.gz
@@ -12,5 +7,6 @@ export PATH=$PATH:/usr/local/go/bin
 go get -u google.golang.org/grpc
 cd CloudVideoConverter
 mkdir localStorage
-go run load-balancer/server/main.go $1
+IP=$(gcloud compute instances describe api-gateway-0 --format='get(networkInterfaces[0].accessConfigs[0].natIP)' --zone=europe-north1-a)
+go run load-balancer/server/main.go 50052 "$IP:50051"
 
