@@ -69,9 +69,9 @@ resource "google_compute_instance" "vm_instance" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/*",
-      "/tmp/startEverything.sh",
+      "/tmp/startAPIGateway.sh",
       "nohup /tmp/startLoadBalancer.sh 50051 &",
-      "sleep 1",
+      "/tmp/startEverythingElse.sh",
     ]
   }
 }
