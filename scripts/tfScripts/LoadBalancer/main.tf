@@ -55,6 +55,10 @@ resource "google_compute_instance" "vm_instance" {
     source = "startEverythingElse.sh"
     destination = "/tmp/startEverythingElse.sh"
   }
+  provisioner "file" {
+    source = "startAPIGateway.sh"
+    destination = "/tmp/startAPIGateway.sh"
+  }
 
   provisioner "file" {
     source = "/tmp/id_rsa.pub"
