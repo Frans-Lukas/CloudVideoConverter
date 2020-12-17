@@ -12,7 +12,7 @@ provider "google" {
 
 resource "google_compute_instance" "vm_instance" {
   count        = var.instance_count
-  name         = "virtual-machine-${count.index}"
+  name         = "spawning-pool-${count.index}"
   machine_type = "f1-micro"
 
 
@@ -42,19 +42,30 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "startLoadBalancer.sh"
-    destination = "/tmp/makeSureWeHaveActiveVMs.sh"
+    source = "startSpawningPool.sh"
+    destination = "/tmp/startSpawningPool.sh"
   }
 
   provisioner "file" {
     source = "SSDNIA.sh"
-    destination = "~/SSDNIA.sh"
+    destination = "/tmp/SSDNIA.sh"
   }
   
+  provisioner "file" {
+    source = "/tmp/id_rsa.pub"
+    destination = "/tmp/id_rsa.pub"
+  }
+  
+  provisioner "file" {
+    source = "/tmp/id_rsa"
+    destination = "/tmp/id_rsa"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/makeSureWeHaveActiveVMs.sh",
-      "/tmp/makeSureWeHaveActiveVMs.sh args",
+      "chmod +x /tmp/*",
+      "nohup /tmp/startSpawningPool.sh 50051 &",
+      "sleep 1",
     ]
   }
 }
