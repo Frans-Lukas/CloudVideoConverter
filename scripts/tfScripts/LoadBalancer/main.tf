@@ -70,7 +70,8 @@ resource "google_compute_instance" "vm_instance" {
     inline = [
       "chmod +x /tmp/*",
       "/tmp/startEverything.sh",
-      "/tmp/startLoadBalancer.sh 50051 &",
+      "nohup /tmp/startLoadBalancer.sh 50051 &",
+      "sleep 1",
     ]
   }
 }
