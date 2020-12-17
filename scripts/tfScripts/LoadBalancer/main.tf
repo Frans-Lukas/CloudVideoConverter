@@ -52,8 +52,8 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "startEverything.sh"
-    destination = "/tmp/startEverything.sh"
+    source = "startEverythingElse.sh"
+    destination = "/tmp/startEverythingElse.sh"
   }
 
   provisioner "file" {
