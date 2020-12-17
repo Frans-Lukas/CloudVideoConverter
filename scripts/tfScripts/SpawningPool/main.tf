@@ -47,7 +47,7 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "/tmp/SSDNIA.sh"
+    source = "SSDNIA.sh"
     destination = "/tmp/SSDNIA.sh"
   }
   
