@@ -1,4 +1,3 @@
 #!/bin/bash
-chmod +x CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh
-./CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh
-./CloudVideoConverter/scripts/tfScripts/SpawningPool/startAPIGatewayVM.sh
+chmod +x CloudVideoConverter/scripts/tfScripts/SpawningPool/startSpawningPoolVM.sh
+./CloudVideoConverter/scripts/tfScripts/SpawningPool/startSpawningPoolVM.sh
