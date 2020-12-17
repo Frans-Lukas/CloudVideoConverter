@@ -47,8 +47,8 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "SSDNIA.sh"
-    destination = "~/SSDNIA.sh"
+    source = "SSDNIA.json"
+    destination = "/tmp/SSDNIA.json"
   }
   
   provisioner "remote-exec" {
