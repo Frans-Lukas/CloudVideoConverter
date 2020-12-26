@@ -67,6 +67,7 @@ func main() {
 		time.Sleep(time.Second * 5)
 	}*/
 }
+
 func loopUntilConverted(token string) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)

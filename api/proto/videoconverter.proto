@@ -17,6 +17,10 @@ service VideoConverterService {
     rpc AvailableForWork(AvailableForWorkRequest) returns (AvailableForWorkResponse) {}
 }
 
+service LifeGuard {
+    rpc IsAlive(IsAliveRequest) returns (IsAliveResponse) {}
+}
+
 message IsAliveRequest{}
 
 message IsAliveResponse{}
