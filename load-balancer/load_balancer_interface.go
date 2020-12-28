@@ -545,6 +545,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 	cmd := exec.Command(scriptPath, numberOfVms)
 	err := cmd.Run()
 	if err != nil {
+		println(cmd.Output())
 		log.Fatalf("could not increaseNumberOfServices: " + err.Error())
 	}
 }
