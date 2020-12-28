@@ -144,6 +144,7 @@ func (store *ConversionObjectsClient) CheckForMergeableFiles() []string {
 
 	for i, v := range keys {
 		token := strings.Split(v.Name, "-")[0]
+		println(v.Name)
 		//println("token used for counting: ", token)
 		if _, ok := countMap[token]; !ok {
 			countMap[token] = make([]ConversionObjectInfo, 0)
