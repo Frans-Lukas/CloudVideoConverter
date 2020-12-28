@@ -61,7 +61,6 @@ func main() {
 	}
 }
 
-
 func PostServicePoint(Ip string, Port string, c api_gateway.APIGateWayClient) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
