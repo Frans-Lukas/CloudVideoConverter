@@ -38,7 +38,7 @@ resource "google_compute_instance" "vm_instance" {
     private_key = file(var.gce_ssh_private_key_location)
     host = self.network_interface[0].access_config[0].nat_ip
     timeout = "10s"
-    agent = false 
+    agent = false
   }
 
   provisioner "file" {
@@ -50,12 +50,12 @@ resource "google_compute_instance" "vm_instance" {
     source = "/tmp/SSDNIA.json"
     destination = "/tmp/SSDNIA.json"
   }
-  
+
   provisioner "file" {
     source = "/tmp/id_rsa.pub"
     destination = "/tmp/id_rsa.pub"
   }
-  
+
   provisioner "file" {
     source = "/tmp/id_rsa"
     destination = "/tmp/id_rsa"
@@ -64,7 +64,7 @@ resource "google_compute_instance" "vm_instance" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/*",
-      "nohup /tmp/startSpawningPool.sh 50051 &",
+      "nohup /tmp/startSpawningPool.sh &",
       "sleep 1",
     ]
   }
