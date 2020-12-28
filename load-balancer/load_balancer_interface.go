@@ -14,6 +14,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -26,11 +27,12 @@ const sizeLimit = megaByte * 1
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
-	ActiveTokens    *map[string]items.Token
-	ConversionQueue *[]ConversionObjectInfo
-	ActiveServices  *map[string]VideoConverterClient
-	databaseClient  *ConversionObjectsClient
-	storageClient   *StorageClient
+	ActiveTokens      *map[string]items.Token
+	ConversionQueue   *[]ConversionObjectInfo
+	ActiveServices    *map[string]VideoConverterClient
+	databaseClient    *ConversionObjectsClient
+	storageClient     *StorageClient
+	apiGatewayAddress string
 }
 
 type ConversionObjectInfo struct {
@@ -50,17 +52,24 @@ func CreateNewServer() VideoConverterServer {
 	dataBaseClient := NewConversionObjectsClient()
 	storageClient := CreateStorageClient()
 	val := VideoConverterServer{
-		ActiveTokens:    &activeTokens,
-		ConversionQueue: &conversionQueue,
-		ActiveServices:  &activeServices,
-		databaseClient:  &dataBaseClient,
-		storageClient:   &storageClient,
+		ActiveTokens:      &activeTokens,
+		ConversionQueue:   &conversionQueue,
+		ActiveServices:    &activeServices,
+		databaseClient:    &dataBaseClient,
+		storageClient:     &storageClient,
+		apiGatewayAddress: "",
 	}
 	return val
 }
 
 func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 	println("Trying to update active services with address: ", address)
+
+	if address == "" {
+		println("ADDRESS NOT SET!")
+		return
+	}
+
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -100,6 +109,7 @@ func (serv *VideoConverterServer) PollActiveServices(address string) {
 		notifyAPIGatewayOfDeadClient(v)
 	}
 }
+
 func notifyAPIGatewayOfDeadClient(address string) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -162,6 +172,10 @@ func saveImage(fileName string, imageBytes *bytes.Buffer) error {
 
 func (serv *VideoConverterServer) WorkManagementLoop() {
 	for {
+		// Update Clients
+		serv.UpdateActiveServices(serv.apiGatewayAddress)
+
+		// Handle Videos
 		time.Sleep(constants.WorkManagementLoopSleepTime)
 		serv.SendWorkToClients()
 		tokens := serv.databaseClient.CheckForMergeableFiles()
@@ -176,6 +190,9 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 				*(*serv.ActiveTokens)[token].ConversionDone = true
 			}
 		}
+
+		// Handle Clients
+		serv.manageClients()
 	}
 }
 
@@ -302,6 +319,7 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoa
 
 	return nil
 }
+
 func (serv *VideoConverterServer) sendVideoInformationToDatabase(token string) {
 	fileNames, err := getVideoParts(token)
 	if err != nil {
@@ -313,6 +331,7 @@ func (serv *VideoConverterServer) sendVideoInformationToDatabase(token string) {
 func deleteFullVideo(token string) {
 
 }
+
 func sendVideosToCloudStorage(token string) {
 	println("uploading files to cloud storage, token: ", token)
 	fileNames, err := getVideoParts(token)
@@ -323,6 +342,7 @@ func sendVideosToCloudStorage(token string) {
 	println("files uploaded to cloud storage")
 
 }
+
 func uploadFiles(fileNames []string) {
 	storageClient := CreateStorageClient()
 	storageClient.listBuckets()
@@ -371,7 +391,6 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 		})
 	}
 
-
 	serv.storageClient.DeleteConvertedParts(token)
 	serv.databaseClient.DeleteConvertedParts(token)
 
@@ -413,6 +432,7 @@ func (serv *VideoConverterServer) ConversionStatus(ctx context.Context, in *vide
 	}
 	return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_NotStarted}, nil
 }
+
 func (serv *VideoConverterServer) resetConversionStatus(token string) {
 	*(*serv.ActiveTokens)[token].ConversionStarted = false
 	*(*serv.ActiveTokens)[token].ConversionFailed = false
@@ -461,4 +481,58 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 func (serv *VideoConverterServer) downloadAndMergeFiles(token string) {
 	serv.storageClient.DownloadConvertedParts(token)
 	mergeVideo(token)
+}
+
+func (serv *VideoConverterServer) SetApiGatewayAddress(address string) {
+	serv.apiGatewayAddress = address
+}
+
+func (serv *VideoConverterServer) manageClients() {
+	if serv.shouldReduceNumberOfServices() {
+		serv.reduceNumberOfServices()
+	} else if serv.shouldIncreaseNumberOfServices() {
+		serv.increaseNumberOfServices()
+	}
+}
+
+func (serv *VideoConverterServer) shouldReduceNumberOfServices() bool {
+	count := serv.countActiveConversions()
+
+	return count < len(*serv.ActiveServices)
+}
+
+func (serv *VideoConverterServer) shouldIncreaseNumberOfServices() bool {
+	count := serv.countActiveConversions()
+
+	return count > len(*serv.ActiveServices)
+}
+
+func (serv *VideoConverterServer) countActiveConversions() int {
+	count := 0
+	for token, _ := range *serv.ActiveTokens {
+		if serv.conversionIsInProgressForToken(token) {
+			count += 1
+		}
+	}
+	return count
+}
+
+func (serv *VideoConverterServer) reduceNumberOfServices() {
+	command := "reduceNumberOfServices COMMAND NOT IMPLEMENTED!"
+	println(command)
+	cmd := exec.Command("COMMAND NOT IMPLEMENTED!")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("could not reduceNumberOfServices: " + err.Error())
+	}
+}
+
+func (serv *VideoConverterServer) increaseNumberOfServices() {
+	command := "increaseNumberOfServices COMMAND NOT IMPLEMENTED!"
+	println(command)
+	cmd := exec.Command("COMMAND NOT IMPLEMENTED!")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("could not increaseNumberOfServices: " + err.Error())
+	}
 }

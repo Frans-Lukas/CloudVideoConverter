@@ -60,6 +60,7 @@ func main() {
 
 	//1. Load active services
 	videoServer.UpdateActiveServices(apiGatewayAddress)
+	videoServer.SetApiGatewayAddress(apiGatewayAddress)
 
 	//2. Load work from database
 	println("loading queue from DB")
