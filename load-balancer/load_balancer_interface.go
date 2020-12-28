@@ -540,7 +540,7 @@ func (serv *VideoConverterServer) reduceNumberOfServices() {
 }
 
 func (serv *VideoConverterServer) IncreaseNumberOfServices() {
-	scriptPath := "./CloudVideoConverter/scripts/tfScripts/Service/startServiceVM.sh"
+	scriptPath := "/home/group9/CloudVideoConverter/scripts/tfScripts/Service/startServiceVM.sh"
 	numberOfVms := strconv.Itoa(len(*serv.ActiveServices) + 1)
 	cmd := exec.Command(scriptPath, numberOfVms)
 	err := cmd.Run()
