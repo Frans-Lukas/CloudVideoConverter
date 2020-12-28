@@ -64,7 +64,7 @@ resource "google_compute_instance" "vm_instance" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/startService.sh",
-      "nohup /tmp/startService.sh | output.log&",
+      "nohup /tmp/startService.sh &",
       "sleep 1",
     ]
   }

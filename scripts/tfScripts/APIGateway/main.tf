@@ -64,7 +64,7 @@ resource "google_compute_instance" "vm_instance" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/startApiGateway.sh",
-      "nohup /tmp/startApiGateway.sh | output.log &",
+      "nohup /tmp/startApiGateway.sh &",
       "sleep 1",
     ]
   }
