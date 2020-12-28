@@ -1033,7 +1033,13 @@ var file_videoconverter_proto_rawDesc = []byte{
 	0x72, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x76, 0x69, 0x64, 0x65,
 	0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x41, 0x76, 0x61, 0x69, 0x6c,
 	0x61, 0x62, 0x6c, 0x65, 0x46, 0x6f, 0x72, 0x57, 0x6f, 0x72, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x00, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x32, 0x59, 0x0a, 0x09, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61,
+	0x72, 0x64, 0x12, 0x4c, 0x0a, 0x07, 0x49, 0x73, 0x41, 0x6c, 0x69, 0x76, 0x65, 0x12, 0x1e, 0x2e,
+	0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x49,
+	0x73, 0x41, 0x6c, 0x69, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e,
+	0x76, 0x69, 0x64, 0x65, 0x6f, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x65, 0x72, 0x2e, 0x49,
+	0x73, 0x41, 0x6c, 0x69, 0x76, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1083,17 +1089,19 @@ var file_videoconverter_proto_depIdxs = []int32{
 	6,  // 9: videoconverter.VideoConverterService.StartConversion:input_type -> videoconverter.ConversionRequest
 	2,  // 10: videoconverter.VideoConverterService.IsAlive:input_type -> videoconverter.IsAliveRequest
 	12, // 11: videoconverter.VideoConverterService.AvailableForWork:input_type -> videoconverter.AvailableForWorkRequest
-	5,  // 12: videoconverter.VideoConverterLoadBalancer.RequestUploadToken:output_type -> videoconverter.UploadTokenResponse
-	13, // 13: videoconverter.VideoConverterLoadBalancer.Upload:output_type -> videoconverter.UploadStatus
-	7,  // 14: videoconverter.VideoConverterLoadBalancer.StartConversion:output_type -> videoconverter.ConversionResponse
-	9,  // 15: videoconverter.VideoConverterLoadBalancer.ConversionStatus:output_type -> videoconverter.ConversionStatusResponse
-	8,  // 16: videoconverter.VideoConverterLoadBalancer.Download:output_type -> videoconverter.Chunk
-	16, // 17: videoconverter.VideoConverterLoadBalancer.Delete:output_type -> videoconverter.DeleteResponse
-	7,  // 18: videoconverter.VideoConverterService.StartConversion:output_type -> videoconverter.ConversionResponse
-	3,  // 19: videoconverter.VideoConverterService.IsAlive:output_type -> videoconverter.IsAliveResponse
-	11, // 20: videoconverter.VideoConverterService.AvailableForWork:output_type -> videoconverter.AvailableForWorkResponse
-	12, // [12:21] is the sub-list for method output_type
-	3,  // [3:12] is the sub-list for method input_type
+	2,  // 12: videoconverter.LifeGuard.IsAlive:input_type -> videoconverter.IsAliveRequest
+	5,  // 13: videoconverter.VideoConverterLoadBalancer.RequestUploadToken:output_type -> videoconverter.UploadTokenResponse
+	13, // 14: videoconverter.VideoConverterLoadBalancer.Upload:output_type -> videoconverter.UploadStatus
+	7,  // 15: videoconverter.VideoConverterLoadBalancer.StartConversion:output_type -> videoconverter.ConversionResponse
+	9,  // 16: videoconverter.VideoConverterLoadBalancer.ConversionStatus:output_type -> videoconverter.ConversionStatusResponse
+	8,  // 17: videoconverter.VideoConverterLoadBalancer.Download:output_type -> videoconverter.Chunk
+	16, // 18: videoconverter.VideoConverterLoadBalancer.Delete:output_type -> videoconverter.DeleteResponse
+	7,  // 19: videoconverter.VideoConverterService.StartConversion:output_type -> videoconverter.ConversionResponse
+	3,  // 20: videoconverter.VideoConverterService.IsAlive:output_type -> videoconverter.IsAliveResponse
+	11, // 21: videoconverter.VideoConverterService.AvailableForWork:output_type -> videoconverter.AvailableForWorkResponse
+	3,  // 22: videoconverter.LifeGuard.IsAlive:output_type -> videoconverter.IsAliveResponse
+	13, // [13:23] is the sub-list for method output_type
+	3,  // [3:13] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name
 	3,  // [3:3] is the sub-list for extension extendee
 	0,  // [0:3] is the sub-list for field type_name
@@ -1310,7 +1318,7 @@ func file_videoconverter_proto_init() {
 			NumEnums:      2,
 			NumMessages:   16,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_videoconverter_proto_goTypes,
 		DependencyIndexes: file_videoconverter_proto_depIdxs,
@@ -1783,6 +1791,78 @@ var _VideoConverterService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AvailableForWork",
 			Handler:    _VideoConverterService_AvailableForWork_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "videoconverter.proto",
+}
+
+// LifeGuardClient is the client API for LifeGuard service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type LifeGuardClient interface {
+	IsAlive(ctx context.Context, in *IsAliveRequest, opts ...grpc.CallOption) (*IsAliveResponse, error)
+}
+
+type lifeGuardClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewLifeGuardClient(cc grpc.ClientConnInterface) LifeGuardClient {
+	return &lifeGuardClient{cc}
+}
+
+func (c *lifeGuardClient) IsAlive(ctx context.Context, in *IsAliveRequest, opts ...grpc.CallOption) (*IsAliveResponse, error) {
+	out := new(IsAliveResponse)
+	err := c.cc.Invoke(ctx, "/videoconverter.LifeGuard/IsAlive", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// LifeGuardServer is the server API for LifeGuard service.
+type LifeGuardServer interface {
+	IsAlive(context.Context, *IsAliveRequest) (*IsAliveResponse, error)
+}
+
+// UnimplementedLifeGuardServer can be embedded to have forward compatible implementations.
+type UnimplementedLifeGuardServer struct {
+}
+
+func (*UnimplementedLifeGuardServer) IsAlive(context.Context, *IsAliveRequest) (*IsAliveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsAlive not implemented")
+}
+
+func RegisterLifeGuardServer(s *grpc.Server, srv LifeGuardServer) {
+	s.RegisterService(&_LifeGuard_serviceDesc, srv)
+}
+
+func _LifeGuard_IsAlive_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsAliveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LifeGuardServer).IsAlive(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/videoconverter.LifeGuard/IsAlive",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LifeGuardServer).IsAlive(ctx, req.(*IsAliveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _LifeGuard_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "videoconverter.LifeGuard",
+	HandlerType: (*LifeGuardServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "IsAlive",
+			Handler:    _LifeGuard_IsAlive_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
