@@ -9,4 +9,4 @@ go get -u google.golang.org/grpc
 git clone https://github.com/Frans-Lukas/CloudVideoConverter.git
 cd CloudVideoConverter || echo "CloudVideoConverter does not exist"
 #download video to localStorage
-go run api-gateway/server/main.go 50051
+go run service/server/main.go 50053
