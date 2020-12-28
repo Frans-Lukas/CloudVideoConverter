@@ -171,7 +171,7 @@ func fileExists(bkt *storage.BucketHandle, fileName string) bool {
 }
 
 func (cli *StorageClient) DownloadSampleVideos() {
-	bkt := cli.getSampleVideosBucketHandle()
+	bkt := cli.getConvertedBucketHandle()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	//query := storage.Query{Prefix: token}
