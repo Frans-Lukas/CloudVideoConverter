@@ -176,7 +176,6 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		serv.UpdateActiveServices(serv.apiGatewayAddress)
 
 		// Handle Videos
-		time.Sleep(constants.WorkManagementLoopSleepTime)
 		serv.SendWorkToClients()
 		tokens := serv.databaseClient.CheckForMergeableFiles()
 		if len(tokens) > 0 {
@@ -193,6 +192,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 
 		// Handle Clients
 		serv.manageClients()
+		time.Sleep(constants.WorkManagementLoopSleepTime)
 	}
 }
 
@@ -518,19 +518,31 @@ func (serv *VideoConverterServer) countActiveConversions() int {
 }
 
 func (serv *VideoConverterServer) reduceNumberOfServices() {
-	command := "reduceNumberOfServices COMMAND NOT IMPLEMENTED!"
-	println(command)
-	cmd := exec.Command("COMMAND NOT IMPLEMENTED!")
-	err := cmd.Run()
-	if err != nil {
-		log.Fatalf("could not reduceNumberOfServices: " + err.Error())
+	for i, v := range *serv.ActiveServices {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+		response, err := v.client.AvailableForWork(ctx, &videoconverter.AvailableForWorkRequest{})
+		if err != nil {
+			println("service did not respond")
+			continue
+		}
+		if response.AvailableForWork {
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+			defer cancel()
+			_, err := v.client.ShutDown(ctx, &videoconverter.ShutDownRequest{})
+			if err != nil {
+				println("failed to shutdown client ", i)
+			} else {
+				return
+			}
+		}
 	}
 }
 
 func (serv *VideoConverterServer) increaseNumberOfServices() {
-	command := "increaseNumberOfServices COMMAND NOT IMPLEMENTED!"
-	println(command)
-	cmd := exec.Command("COMMAND NOT IMPLEMENTED!")
+	scriptPath := "./CloudVideoConverter/scripts/tfScripts/Service/startServiceVM.sh"
+	numberOfVms := strconv.Itoa(len(*serv.ActiveServices) + 1)
+	cmd := exec.Command(scriptPath, numberOfVms)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("could not increaseNumberOfServices: " + err.Error())

@@ -7,6 +7,7 @@ import (
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/server/items"
+	"log"
 	"os"
 	"os/exec"
 	"time"
@@ -82,6 +83,22 @@ func (serv *VideoConverterServiceServer) AvailableForWork(ctx context.Context, i
 
 	//TODO decide if notStarted is a good default response
 	return &videoconverter.AvailableForWorkResponse{AvailableForWork: true}, nil
+}
+
+func (serv *VideoConverterServiceServer) ShutDown(ctx context.Context, in *videoconverter.ShutDownRequest) (*videoconverter.ShutDownResponse, error) {
+	go func() {
+		time.Sleep(time.Second)
+		shutDown()
+	}()
+	return &videoconverter.ShutDownResponse{}, nil
+}
+
+func shutDown() {
+	cmd := exec.Command("poweroff")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("could not shutdown: " + err.Error())
+	}
 }
 
 func (serv *VideoConverterServiceServer) downloadFileToConvert(token string) {

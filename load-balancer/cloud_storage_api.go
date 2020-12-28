@@ -37,9 +37,19 @@ func (cli *StorageClient) getConvertedBucketHandle() *storage.BucketHandle {
 	return bkt
 }
 
+func (cli *StorageClient) getSampleVideosBucketHandle() *storage.BucketHandle {
+	bkt := cli.Bucket(constants.SampleVideosBucketName)
+	return bkt
+}
+
 func (cli *StorageClient) getUnconvertedBucketHandle() *storage.BucketHandle {
 	bkt := cli.Bucket(constants.UnconvertedVideosBucketName)
 	return bkt
+}
+
+func (cli *StorageClient) getSampleVideos() []string {
+	bkt := cli.getSampleVideosBucketHandle()
+	return cli.getVideos(bkt)
 }
 
 func (cli *StorageClient) getConvertedVideos() []string {
@@ -157,6 +167,51 @@ func fileExists(bkt *storage.BucketHandle, fileName string) bool {
 		}
 		println("file exists")
 		return true
+	}
+}
+
+func (cli *StorageClient) DownloadSampleVideos() {
+	bkt := cli.getSampleVideosBucketHandle()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	//query := storage.Query{Prefix: token}
+	objectIterator := bkt.Objects(ctx, nil)
+
+	for {
+		attrs, err := objectIterator.Next()
+		if err == iterator.Done {
+			println("iterator done")
+			break
+		}
+		println("downloading sample")
+		if err != nil {
+			log.Fatal(err)
+		}
+		ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+		rc, err := bkt.Object(attrs.Name).NewReader(ctx)
+		if err != nil {
+			log.Fatalf("DownloadSampleVideos: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
+			return
+		}
+		defer rc.Close()
+		slurp, err := ioutil.ReadAll(rc)
+		println("read " + strconv.Itoa(len(slurp)) + " bytes from downloaded file")
+		if err != nil {
+			log.Fatalf("DownloadSampleVideos: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
+			return
+		}
+
+		f, err := os.Create(constants.LocalStorage + attrs.Name)
+		if err != nil {
+			log.Fatalf("DownloadSampleVideos, create file: %v", err)
+		}
+		_, err = f.Write(slurp)
+		if err != nil {
+			log.Fatalf("DownloadSampleVideos, write to file: %v", err)
+		}
+
+		f.Close()
+
 	}
 }
 

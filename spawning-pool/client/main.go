@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"github.com/Frans-Lukas/cloudvideoconverter/constants"
+	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"google.golang.org/grpc"
 	"io"
@@ -38,12 +39,15 @@ func main() {
 	loadBalancerConnection = videoconverter.NewVideoConverterLoadBalancerClient(conn)
 
 	outputExtension := "mkv"
-
-	token := upload("video.mp4")
-	requestConversion(token, outputExtension)
-	loopUntilConverted(token)
-	download(token, outputExtension)
-
+	storageClient := video_converter.CreateStorageClient()
+	storageClient.DownloadSampleVideos()
+	for {
+		token := upload("video.mp4")
+		requestConversion(token, outputExtension)
+		loopUntilConverted(token)
+		download(token, outputExtension)
+		println("done uploading, converting and downloading videos")
+	}
 }
 
 func loopUntilConverted(token string) {
