@@ -488,11 +488,11 @@ func (serv *VideoConverterServer) SetApiGatewayAddress(address string) {
 }
 
 func (serv *VideoConverterServer) manageClients() {
-	if serv.shouldReduceNumberOfServices() {
+	/*if serv.shouldReduceNumberOfServices() {
 		serv.reduceNumberOfServices()
 	} else if serv.shouldIncreaseNumberOfServices() {
 		serv.increaseNumberOfServices()
-	}
+	}*/
 }
 
 func (serv *VideoConverterServer) shouldReduceNumberOfServices() bool {
@@ -539,7 +539,7 @@ func (serv *VideoConverterServer) reduceNumberOfServices() {
 	}
 }
 
-func (serv *VideoConverterServer) increaseNumberOfServices() {
+func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 	scriptPath := "./CloudVideoConverter/scripts/tfScripts/Service/startServiceVM.sh"
 	numberOfVms := strconv.Itoa(len(*serv.ActiveServices) + 1)
 	cmd := exec.Command(scriptPath, numberOfVms)

@@ -68,6 +68,7 @@ func main() {
 	//3. Send work to services loop
 	println("starting worker loop")
 	go func() {
+		videoServer.IncreaseNumberOfServices()
 		videoServer.WorkManagementLoop()
 	}()
 
