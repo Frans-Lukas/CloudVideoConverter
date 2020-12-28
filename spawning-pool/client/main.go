@@ -41,13 +41,13 @@ func main() {
 	outputExtension := "mkv"
 	storageClient := video_converter.CreateStorageClient()
 	storageClient.DownloadSampleVideos()
-	for {
-		token := upload("video.mp4")
-		requestConversion(token, outputExtension)
-		loopUntilConverted(token)
-		download(token, outputExtension)
-		println("done uploading, converting and downloading videos")
-	}
+
+	token := upload("video.mp4")
+	requestConversion(token, outputExtension)
+	loopUntilConverted(token)
+	download(token, outputExtension)
+	println("done uploading, converting and downloading videos")
+
 }
 
 func loopUntilConverted(token string) {

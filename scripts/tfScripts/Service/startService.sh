@@ -4,10 +4,11 @@ sudo apt-get install wget -y
 sudo apt-get install git -y
 wget https://golang.org/dl/go1.15.5.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.15.5.linux-amd64.tar.gz
-export PATH=$PATH:/usr/local/go/bin
-go get -u google.golang.org/grpc
 git clone https://github.com/Frans-Lukas/CloudVideoConverter.git
+sudo apt-get install ffmpeg -y
+export PATH=$PATH:/usr/local/go/bin
 cd CloudVideoConverter || echo "CloudVideoConverter does not exist"
+mkdir localStorage
 #download video to localStorage
 IP=$(curl https://ipinfo.io/ip)
 gcloud auth activate-service-account fast-blueprint-296210@appspot.gserviceaccount.com --key-file=/tmp/SSDNIA.json
