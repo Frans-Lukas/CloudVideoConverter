@@ -14,5 +14,6 @@ go get -u google.golang.org/grpc
 git clone https://github.com/Frans-Lukas/CloudVideoConverter.git
 cd CloudVideoConverter
 mkdir localStorage
+export GOOGLE_APPLICATION_CREDENTIALS=/tmp/SSDNIA.json
 go run load-balancer/server/main.go $1
 
