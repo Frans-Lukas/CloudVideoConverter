@@ -14,6 +14,7 @@ resource "google_compute_instance" "vm_instance" {
   count        = var.instance_count
   name         = "api-gateway-${count.index}"
   machine_type = "f1-micro"
+  tags = ["http-server", "https-server"]
 
 
   boot_disk {
