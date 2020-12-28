@@ -14,7 +14,7 @@ resource "google_compute_instance" "vm_instance" {
   count        = var.instance_count
   name         = "virtual-machine-${count.index}"
   machine_type = "f1-micro"
-
+  tags = ["http-server", "https-server"]
 
   boot_disk {
     initialize_params {
@@ -38,7 +38,7 @@ resource "google_compute_instance" "vm_instance" {
     private_key = file(var.gce_ssh_private_key_location)
     host = self.network_interface[0].access_config[0].nat_ip
     timeout = "10s"
-    agent = false 
+    agent = false
   }
 
   provisioner "file" {
@@ -50,7 +50,7 @@ resource "google_compute_instance" "vm_instance" {
     source = "SSDNIA.json"
     destination = "/tmp/SSDNIA.json"
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/makeSureWeHaveActiveVMs.sh",

@@ -175,7 +175,7 @@ func (cli *StorageClient) DownloadSampleVideos() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	//query := storage.Query{Prefix: token}
-	objectIterator := bkt.Objects(ctx, nil)
+	objectIterator := bkt.Objects(ctx, &storage.Query{Prefix: ""})
 
 	for {
 		attrs, err := objectIterator.Next()
@@ -185,7 +185,7 @@ func (cli *StorageClient) DownloadSampleVideos() {
 		}
 		println("downloading sample")
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(err.Error())
 		}
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 		rc, err := bkt.Object(attrs.Name).NewReader(ctx)

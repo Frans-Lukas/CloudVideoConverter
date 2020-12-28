@@ -63,7 +63,7 @@ func CreateNewServer() VideoConverterServer {
 }
 
 func (serv *VideoConverterServer) UpdateActiveServices(address string) {
-	println("Trying to update active services with address: ", address)
+	//println("Trying to update active services with address: ", address)
 
 	if address == "" {
 		println("ADDRESS NOT SET!")
@@ -75,11 +75,11 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	println("connected")
+	//println("connected")
 	apiGateway := api_gateway.NewAPIGateWayClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	println("requesting service endpoints:")
+	//println("requesting service endpoints:")
 	endPoints, err := apiGateway.GetActiveServiceEndpoints(ctx, &api_gateway.ServiceEndPointsRequest{})
 	*serv.ActiveServices = make(map[string]VideoConverterClient)
 	for _, v := range endPoints.EndPoint {
@@ -89,7 +89,7 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 			(*serv.ActiveServices)[address] = makeServiceConnection(address)
 		}
 	}
-	println("done updating service endpoints")
+	//println("done updating service endpoints")
 }
 
 func (serv *VideoConverterServer) PollActiveServices(address string) {
