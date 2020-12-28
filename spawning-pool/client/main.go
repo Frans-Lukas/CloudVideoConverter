@@ -51,7 +51,6 @@ func main() {
 }
 
 func loopUntilConverted(token string) {
-
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	status, err := loadBalancerConnection.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
