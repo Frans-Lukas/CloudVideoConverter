@@ -38,7 +38,7 @@ resource "google_compute_instance" "vm_instance" {
     private_key = file(var.gce_ssh_private_key_location)
     host = self.network_interface[0].access_config[0].nat_ip
     timeout = "10s"
-    agent = false 
+    agent = false
   }
 
   provisioner "file" {
@@ -55,16 +55,16 @@ resource "google_compute_instance" "vm_instance" {
     source = "/tmp/id_rsa.pub"
     destination = "/tmp/id_rsa.pub"
   }
-  
+
   provisioner "file" {
     source = "/tmp/id_rsa"
     destination = "/tmp/id_rsa"
   }
-  
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/startApiGateway.sh",
-      "nohup /tmp/startApiGateway.sh &",
+      "nohup /tmp/startApiGateway.sh | output.log &",
       "sleep 1",
     ]
   }

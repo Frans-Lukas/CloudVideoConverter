@@ -64,7 +64,7 @@ resource "google_compute_instance" "vm_instance" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/*",
-      "nohup /tmp/startSpawningPool.sh 50051 &",
+      "nohup /tmp/startSpawningPool.sh 50051 | output.log &",
       "sleep 1",
     ]
   }

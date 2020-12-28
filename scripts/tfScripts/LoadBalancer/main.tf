@@ -38,7 +38,7 @@ resource "google_compute_instance" "vm_instance" {
     private_key = file(var.gce_ssh_private_key_location)
     host = self.network_interface[0].access_config[0].nat_ip
     timeout = "10s"
-    agent = false 
+    agent = false
   }
 
   provisioner "file" {
@@ -64,7 +64,7 @@ resource "google_compute_instance" "vm_instance" {
     source = "/tmp/id_rsa.pub"
     destination = "/tmp/id_rsa.pub"
   }
-  
+
   provisioner "file" {
     source = "/tmp/id_rsa"
     destination = "/tmp/id_rsa"
@@ -74,7 +74,7 @@ resource "google_compute_instance" "vm_instance" {
     inline = [
       "chmod +x /tmp/*",
       "/tmp/startAPIGateway.sh",
-      "nohup /tmp/startLoadBalancer.sh 50051 &",
+      "nohup /tmp/startLoadBalancer.sh 50051 | output.log &",
       "/tmp/startEverythingElse.sh",
     ]
   }
