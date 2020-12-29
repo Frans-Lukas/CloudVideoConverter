@@ -94,7 +94,7 @@ func (serv *VideoConverterServiceServer) ShutDown(ctx context.Context, in *video
 }
 
 func shutDown() {
-	cmd := exec.Command("poweroff")
+	cmd := exec.Command("shutdown", "-h", "now")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("could not shutdown: " + err.Error())
@@ -153,6 +153,8 @@ func (serv *VideoConverterServiceServer) deleteFiles(tokenString string, token i
 		if err != nil {
 			println(err.Error())
 		}
+	} else {
+		println("cannot delete file")
 	}
 }
 
