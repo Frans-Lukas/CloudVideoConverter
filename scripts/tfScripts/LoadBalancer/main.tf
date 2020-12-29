@@ -66,7 +66,6 @@ resource "google_compute_instance_from_machine_image" "tpl" {
       "chmod +x /tmp/*",
       "/tmp/startAPIGateway.sh",
       "nohup /tmp/startLoadBalancer.sh &",
-      "/tmp/startEverythingElse.sh",
     ]
   }
 }
