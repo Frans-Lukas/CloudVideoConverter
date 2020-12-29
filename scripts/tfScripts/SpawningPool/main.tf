@@ -3,8 +3,10 @@ variable "instance_count" {
   default = 1
 }
 
+//command = "echo $(pwd)"
+
 provider "google" {
-  credentials = file("/tmp/SSDNIA.json")
+  credentials = file("../LoadBalancer/SSDNIA.json")
   project     = var.project
   region      = var.region
   zone        = var.zone
@@ -47,7 +49,7 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "/tmp/SSDNIA.json"
+    source = "../LoadBalancer/SSDNIA.json"
     destination = "/tmp/SSDNIA.json"
   }
 
