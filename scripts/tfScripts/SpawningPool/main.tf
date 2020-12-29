@@ -5,7 +5,7 @@ variable "instance_count" {
 
 //command = "echo $(pwd)"
 provider "google-beta" {
-  credentials = file("SSDNIA.json")
+  credentials = file("/tmp/SSDNIA.json")
   project     = var.project
   region      = var.region
   zone        = var.zone

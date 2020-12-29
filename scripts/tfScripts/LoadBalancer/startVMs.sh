@@ -4,7 +4,7 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 cd CloudVideoConverter
-git pull
+sudo git pull
 cd scripts/terraform/LoadBalancer
 sudo terraform init
 sudo terraform apply -input=false -auto-approve -var 'instance_count='$1''
