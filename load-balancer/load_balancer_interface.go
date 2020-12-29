@@ -243,6 +243,11 @@ func (serv *VideoConverterServer) conversionIsInProgressForToken(token string) b
 	return *(*serv.ActiveTokens)[token].ConversionStarted && !*(*serv.ActiveTokens)[token].ConversionDone && !*(*serv.ActiveTokens)[token].ConversionFailed
 }
 
+func (serv *VideoConverterServer) conversionIsNotFinishedForToken(token string) bool {
+	// conversion is not finished
+	return !*(*serv.ActiveTokens)[token].ConversionDone
+}
+
 //func (serv *VideoConverterServer) performConversion(app string, arg0 string, arg1 string, arg2 string, in *videoconverter.ConversionRequest) {
 //	cmd := exec.Command(app, arg0, arg1, arg2)
 //	*(*serv.ActiveTokens)[in.Token].ConversionStarted = true
@@ -488,29 +493,29 @@ func (serv *VideoConverterServer) SetApiGatewayAddress(address string) {
 }
 
 func (serv *VideoConverterServer) manageClients() {
-	/*if serv.shouldReduceNumberOfServices() {
+	if serv.shouldReduceNumberOfServices() {
 		serv.reduceNumberOfServices()
 	} else if serv.shouldIncreaseNumberOfServices() {
-		serv.increaseNumberOfServices()
-	}*/
+		serv.IncreaseNumberOfServices()
+	}
 }
 
 func (serv *VideoConverterServer) shouldReduceNumberOfServices() bool {
-	count := serv.countActiveConversions()
+	count := serv.countNonFinishedConversions()
 
 	return count < len(*serv.ActiveServices)
 }
 
 func (serv *VideoConverterServer) shouldIncreaseNumberOfServices() bool {
-	count := serv.countActiveConversions()
+	count := serv.countNonFinishedConversions()
 
 	return count > len(*serv.ActiveServices)
 }
 
-func (serv *VideoConverterServer) countActiveConversions() int {
+func (serv *VideoConverterServer) countNonFinishedConversions() int {
 	count := 0
 	for token, _ := range *serv.ActiveTokens {
-		if serv.conversionIsInProgressForToken(token) {
+		if serv.conversionIsNotFinishedForToken(token) {
 			count += 1
 		}
 	}
