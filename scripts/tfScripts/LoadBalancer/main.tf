@@ -16,7 +16,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   zone        = var.zone
   count        = var.instance_count
   name         = "load-balancer-${count.index}"
-  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-1-2020-12-29"
+  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-2-0"
 
 
   metadata = {

@@ -16,7 +16,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   project     = var.project
   zone        = var.zone
   count        = var.instance_count
-  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-1-2020-12-29"
+  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-2-0"
   name         = "spawning-pool-${count.index}"
 
   metadata = {
