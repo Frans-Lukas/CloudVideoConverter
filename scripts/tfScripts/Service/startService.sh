@@ -1,5 +1,6 @@
 #!/bin/bash
 cd CloudVideoConverter || echo "CloudVideoConverter does not exist"
+git pull
 mkdir localStorage
 #download video to localStorage
 IP=$(curl https://ipinfo.io/ip)
