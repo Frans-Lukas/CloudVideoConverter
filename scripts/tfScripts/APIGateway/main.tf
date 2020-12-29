@@ -3,31 +3,21 @@ variable "instance_count" {
   default = 1
 }
 
-provider "google" {
-  credentials = file("/tmp/SSDNIA.json")
+provider "google-beta" {
+  credentials = file("SSDNIA.json")
   project     = var.project
   region      = var.region
   zone        = var.zone
 }
 
-resource "google_compute_instance" "vm_instance" {
+resource "google_compute_instance_from_machine_image" "tpl" {
+  provider = google-beta
+  project     = var.project
+  zone        = var.zone
   count        = var.instance_count
+  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-2020-12-29"
   name         = "api-gateway-${count.index}"
-  machine_type = "f1-micro"
-  tags = ["http-server", "https-server"]
 
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-9"
-    }
-  }
-
-  network_interface {
-    network = "default"
-    access_config {
-    }
-  }
 
   metadata = {
     ssh-keys = "${var.gce_ssh_user}:${file(var.gce_ssh_key_location)}"
