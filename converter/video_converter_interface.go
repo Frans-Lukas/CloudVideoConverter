@@ -94,7 +94,7 @@ func (serv *VideoConverterServiceServer) ShutDown(ctx context.Context, in *video
 }
 
 func shutDown() {
-	cmd := exec.Command("shutdown", "-h", "now")
+	cmd := exec.Command("/home/group9/CloudVideoConverter/scripts/VMDeleteSelf.sh")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("could not shutdown: " + err.Error())
