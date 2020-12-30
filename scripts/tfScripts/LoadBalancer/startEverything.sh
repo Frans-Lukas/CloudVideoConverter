@@ -5,7 +5,7 @@
 read -p "Enter ip of load-balancer-0 VM: " ip
 echo $ip
 ssh-add /tmp/id_rsa
-ssh group9@$ip << EOF
+ssh -oStrictHostKeyChecking=no group9@$ip << EOF
   cd /home/group9/CloudVideoConverter
   sudo git checkout .
   sudo git pull

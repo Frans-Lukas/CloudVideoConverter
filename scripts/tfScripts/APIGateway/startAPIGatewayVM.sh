@@ -6,7 +6,7 @@ sudo terraform apply -input=false -auto-approve -var 'instance_count='1'' -var-f
 gcloud auth activate-service-account fast-blueprint-296210@appspot.gserviceaccount.com --key-file=/tmp/SSDNIA.json
 IP=$(gcloud compute instances describe api-gateway-0 --format='get(networkInterfaces[0].accessConfigs[0].natIP)' --zone=europe-north1-a)
 eval "$(ssh-add /tmp/id_rsa)"
-ssh group9@$IP << EOF
+ssh -oStrictHostKeyChecking=no group9@$IP << EOF
   cd /home/group9/CloudVideoConverter
   sudo git checkout .
   sudo git pull
