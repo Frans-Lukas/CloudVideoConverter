@@ -66,6 +66,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
       "sudo chmod +x /tmp/*",
       "sudo /tmp/startAPIGateway.sh",
       "sudo nohup /tmp/startLoadBalancer.sh &",
+      "sleep 1"
     ]
   }
   service_account {
