@@ -10,5 +10,8 @@ ssh group9@$ip << EOF
   sudo git checkout .
   sudo git pull
   sudo chmod -R +x /home/group9/*
+  cd /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway
   sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh
+  sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/sshToAPIGateWay.sh
+  sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &
 EOF
