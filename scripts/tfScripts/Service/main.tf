@@ -16,7 +16,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   zone        = var.zone
   count        = var.instance_count
 
-  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-2-0"
+  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-3-2020-12-30"
   name         = "service-provider-${count.index}"
 
 
