@@ -4,7 +4,7 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 cd CloudVideoConverter
-sudo git pull
+
 mkdir localStorage
 go run load-balancer/server/main.go $1
 
