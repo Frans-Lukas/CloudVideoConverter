@@ -14,6 +14,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   provider = google-beta
   project     = var.project
   zone        = var.zone
+  can_ip_forward=true
   count        = var.instance_count
   name         = "load-balancer-${count.index}"
   source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-3-2020-12-30"
@@ -48,14 +49,14 @@ resource "google_compute_instance_from_machine_image" "tpl" {
     destination = "/tmp/id_rsa"
   }
 //
-  provisioner "remote-exec" {
-    inline = [
-      "sudo chmod -R +x /home/group9/*",
-      "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh",
-//      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &",
-//      "sleep 1"
-    ]
-  }
+//  provisioner "remote-exec" {
+//    inline = [
+//      "sudo chmod -R +x /home/group9/*",
+//      "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh",
+////      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &",
+////      "sleep 1"
+//    ]
+//  }
 
   service_account {
     scopes = ["cloud-platform"]
