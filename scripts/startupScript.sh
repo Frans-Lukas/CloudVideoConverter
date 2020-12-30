@@ -1,2 +1,2 @@
 #!/bin/bash
-PATH=$PATH:$GOPATH:$GOPATH/bin
+PATH=$PATH:/usr/local/go:/usr/local/go/bin
