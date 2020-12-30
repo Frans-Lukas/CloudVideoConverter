@@ -1,2 +1,3 @@
 #!/bin/bash
-/usr/local/go/bin/go run api-gateway/server/main.go 50051
+cd /home/group9/CloudVideoConverter
+go run api-gateway/server/main.go 50051
