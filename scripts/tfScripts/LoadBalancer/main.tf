@@ -64,7 +64,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   provisioner "remote-exec" {
     inline = [
       "sudo nohup echo $PATH",
-      "sudo PATH=$PATH:/usr/local/go:/usr/local/go/bin"
+      "sudo PATH=$PATH:/usr/local/go:/usr/local/go/bin",
       "sudo chmod +x /tmp/*",
       "sudo /tmp/startAPIGateway.sh",
       "sudo nohup /tmp/startLoadBalancer.sh &",
