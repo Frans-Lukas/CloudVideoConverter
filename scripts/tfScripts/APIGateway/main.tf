@@ -54,6 +54,9 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
+      "cd /home/group9/CloudVideoConverter",
+      "sudo git pull",
+      "cd /home/group9"
       "sudo chmod +x /tmp/startApiGateway.sh",
       "sleep 1",
       "sudo nohup /tmp/startApiGateway.sh &",
