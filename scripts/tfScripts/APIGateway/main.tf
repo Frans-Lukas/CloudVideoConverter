@@ -57,9 +57,8 @@ resource "google_compute_instance_from_machine_image" "tpl" {
       "cd /home/group9/CloudVideoConverter",
       "sudo git pull",
       "cd /home/group9"
-      "sudo chmod +x /tmp/startApiGateway.sh",
-      "sleep 1",
-      "sudo nohup /tmp/startApiGateway.sh &",
+      "sudo chmod -R +x /home/group9/*",
+      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startApiGateway.sh &",
       "sleep 1",
     ]
   }

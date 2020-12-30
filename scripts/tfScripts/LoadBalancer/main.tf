@@ -33,23 +33,10 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   }
 
   provisioner "file" {
-    source = "startLoadBalancer.sh"
-    destination = "/tmp/startLoadBalancer.sh"
-  }
-
-  provisioner "file" {
     source = "SSDNIA.json"
     destination = "/tmp/SSDNIA.json"
   }
 
-  provisioner "file" {
-    source = "startEverythingElse.sh"
-    destination = "/tmp/startEverythingElse.sh"
-  }
-  provisioner "file" {
-    source = "startAPIGateway.sh"
-    destination = "/tmp/startAPIGateway.sh"
-  }
 
   provisioner "file" {
     source = "/tmp/id_rsa.pub"
@@ -63,9 +50,9 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo chmod +x /tmp/*",
-      "sudo /tmp/startAPIGateway.sh",
-      "sudo nohup /tmp/startLoadBalancer.sh &",
+      "sudo chmod -R +x /home/group9/*",
+      "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh",
+      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &",
       "sleep 1"
     ]
   }
