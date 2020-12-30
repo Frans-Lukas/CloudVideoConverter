@@ -55,8 +55,8 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/startService.sh",
-      "nohup /tmp/startService.sh &",
+      "sudo chmod +x /tmp/startService.sh",
+      "sudo nohup /tmp/startService.sh &",
       "sleep 1",
     ]
   }

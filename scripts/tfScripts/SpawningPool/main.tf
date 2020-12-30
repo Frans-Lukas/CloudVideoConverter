@@ -54,8 +54,8 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/*",
-      "nohup /tmp/startSpawningPool.sh &",
+      "sudo chmod +x /tmp/*",
+      "sudo nohup /tmp/startSpawningPool.sh &",
       "sleep 1",
     ]
   }

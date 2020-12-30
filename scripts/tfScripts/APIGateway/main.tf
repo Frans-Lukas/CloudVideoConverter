@@ -54,8 +54,8 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/startApiGateway.sh",
-      "nohup /tmp/startApiGateway.sh &",
+      "sudo chmod +x /tmp/startApiGateway.sh",
+      "sudo nohup /tmp/startApiGateway.sh &",
       "sleep 1",
     ]
   }

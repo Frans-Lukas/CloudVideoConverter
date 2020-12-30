@@ -28,7 +28,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
     user        = var.gce_ssh_user
     private_key = file(var.gce_ssh_private_key_location)
     host = self.network_interface[0].access_config[0].nat_ip
-    timeout = "10s"
+    timeout = "20s"
     agent = false
   }
 
@@ -63,9 +63,9 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/*",
-      "/tmp/startAPIGateway.sh",
-      "nohup /tmp/startLoadBalancer.sh &",
+      "sudo chmod +x /tmp/*",
+      "sudo /tmp/startAPIGateway.sh",
+      "sudo nohup /tmp/startLoadBalancer.sh &",
     ]
   }
   service_account {
