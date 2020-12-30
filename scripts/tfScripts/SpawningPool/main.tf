@@ -59,4 +59,8 @@ resource "google_compute_instance_from_machine_image" "tpl" {
       "sleep 1",
     ]
   }
+
+  service_account {
+     scopes = ["cloud-platform"]
+  }
 }
