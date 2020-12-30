@@ -6,5 +6,5 @@ fi
 cd CloudVideoConverter
 
 
-go run load-balancer/server/main.go $1
+/usr/local/go/bin/go run load-balancer/server/main.go $1
 
