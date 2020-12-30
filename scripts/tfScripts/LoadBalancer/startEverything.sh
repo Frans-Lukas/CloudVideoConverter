@@ -12,5 +12,5 @@ ssh -oStrictHostKeyChecking=no -t -t group9@$ip << EOF
   sudo chmod -R +x /home/group9/*
   cd /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway
   sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh
-  sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &
+  /home/group9/CloudVap  ideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &
 EOF
