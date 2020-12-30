@@ -32,10 +32,6 @@ resource "google_compute_instance_from_machine_image" "tpl" {
     agent = false
   }
 
-  provisioner "file" {
-    source = "startApiGateway.sh"
-    destination = "/tmp/startApiGateway.sh"
-  }
 
   provisioner "file" {
     source = "/tmp/SSDNIA.json"
@@ -54,11 +50,8 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
-      "cd /home/group9/CloudVideoConverter",
-      "sudo git pull",
-      "cd /home/group9"
       "sudo chmod -R +x /home/group9/*",
-      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startApiGateway.sh &",
+      "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startApiGateway.sh",
       "sleep 1",
     ]
   }
