@@ -15,6 +15,6 @@ ssh -oStrictHostKeyChecking=no -t -t group9@$IP << EOF
   sudo git pull
   sudo chmod -R +x /home/group9/*
   cd /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway
-  nohup /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startApiGateway.sh < /dev/null > std.out 2> std.err &
+  /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startApiGateway.sh
   exit
 EOF
