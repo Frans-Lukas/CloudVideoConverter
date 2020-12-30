@@ -1,5 +1,6 @@
 #!/bin/bash
-cd CloudVideoConverter/scripts/tfScripts/APIGateway
+cd /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway
+sudo terraform destroy -input=false -auto-approve -var 'instance_count='1'' -var-file="/home/group9/CloudVideoConverter/scripts/tfScripts/variables.tfvars"
 sudo terraform init
 sudo terraform apply -input=false -auto-approve -var 'instance_count='1'' -var-file="/home/group9/CloudVideoConverter/scripts/tfScripts/variables.tfvars"
 gcloud auth activate-service-account fast-blueprint-296210@appspot.gserviceaccount.com --key-file=/tmp/SSDNIA.json
