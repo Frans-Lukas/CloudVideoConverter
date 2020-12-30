@@ -13,7 +13,7 @@ provider "google-beta" {
 
 resource "google_compute_instance_from_machine_image" "tpl" {
   provider = google-beta
-  project     = var.project
+  project     = project
   zone        = var.zone
   count        = var.instance_count
   source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-2-0"

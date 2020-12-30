@@ -68,4 +68,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
       "nohup /tmp/startLoadBalancer.sh &",
     ]
   }
+  service_account {
+    scopes = ["cloud-platform"]
+  }
 }
