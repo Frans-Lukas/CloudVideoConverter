@@ -1,5 +1,5 @@
 #!/bin/bash
-export GOOGLE_APPLICATION_CREDENTIALS=/tmp/SSDNIA.json
+#export GOOGLE_APPLICATION_CREDENTIALS=/tmp/SSDNIA.json
 cd CloudVideoConverter
 sudo git pull
 cd ..
