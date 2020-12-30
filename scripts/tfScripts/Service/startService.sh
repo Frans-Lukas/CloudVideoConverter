@@ -1,7 +1,7 @@
 #!/bin/bash
 cd CloudVideoConverter || echo "CloudVideoConverter does not exist"
 
-mkdir localStorage
+
 #download video to localStorage
 IP=$(curl https://ipinfo.io/ip)
 gcloud auth activate-service-account fast-blueprint-296210@appspot.gserviceaccount.com --key-file=/tmp/SSDNIA.json

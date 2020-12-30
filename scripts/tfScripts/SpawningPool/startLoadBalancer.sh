@@ -5,6 +5,6 @@ if [ "$#" -ne 1 ]; then
 fi
 cd CloudVideoConverter
 
-mkdir localStorage
+
 go run load-balancer/server/main.go $1
 
