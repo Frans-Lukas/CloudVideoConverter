@@ -15,6 +15,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -54,12 +55,12 @@ func CreateNewServer() VideoConverterServer {
 	storageClient := CreateStorageClient()
 	timer := time.Time{}
 	val := VideoConverterServer{
-		ActiveTokens:      &activeTokens,
-		ConversionQueue:   &conversionQueue,
-		ActiveServices:    &activeServices,
-		databaseClient:    &dataBaseClient,
-		storageClient:     &storageClient,
-		apiGatewayAddress: "",
+		ActiveTokens:                  &activeTokens,
+		ConversionQueue:               &conversionQueue,
+		ActiveServices:                &activeServices,
+		databaseClient:                &dataBaseClient,
+		storageClient:                 &storageClient,
+		apiGatewayAddress:             "",
 		timeSinceVMCreationOrDeletion: &timer,
 	}
 	return val
@@ -108,15 +109,18 @@ func (serv *VideoConverterServer) PollActiveServices(address string) {
 	}
 
 	for _, v := range unresponsiveClients {
+		println("deleting unresponsive client: ", v)
 		delete(*serv.ActiveServices, v)
-		notifyAPIGatewayOfDeadClient(v)
+		notifyAPIGatewayOfDeadClient(serv.apiGatewayAddress)
 	}
 }
 
 func notifyAPIGatewayOfDeadClient(address string) {
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	println("trying to connect to APIGateway: ", address)
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Println("did not connect to api gateway: %v", err)
+		return
 	}
 	defer conn.Close()
 	println("connected")
@@ -193,11 +197,13 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 			for _, token := range tokens {
 				if convertedFileExists(token) {
 					println(token, " is already merged, skipping.")
-					continue
+				} else {
+					serv.downloadAndMergeFiles(token)
+					println("conversion for ", token, " is done and merged!")
 				}
-				serv.downloadAndMergeFiles(token)
-				println("conversion for ", token, " is done and merged!")
-				*(*serv.ActiveTokens)[token].ConversionDone = true
+				if _, ok := (*serv.ActiveTokens)[token]; ok {
+					*(*serv.ActiveTokens)[token].ConversionDone = true
+				}
 			}
 		}
 
@@ -363,7 +369,6 @@ func sendVideosToCloudStorage(token string) {
 func uploadFiles(fileNames []string) {
 	storageClient := CreateStorageClient()
 	storageClient.listBuckets()
-	println("fsgsfdgsddgs")
 	println(constants.UnconvertedVideosBucketName)
 	for _, fileName := range fileNames {
 		storageClient.UploadUnconvertedPart(fileName)
@@ -408,10 +413,23 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 		})
 	}
 
+	DeleteFiles(token)
 	serv.storageClient.DeleteConvertedParts(token)
 	serv.databaseClient.DeleteConvertedParts(token)
 
 	return nil
+}
+
+func DeleteFiles(prefix string) {
+	files, err := filepath.Glob(constants.LocalStorage + prefix)
+	if err != nil {
+		panic(err)
+	}
+	for _, f := range files {
+		if err := os.Remove(f); err != nil {
+			println("could not delete file: ", err)
+		}
+	}
 }
 
 func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
@@ -572,7 +590,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 }
 
 func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
-	println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60 - time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
+	println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60-time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
 	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > constants.MinutesBetweenVMCreationAndDeletion
 }
 
