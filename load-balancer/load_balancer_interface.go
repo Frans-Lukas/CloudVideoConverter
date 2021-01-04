@@ -194,7 +194,9 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 				}
 				serv.downloadAndMergeFiles(token)
 				println("conversion for ", token, " is done and merged!")
-				*(*serv.ActiveTokens)[token].ConversionDone = true
+				if _, ok := (*serv.ActiveTokens)[token]; ok {
+					*(*serv.ActiveTokens)[token].ConversionDone = true
+				}
 			}
 		}
 
@@ -360,7 +362,6 @@ func sendVideosToCloudStorage(token string) {
 func uploadFiles(fileNames []string) {
 	storageClient := CreateStorageClient()
 	storageClient.listBuckets()
-	println("fsgsfdgsddgs")
 	println(constants.UnconvertedVideosBucketName)
 	for _, fileName := range fileNames {
 		storageClient.UploadUnconvertedPart(fileName)
