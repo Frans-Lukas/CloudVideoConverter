@@ -110,14 +110,16 @@ func (serv *VideoConverterServer) PollActiveServices(address string) {
 	for _, v := range unresponsiveClients {
 		println("deleting unresponsive client: ", v)
 		delete(*serv.ActiveServices, v)
-		notifyAPIGatewayOfDeadClient(v)
+		notifyAPIGatewayOfDeadClient(serv.apiGatewayAddress)
 	}
 }
 
 func notifyAPIGatewayOfDeadClient(address string) {
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	println("trying to connect to APIGateway: ", address)
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Println("did not connect to api gateway: %v", err)
+		return
 	}
 	defer conn.Close()
 	println("connected")
