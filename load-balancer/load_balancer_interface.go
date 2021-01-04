@@ -531,6 +531,7 @@ func (serv *VideoConverterServer) countNonFinishedConversions() int {
 }
 
 func (serv *VideoConverterServer) reduceNumberOfServices() {
+	println("Attempting shutdown of service")
 	for i, v := range *serv.ActiveServices {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
@@ -546,6 +547,7 @@ func (serv *VideoConverterServer) reduceNumberOfServices() {
 			if err != nil {
 				println("failed to shutdown client ", i)
 			} else {
+				println("Shutdown service")
 				return
 			}
 		}
@@ -553,6 +555,7 @@ func (serv *VideoConverterServer) reduceNumberOfServices() {
 }
 
 func (serv *VideoConverterServer) IncreaseNumberOfServices() {
+	println("Starting new service")
 	scriptPath := "/home/group9/CloudVideoConverter/scripts/tfScripts/Service/startServiceVM.sh"
 	numberOfVms := strconv.Itoa(len(*serv.ActiveServices) + 1)
 	out, err := exec.Command(scriptPath, numberOfVms).Output()
