@@ -47,6 +47,9 @@ resource "google_compute_instance_from_machine_image" "tpl" {
     source = "/tmp/id_rsa"
     destination = "/tmp/id_rsa"
   }
+  service_account {
+    scopes = ["cloud-platform"]
+  }
 //
 //  provisioner "remote-exec" {
 //    inline = [
