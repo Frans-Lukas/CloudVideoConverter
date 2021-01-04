@@ -35,13 +35,14 @@ func (serv *APIGatewayServer) DisableServiceEndpoint(
 	ctx context.Context, in *api_gateway.DisableServiceEndPointRequest,
 ) (*api_gateway.DisabledServiceEndPointResponse, error) {
 	println("removing service from gateway, addr: ", in.Ip, ":", in.Port)
-	newEndPoint := items.EndPoint{
-		Ip:   in.Ip,
-		Port: int(in.Port),
+	found := false
+	for endPoint := range *serv.endPoints {
+		if endPoint.Ip == in.Ip && endPoint.Port == int(in.Port) {
+			delete(*serv.endPoints, endPoint)
+			found = true
+		}
 	}
-	if _, ok := (*serv.endPoints)[newEndPoint]; ok {
-		(*serv.endPoints)[newEndPoint] = false
-	} else {
+	if !found {
 		return nil, errors.New("tried disabling endpoint but it did not exist")
 	}
 	return &api_gateway.DisabledServiceEndPointResponse{}, nil
