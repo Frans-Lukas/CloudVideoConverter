@@ -134,7 +134,10 @@ func notifyAPIGatewayOfDeadClient(address string) {
 		log.Println("Failed to split address: " + address)
 		return
 	}
-	apiGateway.DisableServiceEndpoint(ctx, &api_gateway.DisableServiceEndPoint{Ip: ip, Port: int32(port)})
+	_, err = apiGateway.DisableServiceEndpoint(ctx, &api_gateway.DisableServiceEndPoint{Ip: ip, Port: int32(port)})
+	if err != nil {
+		println("failed to disable service endpoint")
+	}
 }
 
 func makeServiceConnection(address string) VideoConverterClient {
