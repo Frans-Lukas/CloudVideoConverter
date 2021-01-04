@@ -132,7 +132,7 @@ func notifyAPIGatewayOfDeadClient(address string) {
 
 func makeServiceConnection(address string) VideoConverterClient {
 	println("connecting to service endpoint: ", address)
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	println("connected to service endpoint!")
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
