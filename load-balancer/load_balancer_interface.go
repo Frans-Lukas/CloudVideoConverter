@@ -27,12 +27,13 @@ const sizeLimit = megaByte * 1
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
-	ActiveTokens      *map[string]items.Token
-	ConversionQueue   *[]ConversionObjectInfo
-	ActiveServices    *map[string]VideoConverterClient
-	databaseClient    *ConversionObjectsClient
-	storageClient     *StorageClient
-	apiGatewayAddress string
+	ActiveTokens                  *map[string]items.Token
+	ConversionQueue               *[]ConversionObjectInfo
+	ActiveServices                *map[string]VideoConverterClient
+	databaseClient                *ConversionObjectsClient
+	storageClient                 *StorageClient
+	apiGatewayAddress             string
+	timeSinceVMCreationOrDeletion *time.Time
 }
 
 type ConversionObjectInfo struct {
@@ -51,6 +52,7 @@ func CreateNewServer() VideoConverterServer {
 	activeServices := make(map[string]VideoConverterClient, 0)
 	dataBaseClient := NewConversionObjectsClient()
 	storageClient := CreateStorageClient()
+	timer := time.Time{}
 	val := VideoConverterServer{
 		ActiveTokens:      &activeTokens,
 		ConversionQueue:   &conversionQueue,
@@ -58,6 +60,7 @@ func CreateNewServer() VideoConverterServer {
 		databaseClient:    &dataBaseClient,
 		storageClient:     &storageClient,
 		apiGatewayAddress: "",
+		timeSinceVMCreationOrDeletion: &timer,
 	}
 	return val
 }
@@ -513,13 +516,13 @@ func (serv *VideoConverterServer) manageClients() {
 func (serv *VideoConverterServer) shouldReduceNumberOfServices() bool {
 	count := serv.countNonFinishedConversions()
 
-	return count < len(*serv.ActiveServices)
+	return count < len(*serv.ActiveServices) && serv.enoughTimeSinceVMCreationOrDeletion()
 }
 
 func (serv *VideoConverterServer) shouldIncreaseNumberOfServices() bool {
 	count := serv.countNonFinishedConversions()
 
-	return count > len(*serv.ActiveServices)
+	return count > len(*serv.ActiveServices) && serv.enoughTimeSinceVMCreationOrDeletion()
 }
 
 func (serv *VideoConverterServer) countNonFinishedConversions() int {
@@ -550,10 +553,12 @@ func (serv *VideoConverterServer) reduceNumberOfServices() {
 				println("failed to shutdown client ", i)
 			} else {
 				println("Shutdown service")
+				serv.resetVMTimer()
 				return
 			}
 		}
 	}
+	println("No service was shut down")
 }
 
 func (serv *VideoConverterServer) IncreaseNumberOfServices() {
@@ -564,4 +569,15 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 	if err != nil {
 		log.Println("could not increaseNumberOfServices: " + string(out))
 	}
+	serv.resetVMTimer()
+}
+
+func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
+	println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60 - time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
+	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > constants.MinutesBetweenVMCreationAndDeletion
+}
+
+func (serv *VideoConverterServer) resetVMTimer() {
+	now := time.Now()
+	serv.timeSinceVMCreationOrDeletion = &now
 }
