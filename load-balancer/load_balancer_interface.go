@@ -136,7 +136,7 @@ func notifyAPIGatewayOfDeadClient(address string) {
 	}
 	_, err = apiGateway.DisableServiceEndpoint(ctx, &api_gateway.DisableServiceEndPoint{Ip: ip, Port: int32(port)})
 	if err != nil {
-		println("failed to disable service endpoint")
+		println("failed to disable service endpoint", err.Error())
 	}
 }
 
