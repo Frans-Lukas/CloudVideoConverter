@@ -203,7 +203,6 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 				if _, ok := (*serv.ActiveTokens)[token]; ok {
 					*(*serv.ActiveTokens)[token].ConversionDone = true
 				}
-				os.Remove()
 			}
 		}
 
