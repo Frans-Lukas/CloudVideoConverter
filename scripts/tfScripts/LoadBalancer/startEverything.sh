@@ -6,14 +6,13 @@ read -p "Enter ip of load-balancer-0 VM: " ip
 echo $ip
 ssh-add /tmp/id_rsa
 ssh -oStrictHostKeyChecking=no -t -t group9@$ip << EOF
+  cd /home/group9/CloudVideoConverter
+  sudo git checkout .
+  sudo git pull
+  sudo chmod -R +x /home/group9/*
+  cd /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway
+  sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh
+  cd /home/group9/CloudVideoConverter
   sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &
   sleep 1
 EOF
-#  cd /home/group9/CloudVideoConverter
-#  sudo git checkout .
-#  sudo git pull
-#  sudo chmod -R +x /home/group9/*
-#  cd /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway
-#  sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh
-#  nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh < /dev/null > std.out 2> std.err &
-#EOF
