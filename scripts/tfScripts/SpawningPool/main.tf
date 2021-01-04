@@ -3,9 +3,14 @@ variable "instance_count" {
   default = 1
 }
 
-//command = "echo $(pwd)"
 provider "google-beta" {
-  credentials = file("/tmp/SSDNIA.json")
+  credentials = file("../LoadBalancer/SSDNIA.json")
+  project     = var.project
+  region      = var.region
+  zone        = var.zone
+}
+provider "google" {
+  credentials = file("../LoadBalancer/SSDNIA.json")
   project     = var.project
   region      = var.region
   zone        = var.zone
@@ -13,11 +18,12 @@ provider "google-beta" {
 
 resource "google_compute_instance_from_machine_image" "tpl" {
   provider = google-beta
-  project     = project
+  project     = var.project
   zone        = var.zone
+  can_ip_forward=true
   count        = var.instance_count
-  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-3-2020-12-30"
   name         = "spawning-pool-${count.index}"
+  source_machine_image = "projects/fast-blueprint-296210/global/machineImages/video-converter-image-3-2020-12-30"
 
   metadata = {
     ssh-keys = "${var.gce_ssh_user}:${file(var.gce_ssh_key_location)}"
