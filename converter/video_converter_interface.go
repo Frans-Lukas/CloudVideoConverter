@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 )
 
@@ -119,9 +120,8 @@ func (serv *VideoConverterServiceServer) HandleConversionsLoop() {
 				serv.uploadConvertedFile(correctFileName)
 				serv.databaseClient.MarkConversionAsDone(fileName)
 				serv.storageClient.DeleteUnconvertedPart(fileName)
-				serv.deleteFiles(fileName, token)
-				serv.deleteFiles(correctFileName, token)
-
+				DeleteFiles(fileName)
+				DeleteFiles(correctFileName)
 				delete(*serv.ActiveTokens, fileName)
 				continue
 			}
@@ -149,17 +149,15 @@ func (serv *VideoConverterServiceServer) actuallyStartConversion(token string, o
 	}()
 }
 
-func (serv *VideoConverterServiceServer) deleteFiles(tokenString string, token items.Token) {
-	filePath := constants.LocalStorage + tokenString
-	_, err := os.Stat(filePath)
-	if err == nil {
-		println("deleting " + filePath)
-		err := os.Remove(filePath)
-		if err != nil {
-			println(err.Error())
+func DeleteFiles(prefix string) {
+	files, err := filepath.Glob(constants.LocalStorage + prefix)
+	if err != nil {
+		panic(err)
+	}
+	for _, f := range files {
+		if err := os.Remove(f); err != nil {
+			println("could not delete file: ", err)
 		}
-	} else {
-		println("cannot delete file")
 	}
 }
 

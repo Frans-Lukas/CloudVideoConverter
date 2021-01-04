@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/constants"
+	"github.com/Frans-Lukas/cloudvideoconverter/converter"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/server/items"
 	"google.golang.org/grpc"
@@ -412,6 +413,7 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 		})
 	}
 
+	converter.DeleteFiles(token)
 	serv.storageClient.DeleteConvertedParts(token)
 	serv.databaseClient.DeleteConvertedParts(token)
 
