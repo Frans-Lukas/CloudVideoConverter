@@ -200,8 +200,9 @@ func (cli *StorageClient) DownloadSampleVideos() {
 			log.Fatalf("DownloadSampleVideos: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
 			return
 		}
-
-		f, err := os.Create(constants.LocalStorage + attrs.Name)
+		imagePath := constants.LocalStorage + attrs.Name
+		println(imagePath)
+		f, err := os.Create(imagePath)
 		if err != nil {
 			log.Fatalf("DownloadSampleVideos, create file: %v", err)
 		}

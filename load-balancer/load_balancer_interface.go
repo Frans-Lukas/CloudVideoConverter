@@ -164,6 +164,7 @@ func saveFile(fileName string, imageBytes *bytes.Buffer) error {
 	fmt.Println(dir)
 
 	imagePath := constants.LocalStorage + fileName + ".mp4"
+	println(imagePath)
 	file, err := os.Create(imagePath)
 	defer file.Close()
 	if err != nil {
