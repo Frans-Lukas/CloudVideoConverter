@@ -52,7 +52,7 @@ func CreateNewServer() VideoConverterServer {
 	activeServices := make(map[string]VideoConverterClient, 0)
 	dataBaseClient := NewConversionObjectsClient()
 	storageClient := CreateStorageClient()
-	timer := time.Now()
+	timer := time.Time{}
 	val := VideoConverterServer{
 		ActiveTokens:      &activeTokens,
 		ConversionQueue:   &conversionQueue,
