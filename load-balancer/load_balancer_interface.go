@@ -230,6 +230,7 @@ func (serv *VideoConverterServer) LoadQueueFromDB() {
 	filesToConvert := serv.databaseClient.GetPartsInProgress()
 	for _, v := range filesToConvert {
 		*serv.ConversionQueue = append(*serv.ConversionQueue, v)
+		println("Found part: ", v.name)
 	}
 }
 
