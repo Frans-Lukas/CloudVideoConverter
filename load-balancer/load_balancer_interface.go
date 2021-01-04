@@ -156,7 +156,13 @@ func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *vi
 	return &videoconverter.UploadTokenResponse{Token: tokenString}, nil
 }
 
-func saveImage(fileName string, imageBytes *bytes.Buffer) error {
+func saveFile(fileName string, imageBytes *bytes.Buffer) error {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(dir)
+
 	imagePath := constants.LocalStorage + fileName + ".mp4"
 	file, err := os.Create(imagePath)
 	defer file.Close()
@@ -305,7 +311,7 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoa
 		RetrievalToken: tokenString,
 	})
 
-	err = saveImage(tokenString, &imageData)
+	err = saveFile(tokenString, &imageData)
 	if err != nil {
 		return err
 	}
