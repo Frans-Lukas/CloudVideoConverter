@@ -201,7 +201,7 @@ func (cli *StorageClient) DownloadSampleVideos() {
 			return
 		}
 		imagePath := constants.LocalStorage + attrs.Name
-		println(imagePath)
+		println("Download imagePath: ", imagePath)
 		f, err := os.Create(imagePath)
 		if err != nil {
 			log.Fatalf("DownloadSampleVideos, create file: %v", err)
