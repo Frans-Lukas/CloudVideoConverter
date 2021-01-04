@@ -573,7 +573,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 
 func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
 	println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60 - time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
-	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > 1
+	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > constants.MinutesBetweenVMCreationAndDeletion
 }
 
 func (serv *VideoConverterServer) resetVMTimer() {
