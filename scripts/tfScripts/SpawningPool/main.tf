@@ -61,6 +61,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   provisioner "remote-exec" {
     inline = [
       "sudo chmod +x /tmp/*",
+      "sudo mkdir /home/group9/CloudVideoConverter/localStorage",
       "sudo nohup /tmp/startSpawningPool.sh &",
       "sleep 1",
     ]
