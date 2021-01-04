@@ -4,7 +4,7 @@ package api_gateway;
 
 service APIGateWay {
   rpc AddServiceEndpoint(ServiceEndPoint) returns (AddedServiceEndPoint) {}
-  rpc DisableServiceEndpoint(DisableServiceEndPoint) returns (DisabledServiceEndPoint) {}
+  rpc DisableServiceEndpoint(DisableServiceEndPointRequest) returns (DisabledServiceEndPointResponse) {}
   rpc GetActiveServiceEndpoints(ServiceEndPointsRequest) returns (ServiceEndPointList) {}
 }
 
@@ -17,8 +17,8 @@ message ServiceEndPointList {
   repeated ServiceEndPoint endPoint = 1;
 }
 message AddedServiceEndPoint{}
-message DisabledServiceEndPoint{}
-message DisableServiceEndPoint {
+message DisabledServiceEndPointResponse{}
+message DisableServiceEndPointRequest {
   string ip = 1;
   int32 port = 2;
 }
