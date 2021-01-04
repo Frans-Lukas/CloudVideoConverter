@@ -54,12 +54,12 @@ func CreateNewServer() VideoConverterServer {
 	storageClient := CreateStorageClient()
 	timer := time.Time{}
 	val := VideoConverterServer{
-		ActiveTokens:      &activeTokens,
-		ConversionQueue:   &conversionQueue,
-		ActiveServices:    &activeServices,
-		databaseClient:    &dataBaseClient,
-		storageClient:     &storageClient,
-		apiGatewayAddress: "",
+		ActiveTokens:                  &activeTokens,
+		ConversionQueue:               &conversionQueue,
+		ActiveServices:                &activeServices,
+		databaseClient:                &dataBaseClient,
+		storageClient:                 &storageClient,
+		apiGatewayAddress:             "",
 		timeSinceVMCreationOrDeletion: &timer,
 	}
 	return val
@@ -108,6 +108,7 @@ func (serv *VideoConverterServer) PollActiveServices(address string) {
 	}
 
 	for _, v := range unresponsiveClients {
+		println("deleting unresponsive client: ", v)
 		delete(*serv.ActiveServices, v)
 		notifyAPIGatewayOfDeadClient(v)
 	}
@@ -573,7 +574,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 }
 
 func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
-	println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60 - time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
+	println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60-time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
 	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > constants.MinutesBetweenVMCreationAndDeletion
 }
 
