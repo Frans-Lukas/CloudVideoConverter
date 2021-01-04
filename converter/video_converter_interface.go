@@ -111,6 +111,7 @@ func (serv *VideoConverterServiceServer) downloadFileToConvert(token string) {
 
 func (serv *VideoConverterServiceServer) HandleConversionsLoop() {
 	for {
+		println("handling any converted files.")
 		for fileName, token := range *serv.ActiveTokens {
 			if *token.ConversionDone {
 				correctFileName := helpers.ChangeFileExtension(fileName, *token.OutputType)
