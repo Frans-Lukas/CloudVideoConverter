@@ -181,6 +181,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 	for {
 		// Update Clients
 		serv.UpdateActiveServices(serv.apiGatewayAddress)
+		serv.PollActiveServices(serv.apiGatewayAddress)
 
 		// Handle Videos
 		serv.SendWorkToClients()
