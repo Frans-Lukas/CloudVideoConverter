@@ -93,6 +93,10 @@ func (serv *VideoConverterServiceServer) ShutDown(ctx context.Context, in *video
 	return &videoconverter.ShutDownResponse{}, nil
 }
 
+func (serv *VideoConverterServiceServer) IsAlive(ctx context.Context, in *videoconverter.IsAliveRequest) (*videoconverter.IsAliveResponse, error) {
+	return &videoconverter.IsAliveResponse{}, nil
+}
+
 func shutDown() {
 	cmd := exec.Command("/home/group9/CloudVideoConverter/scripts/VMDeleteSelf.sh")
 	err := cmd.Run()

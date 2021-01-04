@@ -3,7 +3,7 @@ package api_gateway
 import (
 	"context"
 	"errors"
-	api_gateway "github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
+	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/items"
 	"strconv"
 )
@@ -34,6 +34,7 @@ func (serv *APIGatewayServer) AddServiceEndpoint(
 func (serv *APIGatewayServer) DisableServiceEndPoint(
 	ctx context.Context, in *api_gateway.DisableServiceEndPoint,
 ) (*api_gateway.DisabledServiceEndPoint, error) {
+	println("removing service from gateway, addr: ", in.Ip, ":", in.Port)
 	newEndPoint := items.EndPoint{
 		Ip:   in.Ip,
 		Port: int(in.Port),
