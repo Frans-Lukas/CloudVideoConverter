@@ -20,7 +20,21 @@ service VideoConverterService {
 
 service LifeGuard {
     rpc IsAlive(IsAliveRequest) returns (IsAliveResponse) {}
+    rpc Election(ElectionRequest) returns (ElectionResponse) {}
+    rpc Coordinator(CoordinatorRequest) returns (CoordinatorResponse) {}
 }
+
+message ElectionRequest{
+    int32 highestProcessNumber = 1;
+}
+
+message ElectionResponse{}
+
+message CoordinatorRequest{
+    int32 highestProcessNumber = 1;
+}
+
+message CoordinatorResponse{}
 
 message IsAliveRequest{}
 
