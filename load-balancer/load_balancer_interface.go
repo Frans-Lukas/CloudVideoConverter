@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/constants"
-	"github.com/Frans-Lukas/cloudvideoconverter/converter"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/server/items"
 	"google.golang.org/grpc"
@@ -16,6 +15,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -413,11 +413,23 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 		})
 	}
 
-	converter.DeleteFiles(token)
+	DeleteFiles(token)
 	serv.storageClient.DeleteConvertedParts(token)
 	serv.databaseClient.DeleteConvertedParts(token)
 
 	return nil
+}
+
+func DeleteFiles(prefix string) {
+	files, err := filepath.Glob(constants.LocalStorage + prefix)
+	if err != nil {
+		panic(err)
+	}
+	for _, f := range files {
+		if err := os.Remove(f); err != nil {
+			println("could not delete file: ", err)
+		}
+	}
 }
 
 func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
