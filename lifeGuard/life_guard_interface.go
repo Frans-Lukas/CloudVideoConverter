@@ -17,7 +17,7 @@ type LifeGuardServer struct {
 	targetLifeGuardConnection    *videoconverter.LifeGuardClient
 	APIGateway                   *api_gateway.APIGateWayClient
 	shouldSendElectionMessage    bool
-	canSendElectionMessage       bool
+	shouldStartElection          bool
 	newElectionRequest           *videoconverter.ElectionRequest
 	id                           int32
 	shouldSendCoordinatorMessage bool
@@ -29,6 +29,7 @@ type LifeGuardServer struct {
 	recreateRingSenderId         int
 	yourAddress                  string
 	targetIsCoordinator          bool
+	shouldSetCoordinator         bool
 }
 
 func CreateNewLifeGuardServer() LifeGuardServer {
@@ -37,7 +38,7 @@ func CreateNewLifeGuardServer() LifeGuardServer {
 		targetLifeGuardConnection:    nil,
 		APIGateway:                   nil,
 		shouldSendElectionMessage:    false,
-		canSendElectionMessage:       true,
+		shouldStartElection:          false,
 		newElectionRequest:           nil,
 		id:                           -1,
 		shouldSendCoordinatorMessage: false,
@@ -48,6 +49,7 @@ func CreateNewLifeGuardServer() LifeGuardServer {
 		recreateRingSenderId:         -1,
 		yourAddress:                  "",
 		targetIsCoordinator:          false,
+		shouldSetCoordinator:		  false,
 	}
 	return val
 }
@@ -66,11 +68,7 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 
 		server.checkIfNextLifeGuardIsAlive()
 
-		if server.checkIfElectionShouldBeStarted() {
-			server.startElection()
-		}
-
-		if server.shouldSendElectionMessage && server.canSendElectionMessage {
+		if server.shouldSendElectionMessage {
 			server.sendElectionMessage()
 		}
 
@@ -78,9 +76,19 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 			server.sendCoordinatorMessage()
 		}
 
+		if server.shouldSetCoordinator {
+			server.setCoordinator()
+		}
+
 		if server.isCoordinator {
 			//TODO coordinator stuff
 		}
+
+		if server.shouldStartElection {
+			server.startElection()
+		}
+
+		time.Sleep(time.Second)
 	}
 }
 
@@ -109,29 +117,34 @@ func (server *LifeGuardServer) IsAlive(ctx context.Context, in *videoconverter.I
 }
 
 func (server *LifeGuardServer) Election(ctx context.Context, in *videoconverter.ElectionRequest) (*videoconverter.ElectionResponse, error) {
+	println("Received election message with ID: " + strconv.Itoa(int(in.HighestProcessNumber)))
+
 	if server.startedElection {
 		server.shouldSendCoordinatorMessage = true
-		server.newElectionRequest = in
-	} else if in.HighestProcessNumber == server.id {
-		server.shouldSendElectionMessage = true
-		server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id}
-	} else if in.HighestProcessNumber < server.id {
+		server.startedCoordination = true
+		server.shouldSendElectionMessage = false
+		server.startedElection = false
+		server.newCoordinatorRequest = &videoconverter.CoordinatorRequest{HighestProcessNumber:in.HighestProcessNumber}
+	} else if in.HighestProcessNumber <= server.id {
 		server.shouldSendElectionMessage = true
 		server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id}
 	} else {
 		server.shouldSendElectionMessage = true
-		server.newElectionRequest = in
+		server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber:in.HighestProcessNumber}
 	}
 	return &videoconverter.ElectionResponse{}, nil
 }
 
 func (server *LifeGuardServer) Coordinator(ctx context.Context, in *videoconverter.CoordinatorRequest) (*videoconverter.CoordinatorResponse, error) {
 	if in.HighestProcessNumber == server.id {
+		println("is coordinator")
 		server.isCoordinator = true
+		server.shouldSetCoordinator = true
 	}
 
 	if server.startedCoordination {
 		server.newElectionRequest = nil
+		server.startedCoordination = false
 	} else {
 		server.shouldSendCoordinatorMessage = true
 		server.newCoordinatorRequest = in
@@ -142,12 +155,15 @@ func (server *LifeGuardServer) Coordinator(ctx context.Context, in *videoconvert
 
 func (server *LifeGuardServer) RecreateRing(ctx context.Context, in *videoconverter.RecreateRingRequest) (*videoconverter.RecreateRingResponse, error) {
 	if in.InitialSenderId == server.id {
+		println("RecreateRing Completed!!!")
 		if server.shouldSendElectionMessage {
-			server.canSendElectionMessage = true
+			server.shouldStartElection = true
 			server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id}
 		}
 	} else {
+		println("recreateRing id: " + strconv.Itoa(int(in.InitialSenderId)))
 		server.shouldRecreateRing = true
+		server.recreateRingSenderId = int(in.InitialSenderId)
 	}
 	return &videoconverter.RecreateRingResponse{}, nil
 }
@@ -157,10 +173,9 @@ func (server *LifeGuardServer) checkIfNextLifeGuardIsAlive() {
 	_, err := (*server.targetLifeGuardConnection).IsAlive(ctx, &videoconverter.IsAliveRequest{})
 
 	if err != nil {
-		log.Fatalf("response to IsAlive: %v", err)
+		println("response to IsAlive: %v", err)
 		if server.targetIsCoordinator {
-			server.shouldSendElectionMessage = true
-			server.canSendElectionMessage = false
+			server.shouldStartElection = true
 		}
 		server.removeTargetLifeGuard()
 		server.shouldRecreateRing = true
@@ -169,13 +184,15 @@ func (server *LifeGuardServer) checkIfNextLifeGuardIsAlive() {
 }
 
 func (server *LifeGuardServer) startElection() {
+	println("starting election!")
 	server.startedElection = true
 	server.shouldSendElectionMessage = true
+	server.shouldStartElection = false
 	server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id}
 }
 
 func (server *LifeGuardServer) sendElectionMessage() {
-	println("Sending ElectionMessage")
+	println("Sending ElectionMessage with id: " + strconv.Itoa(int(server.newElectionRequest.HighestProcessNumber)))
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	_, err := (*server.targetLifeGuardConnection).Election(ctx, server.newElectionRequest)
 
@@ -193,7 +210,8 @@ func (server *LifeGuardServer) sendCoordinatorMessage() {
 	_, err := (*server.targetLifeGuardConnection).Coordinator(ctx, server.newCoordinatorRequest)
 
 	if err != nil {
-		log.Fatalf("response to coordinator message: %v", err)
+		println("response to coordinator message: " + err.Error())
+		return
 	}
 	println("responded!")
 	server.newCoordinatorRequest = nil
@@ -221,13 +239,8 @@ func (server *LifeGuardServer) SetupAPIConnections(Ip string, Port string, c api
 	server.yourAddress = Ip + ":" + Port
 }
 
-func (server *LifeGuardServer) checkIfElectionShouldBeStarted() bool {
-	//TODO figure out how to implement this
-	return false
-}
-
 func (server *LifeGuardServer) recreateRingProcedure() {
-	server.getNextLifeGuard()
+	server.ConnectToLifeGuard()
 	if server.targetLifeGuard == "NOT SET" || server.targetLifeGuard == "" {
 		println("recreateRingProcedure: target not set")
 		return
@@ -268,10 +281,16 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 		return
 	}
 
+	if res.Port == -1 && res.Ip == "" {
+		server.startElection()
+		return
+	}
+
 	coordinatorLifeGuard := res.Ip + ":" + strconv.Itoa(int(res.Port))
 
 	if coordinatorLifeGuard == server.yourAddress {
 		server.isCoordinator = true
+		println("is coordinator")
 		server.targetIsCoordinator = false
 	} else if coordinatorLifeGuard == server.targetLifeGuard {
 		server.isCoordinator = false
@@ -299,4 +318,16 @@ func (server *LifeGuardServer) removeTargetLifeGuard() {
 	}
 
 	server.targetLifeGuard = "NOT SET"
+}
+
+func (server *LifeGuardServer) setCoordinator() {
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	_, err := (*server.APIGateway).SetLifeGuardCoordinator(ctx, &api_gateway.SetLifeGuardCoordinatorRequest{LifeGuardId:server.id})
+
+	if err != nil {
+		println("setCoordinator: " + err.Error())
+		return
+	}
+
+	server.shouldSetCoordinator = false
 }

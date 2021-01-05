@@ -97,6 +97,11 @@ func (serv *APIGatewayServer) RemoveLifeGuardNode(
 		if v.Port == int(in.Port) && v.Ip == in.Ip {
 			println("Deleting lifeGuard: " + in.Ip + ":" + strconv.Itoa(int(in.Port)) + " with id: " + strconv.Itoa(k))
 			delete(*serv.lifeGuards, k)
+
+			if serv.currentCoordinator.Port == int(in.Port) && serv.currentCoordinator.Ip == in.Ip {
+				serv.currentCoordinator = items.LifeGuard{Port:-1, Ip:""}
+			}
+
 			break
 		}
 	}
@@ -121,16 +126,6 @@ func (serv *APIGatewayServer) SetLifeGuardCoordinator(
 func (serv *APIGatewayServer) GetLifeGuardCoordinator(
 	ctx context.Context, in *api_gateway.GetLifeGuardCoordinatorRequest,
 ) (*api_gateway.GetLifeGuardCoordinatorResponse, error) {
-
-	// First coordinator will just be the first lifeguard that joins
-	if serv.currentCoordinator.Ip == "" && serv.currentCoordinator.Port == -1 {
-		if len(*serv.lifeGuards) > 0 {
-			serv.currentCoordinator = (*serv.lifeGuards)[0]
-		} else {
-			println("Received request for coordinator before any lifeGuard has joined.")
-			return &api_gateway.GetLifeGuardCoordinatorResponse{Ip: "", Port: -1}, errors.New("request for coordinator before any lifeGuard has joined")
-		}
-	}
 
 	return &api_gateway.GetLifeGuardCoordinatorResponse{Ip: serv.currentCoordinator.Ip, Port: int32(serv.currentCoordinator.Port)}, nil
 }
