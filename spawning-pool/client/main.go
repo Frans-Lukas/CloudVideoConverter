@@ -213,12 +213,14 @@ func download(token string, extension string) error {
 
 	f, err := os.Create(constants.LocalStorage + "downloaded" + "." + extension)
 	if err != nil {
-		log.Fatalf("Download, create file: %v", err)
+		log.Println("Download, create file: %v", err)
+		return errors.New("Download, create file: " + err.Error())
 	}
 
 	_, err = f.Write(buf.Bytes())
 	if err != nil {
-		log.Fatalf("Download, write to file: %v", err)
+		log.Println("Download, write to file: %v", err)
+		return errors.New("Download, write to file: " + err.Error())
 	}
 
 	f.Close()
