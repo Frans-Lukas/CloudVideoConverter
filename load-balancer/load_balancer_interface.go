@@ -428,6 +428,7 @@ func DeleteFiles(prefix string) {
 	if err != nil {
 		panic(err)
 	}
+	println("Trying to delete files at: ", constants.LocalStorage+prefix, " length of files: ", len(files))
 	for _, f := range files {
 		println("trying to delete file: ", f)
 		if err := os.Remove(f); err != nil {
