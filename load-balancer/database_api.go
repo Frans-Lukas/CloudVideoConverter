@@ -55,7 +55,7 @@ func (store *ConversionObjectsClient) AddParts(files []string, count int, conver
 		}
 	}
 }
-func (store *ConversionObjectsClient) DeleteConvertedParts(token string) {
+func (store *ConversionObjectsClient) DeleteWithToken(token string) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	q := datastore.NewQuery(KIND).Filter("Token =", token)
@@ -118,6 +118,29 @@ func (store *ConversionObjectsClient) StartConversionForParts(token string, outp
 
 	return nil, &fileNames
 }
+func (store *ConversionObjectsClient) RestartConversionForParts(token string) (error, *[]ConversionObjectInfo) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	q := datastore.NewQuery(KIND).Filter("Token =", token)
+	var objects []ConversionObject
+	keys, err := store.GetAll(ctx, q, &objects)
+	if err != nil {
+		log.Println("could not update conversion status for token ", token, " because: ", err.Error())
+		return err, nil
+	}
+	fileNames := make([]ConversionObjectInfo, 0)
+	for i, object := range objects {
+		object.InProgress = false
+		fileNames = append(fileNames, ConversionObjectInfo{keys[i].Name, object.ConversionType})
+		_, err := store.Put(ctx, keys[i], &object)
+		if err != nil {
+			log.Println("failed to add ", keys[i], " to datastore")
+			return err, nil
+		}
+	}
+
+	return nil, &fileNames
+}
 
 func (store *ConversionObjectsClient) GetPartsInProgress() []ConversionObjectInfo {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
@@ -137,14 +160,14 @@ func (store *ConversionObjectsClient) GetPartsInProgress() []ConversionObjectInf
 
 func (store *ConversionObjectsClient) CheckForMergeableFiles() []string {
 	keys, objects := store.GetFinishedParts()
-	println("found ", len(keys), " finished parts")
+	//println("found ", len(keys), " finished parts")
 
 	countMap := make(map[string][]ConversionObjectInfo, 0)
 	desiredCountMap := make(map[string]int, 0)
 
 	for i, v := range keys {
 		token := strings.Split(v.Name, "-")[0]
-		println(v.Name)
+		//println(v.Name)
 		//println("token used for counting: ", token)
 		if _, ok := countMap[token]; !ok {
 			countMap[token] = make([]ConversionObjectInfo, 0)
@@ -156,10 +179,10 @@ func (store *ConversionObjectsClient) CheckForMergeableFiles() []string {
 
 	output := make([]string, 0)
 	for i, v := range desiredCountMap {
-		println("seeing if part is done v: ", v, " part count: ", len(countMap[i]))
+		//println("seeing if part is done v: ", v, " part count: ", len(countMap[i]))
 		if v == len(countMap[i]) {
 			output = append(output, i)
-			println("appedning finished part: ", i)
+			//println("appedning finished part: ", i)
 		}
 	}
 	return output

@@ -153,6 +153,7 @@ func makeServiceConnection(address string) VideoConverterClient {
 
 func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
 	tokenString := GenerateRandomString()
+	println("received request for upload token, responding with: ", tokenString)
 	creationTime := time.Now()
 	isStarted := false
 	isDone := false
@@ -199,7 +200,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		if len(tokens) > 0 {
 			for _, token := range tokens {
 				if convertedFileExists(token) {
-					println(token, " is already merged, skipping.")
+					//println(token, " is already merged, skipping.")
 				} else {
 					serv.downloadAndMergeFiles(token)
 					println("conversion for ", token, " is done and merged!")
@@ -243,13 +244,26 @@ func (serv *VideoConverterServer) LoadQueueFromDB() {
 	filesToConvert := serv.databaseClient.GetPartsInProgress()
 	for _, v := range filesToConvert {
 		*serv.ConversionQueue = append(*serv.ConversionQueue, v)
+		token := strings.Split(v.name, "-")[0]
+		println("Timing token: ", token)
+		serv.databaseClient.RestartConversionForParts(token)
+		creationTime := time.Now()
+		isStarted := false
+		isDone := false
+		isFailed := false
+		(*serv.ActiveTokens)[token] = items.Token{
+			CreationTime:      &creationTime,
+			ConversionStarted: &isStarted,
+			ConversionDone:    &isDone,
+			ConversionFailed:  &isFailed,
+		}
 		println("Found part: ", v.name)
 	}
 }
 
 func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
 	err, filesToConvert := serv.databaseClient.StartConversionForParts(in.Token, in.OutputType)
-	println("starting conversion for ", in.Token)
+	println("load balancer starting conversion for ", in.Token)
 	if err != nil {
 		return &videoconverter.ConversionResponse{}, err
 	}
@@ -268,25 +282,6 @@ func (serv *VideoConverterServer) conversionIsNotFinishedForToken(token string) 
 	// conversion is not finished
 	return !*(*serv.ActiveTokens)[token].ConversionDone
 }
-
-//func (serv *VideoConverterServer) performConversion(app string, arg0 string, arg1 string, arg2 string, in *videoconverter.ConversionRequest) {
-//	cmd := exec.Command(app, arg0, arg1, arg2)
-//	*(*serv.ActiveTokens)[in.Token].ConversionStarted = true
-//	err := cmd.Run()
-//	if err != nil {
-//		*(*serv.ActiveTokens)[in.Token].ConversionFailed = true
-//		return
-//	} else {
-//		*(*serv.ActiveTokens)[in.Token].ConversionDone = true
-//	}
-//	file, err := os.Open(arg2)
-//	defer file.Close()
-//	if err != nil {
-//		println(err.Error())
-//		return
-//	}
-//	os.Rename(arg2, constants.LocalStorage+in.Token)
-//}
 
 func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoadBalancer_UploadServer) error {
 
@@ -335,7 +330,7 @@ func (serv *VideoConverterServer) Upload(stream videoconverter.VideoConverterLoa
 	if err != nil {
 		return err
 	}
-	deleteFullVideo(tokenString)
+	//deleteFullVideo(tokenString)
 	sendVideosToCloudStorage(tokenString)
 	serv.sendVideoInformationToDatabase(tokenString)
 
@@ -380,6 +375,7 @@ func uploadFiles(fileNames []string) {
 
 func (server *VideoConverterServer) tokenIsInvalid(token string) bool {
 	if tokenCreationTime, ok := (*server.ActiveTokens)[token]; ok {
+		println("Time since token was created: ", time.Since(*tokenCreationTime.CreationTime).Seconds())
 		if time.Since(*tokenCreationTime.CreationTime).Seconds() < tokenTimeOutSeconds {
 			return false
 		}
@@ -418,7 +414,7 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 
 	DeleteFiles(token)
 	serv.storageClient.DeleteConvertedParts(token)
-	serv.databaseClient.DeleteConvertedParts(token)
+	serv.databaseClient.DeleteWithToken(token)
 
 	return nil
 }
@@ -492,28 +488,25 @@ func GenerateRandomString() string {
 
 func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 	for {
+		println("Checking active tokens: ")
+		keysToDelete := make([]string, 0)
 		for token, _ := range *serv.ActiveTokens {
+			println("checking if I can delete token: ", token)
 			if serv.tokenIsInvalid(token) {
-				filePath := constants.LocalStorage + token + ".mp4"
-				_, err := os.Stat(filePath)
-				if err == nil {
-					println("deleting " + filePath)
-					err := os.Remove(filePath)
-					if err != nil {
-						println(err.Error())
-					}
-				}
-				filePath = constants.LocalStorage + token
-				_, err = os.Stat(filePath)
-				if err == nil {
-					println("deleting " + filePath)
-					err := os.Remove(filePath)
-					if err != nil {
-						println(err.Error())
-					}
-				}
+				println("deleting invalid token from everywhere.")
+				DeleteFiles(token)
+				serv.databaseClient.DeleteWithToken(token)
+				serv.storageClient.DeleteUnconvertedParts(token)
+				serv.storageClient.DeleteConvertedParts(token)
+				keysToDelete = append(keysToDelete, token)
+				break
 			}
 		}
+		for _, key := range keysToDelete {
+			delete(*serv.ActiveTokens, key)
+		}
+		fmt.Printf("map after deletion: %v", *serv.ActiveTokens)
+
 		time.Sleep(time.Second * 5)
 	}
 }
@@ -608,7 +601,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 }
 
 func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
-	println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60-time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
+	//println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60-time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
 	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > constants.MinutesBetweenVMCreationAndDeletion
 }
 

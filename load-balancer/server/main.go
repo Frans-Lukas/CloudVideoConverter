@@ -69,6 +69,10 @@ func main() {
 	println("starting worker loop")
 
 	go func() {
+		videoServer.DeleteTimedOutVideosLoop()
+	}()
+
+	go func() {
 		//videoServer.IncreaseNumberOfServices()
 		videoServer.WorkManagementLoop()
 	}()
