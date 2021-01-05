@@ -497,6 +497,8 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 				serv.databaseClient.DeleteWithToken(token)
 				serv.storageClient.DeleteUnconvertedParts(token)
 				serv.storageClient.DeleteConvertedParts(token)
+				delete(*serv.ActiveServices, token)
+				break
 			}
 		}
 		time.Sleep(time.Second * 5)
@@ -593,7 +595,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 }
 
 func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
-	println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60-time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
+	//println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60-time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
 	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > constants.MinutesBetweenVMCreationAndDeletion
 }
 
