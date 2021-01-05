@@ -423,26 +423,22 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 }
 
 func DeleteFiles(prefix string) {
-
 	filesToRemove := "/home/group9/CloudVideoConverter/localStorage/" + prefix + "*"
-	out, err := exec.Command("rm", filesToRemove).Output()
+	println("Trying to delete files with prefix: ", filesToRemove)
+	cmd := exec.Command("rm", filesToRemove)
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+
 	if err != nil {
-		log.Println("could not increaseNumberOfServices: " + string(out))
-		log.Println(err.Error())
+		log.Println("could not DeleteFiles: " + out.String())
+		log.Println(err.Error(), ": ", stderr.String())
+	} else {
+		log.Println(out.String())
 	}
-	//
-	//files, err := filepath.Glob(constants.LocalStorage + prefix)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//println("Trying to delete files at: ", constants.LocalStorage+prefix, " length of files: ", len(files))
-	//for _, f := range files {
-	//	println("trying to delete file: ", f)
-	//	if err := os.Remove(f); err != nil {
-	//		println("could not delete file: ", err)
-	//	}
-	//	println("deleted: ", f)
-	//}
 }
 
 func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
