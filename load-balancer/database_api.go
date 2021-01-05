@@ -160,14 +160,14 @@ func (store *ConversionObjectsClient) GetPartsInProgress() []ConversionObjectInf
 
 func (store *ConversionObjectsClient) CheckForMergeableFiles() []string {
 	keys, objects := store.GetFinishedParts()
-	println("found ", len(keys), " finished parts")
+	//println("found ", len(keys), " finished parts")
 
 	countMap := make(map[string][]ConversionObjectInfo, 0)
 	desiredCountMap := make(map[string]int, 0)
 
 	for i, v := range keys {
 		token := strings.Split(v.Name, "-")[0]
-		println(v.Name)
+		//println(v.Name)
 		//println("token used for counting: ", token)
 		if _, ok := countMap[token]; !ok {
 			countMap[token] = make([]ConversionObjectInfo, 0)
@@ -179,10 +179,10 @@ func (store *ConversionObjectsClient) CheckForMergeableFiles() []string {
 
 	output := make([]string, 0)
 	for i, v := range desiredCountMap {
-		println("seeing if part is done v: ", v, " part count: ", len(countMap[i]))
+		//println("seeing if part is done v: ", v, " part count: ", len(countMap[i]))
 		if v == len(countMap[i]) {
 			output = append(output, i)
-			println("appedning finished part: ", i)
+			//println("appedning finished part: ", i)
 		}
 	}
 	return output

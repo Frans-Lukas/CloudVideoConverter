@@ -200,7 +200,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		if len(tokens) > 0 {
 			for _, token := range tokens {
 				if convertedFileExists(token) {
-					println(token, " is already merged, skipping.")
+					//println(token, " is already merged, skipping.")
 				} else {
 					serv.downloadAndMergeFiles(token)
 					println("conversion for ", token, " is done and merged!")
