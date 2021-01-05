@@ -368,3 +368,14 @@ func (cli *StorageClient) DeleteConvertedParts(token string) {
 		}
 	}
 }
+
+func (cli *StorageClient) DeleteAll() {
+	allConvertedFiles := cli.getConvertedVideos()
+	for _, file := range allConvertedFiles {
+		cli.DeleteConvertedPart(file)
+	}
+	allUnconvertedFiles := cli.getUnconvertedVideos()
+	for _, file := range allUnconvertedFiles {
+		cli.DeleteUnconvertedPart(file)
+	}
+}

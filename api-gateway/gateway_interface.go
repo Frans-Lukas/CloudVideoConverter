@@ -42,20 +42,23 @@ func (serv *APIGatewayServer) AddServiceEndpoint(
 	return &api_gateway.AddedServiceEndPoint{}, nil
 }
 
-func (serv *APIGatewayServer) DisableServiceEndPoint(
-	ctx context.Context, in *api_gateway.DisableServiceEndPoint,
-) (*api_gateway.DisabledServiceEndPoint, error) {
-	println("removing service from gateway, addr: ", in.Ip, ":", in.Port)
-	newEndPoint := items.EndPoint{
-		Ip:   in.Ip,
-		Port: int(in.Port),
+func (serv *APIGatewayServer) DisableServiceEndpoint(
+	ctx context.Context, in *api_gateway.DisableServiceEndPointRequest,
+) (*api_gateway.DisabledServiceEndPointResponse, error) {
+	found := false
+	for endPoint := range *serv.endPoints {
+		println("iterating ip: ", endPoint.Ip, " comparing with in.ip: ", in.Ip)
+		if endPoint.Ip == in.Ip {
+			println("removing service from gateway, addr: ", in.Ip, ":", in.Port)
+			(*serv.endPoints)[endPoint] = false
+			delete(*serv.endPoints, endPoint)
+			found = true
+		}
 	}
-	if _, ok := (*serv.endPoints)[newEndPoint]; ok {
-		(*serv.endPoints)[newEndPoint] = false
-	} else {
+	if !found {
 		return nil, errors.New("tried disabling endpoint but it did not exist")
 	}
-	return &api_gateway.DisabledServiceEndPoint{}, nil
+	return &api_gateway.DisabledServiceEndPointResponse{}, nil
 }
 
 func (serv *APIGatewayServer) GetActiveServiceEndpoints(

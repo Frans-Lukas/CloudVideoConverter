@@ -176,3 +176,18 @@ func (store *ConversionObjectsClient) GetFinishedParts() ([]*datastore.Key, []Co
 	}
 	return keys, objects
 }
+
+func (store *ConversionObjectsClient) DeleteAllEntities() {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	q := datastore.NewQuery(KIND)
+	var objects []ConversionObject
+	keys, err := store.GetAll(ctx, q, &objects)
+	if err != nil {
+		log.Println("Could not get all converted datastore enteties", err.Error())
+		return
+	}
+	ctx, cancel = context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	store.DeleteMulti(ctx, keys)
+}

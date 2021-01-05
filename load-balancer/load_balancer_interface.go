@@ -15,7 +15,6 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -98,26 +97,26 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 
 func (serv *VideoConverterServer) PollActiveServices(address string) {
 	unresponsiveClients := make([]string, 0)
-	for i, v := range *serv.ActiveServices {
+	for addr, v := range *serv.ActiveServices {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		_, err := v.client.IsAlive(ctx, &videoconverter.IsAliveRequest{})
 		if err != nil {
 			log.Println("unresponsive client: " + v.address + " " + err.Error())
-			unresponsiveClients = append(unresponsiveClients, i)
+			unresponsiveClients = append(unresponsiveClients, addr)
 		}
 	}
 
 	for _, v := range unresponsiveClients {
 		println("deleting unresponsive client: ", v)
 		delete(*serv.ActiveServices, v)
-		notifyAPIGatewayOfDeadClient(serv.apiGatewayAddress)
+		notifyAPIGatewayOfDeadClient(v, serv.apiGatewayAddress)
 	}
 }
 
-func notifyAPIGatewayOfDeadClient(address string) {
-	println("trying to connect to APIGateway: ", address)
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
+func notifyAPIGatewayOfDeadClient(removeAddr string, apiAddress string) {
+	println("trying to connect to APIGateway: ", apiAddress)
+	conn, err := grpc.Dial(apiAddress, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	if err != nil {
 		log.Println("did not connect to api gateway: %v", err)
 		return
@@ -127,14 +126,17 @@ func notifyAPIGatewayOfDeadClient(address string) {
 	apiGateway := api_gateway.NewAPIGateWayClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	ip := strings.Split(address, ":")[0]
-	portString := strings.Split(address, ":")[1]
+	ip := strings.Split(removeAddr, ":")[0]
+	portString := strings.Split(removeAddr, ":")[1]
 	port, err := strconv.Atoi(portString)
 	if err != nil {
-		log.Println("Failed to split address: " + address)
+		log.Println("Failed to split address: " + removeAddr)
 		return
 	}
-	apiGateway.DisableServiceEndpoint(ctx, &api_gateway.DisableServiceEndPoint{Ip: ip, Port: int32(port)})
+	_, err = apiGateway.DisableServiceEndpoint(ctx, &api_gateway.DisableServiceEndPointRequest{Ip: ip, Port: int32(port)})
+	if err != nil {
+		println("failed to disable service endpoint", err.Error())
+	}
 }
 
 func makeServiceConnection(address string) VideoConverterClient {
@@ -421,15 +423,26 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 }
 
 func DeleteFiles(prefix string) {
-	files, err := filepath.Glob(constants.LocalStorage + prefix)
+
+	filesToRemove := "/home/group9/CloudVideoConverter/localStorage/" + prefix + "*"
+	out, err := exec.Command("rm", filesToRemove).Output()
 	if err != nil {
-		panic(err)
+		log.Println("could not increaseNumberOfServices: " + string(out))
+		log.Println(err.Error())
 	}
-	for _, f := range files {
-		if err := os.Remove(f); err != nil {
-			println("could not delete file: ", err)
-		}
-	}
+	//
+	//files, err := filepath.Glob(constants.LocalStorage + prefix)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//println("Trying to delete files at: ", constants.LocalStorage+prefix, " length of files: ", len(files))
+	//for _, f := range files {
+	//	println("trying to delete file: ", f)
+	//	if err := os.Remove(f); err != nil {
+	//		println("could not delete file: ", err)
+	//	}
+	//	println("deleted: ", f)
+	//}
 }
 
 func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
@@ -585,6 +598,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 	out, err := exec.Command(scriptPath, numberOfVms).Output()
 	if err != nil {
 		log.Println("could not increaseNumberOfServices: " + string(out))
+		log.Println(err.Error())
 	}
 	serv.resetVMTimer()
 }
