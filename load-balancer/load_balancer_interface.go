@@ -15,7 +15,6 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -424,18 +423,26 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 }
 
 func DeleteFiles(prefix string) {
-	files, err := filepath.Glob(constants.LocalStorage + prefix)
+
+	filesToRemove := "/home/group9/CloudVideoConverter/localStorage/" + prefix + "*"
+	out, err := exec.Command("rm", filesToRemove).Output()
 	if err != nil {
-		panic(err)
+		log.Println("could not increaseNumberOfServices: " + string(out))
+		log.Println(err.Error())
 	}
-	println("Trying to delete files at: ", constants.LocalStorage+prefix, " length of files: ", len(files))
-	for _, f := range files {
-		println("trying to delete file: ", f)
-		if err := os.Remove(f); err != nil {
-			println("could not delete file: ", err)
-		}
-		println("deleted: ", f)
-	}
+	//
+	//files, err := filepath.Glob(constants.LocalStorage + prefix)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//println("Trying to delete files at: ", constants.LocalStorage+prefix, " length of files: ", len(files))
+	//for _, f := range files {
+	//	println("trying to delete file: ", f)
+	//	if err := os.Remove(f); err != nil {
+	//		println("could not delete file: ", err)
+	//	}
+	//	println("deleted: ", f)
+	//}
 }
 
 func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
@@ -591,6 +598,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 	out, err := exec.Command(scriptPath, numberOfVms).Output()
 	if err != nil {
 		log.Println("could not increaseNumberOfServices: " + string(out))
+		log.Println(err.Error())
 	}
 	serv.resetVMTimer()
 }
