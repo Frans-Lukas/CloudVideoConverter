@@ -364,7 +364,17 @@ func (cli *StorageClient) DeleteConvertedParts(token string) {
 	allFiles := cli.getConvertedVideos()
 	for _, file := range allFiles {
 		if strings.Split(file, "-")[0] == token {
+			println("Deleting ", file, " from storage.")
 			cli.DeleteConvertedPart(file)
+		}
+	}
+}
+func (cli *StorageClient) DeleteUnconvertedParts(token string) {
+	allFiles := cli.getUnconvertedVideos()
+	for _, file := range allFiles {
+		if strings.Split(file, "-")[0] == token {
+			println("Deleting ", file, " from storage.")
+			cli.DeleteUnconvertedPart(file)
 		}
 	}
 }
@@ -372,10 +382,12 @@ func (cli *StorageClient) DeleteConvertedParts(token string) {
 func (cli *StorageClient) DeleteAll() {
 	allConvertedFiles := cli.getConvertedVideos()
 	for _, file := range allConvertedFiles {
+		println("Deleting ", file, " from storage.")
 		cli.DeleteConvertedPart(file)
 	}
 	allUnconvertedFiles := cli.getUnconvertedVideos()
 	for _, file := range allUnconvertedFiles {
+		println("Deleting ", file, " from storage.")
 		cli.DeleteUnconvertedPart(file)
 	}
 }

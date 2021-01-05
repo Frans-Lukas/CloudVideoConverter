@@ -418,7 +418,7 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 
 	DeleteFiles(token)
 	serv.storageClient.DeleteConvertedParts(token)
-	serv.databaseClient.DeleteConvertedParts(token)
+	serv.databaseClient.DeleteWithToken(token)
 
 	return nil
 }
@@ -494,24 +494,11 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 	for {
 		for token, _ := range *serv.ActiveTokens {
 			if serv.tokenIsInvalid(token) {
-				filePath := constants.LocalStorage + token + ".mp4"
-				_, err := os.Stat(filePath)
-				if err == nil {
-					println("deleting " + filePath)
-					err := os.Remove(filePath)
-					if err != nil {
-						println(err.Error())
-					}
-				}
-				filePath = constants.LocalStorage + token
-				_, err = os.Stat(filePath)
-				if err == nil {
-					println("deleting " + filePath)
-					err := os.Remove(filePath)
-					if err != nil {
-						println(err.Error())
-					}
-				}
+				println("deleting invalid token from everywhere.")
+				DeleteFiles(token)
+				serv.databaseClient.DeleteWithToken(token)
+				serv.storageClient.DeleteUnconvertedParts(token)
+				serv.storageClient.DeleteConvertedParts(token)
 			}
 		}
 		time.Sleep(time.Second * 5)

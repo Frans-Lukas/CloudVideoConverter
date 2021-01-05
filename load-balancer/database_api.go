@@ -55,7 +55,7 @@ func (store *ConversionObjectsClient) AddParts(files []string, count int, conver
 		}
 	}
 }
-func (store *ConversionObjectsClient) DeleteConvertedParts(token string) {
+func (store *ConversionObjectsClient) DeleteWithToken(token string) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	q := datastore.NewQuery(KIND).Filter("Token =", token)
