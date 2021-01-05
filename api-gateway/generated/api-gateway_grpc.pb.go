@@ -20,6 +20,11 @@ type APIGateWayClient interface {
 	AddServiceEndpoint(ctx context.Context, in *ServiceEndPoint, opts ...grpc.CallOption) (*AddedServiceEndPoint, error)
 	DisableServiceEndpoint(ctx context.Context, in *DisableServiceEndPoint, opts ...grpc.CallOption) (*DisabledServiceEndPoint, error)
 	GetActiveServiceEndpoints(ctx context.Context, in *ServiceEndPointsRequest, opts ...grpc.CallOption) (*ServiceEndPointList, error)
+	AddLifeGuardNode(ctx context.Context, in *AddLifeGuardNodeRequest, opts ...grpc.CallOption) (*AddLifeGuardNodeRequest, error)
+	RemoveLifeGuardNode(ctx context.Context, in *RemoveLifeGuardNodeRequest, opts ...grpc.CallOption) (*RemoveLifeGuardNodeRequest, error)
+	SetLifeGuardCoordinator(ctx context.Context, in *SetLifeGuardCoordinatorRequest, opts ...grpc.CallOption) (*SetLifeGuardCoordinatorResponse, error)
+	GetLifeGuardCoordinator(ctx context.Context, in *GetLifeGuardCoordinatorRequest, opts ...grpc.CallOption) (*GetLifeGuardCoordinatorResponse, error)
+	GetNextLifeGuard(ctx context.Context, in *GetNextLifeGuardRequest, opts ...grpc.CallOption) (*GetNextLifeGuardResponse, error)
 }
 
 type aPIGateWayClient struct {
@@ -28,6 +33,10 @@ type aPIGateWayClient struct {
 
 func NewAPIGateWayClient(cc grpc.ClientConnInterface) APIGateWayClient {
 	return &aPIGateWayClient{cc}
+}
+
+var aPIGateWayAddServiceEndpointStreamDesc = &grpc.StreamDesc{
+	StreamName: "AddServiceEndpoint",
 }
 
 func (c *aPIGateWayClient) AddServiceEndpoint(ctx context.Context, in *ServiceEndPoint, opts ...grpc.CallOption) (*AddedServiceEndPoint, error) {
@@ -39,6 +48,10 @@ func (c *aPIGateWayClient) AddServiceEndpoint(ctx context.Context, in *ServiceEn
 	return out, nil
 }
 
+var aPIGateWayDisableServiceEndpointStreamDesc = &grpc.StreamDesc{
+	StreamName: "DisableServiceEndpoint",
+}
+
 func (c *aPIGateWayClient) DisableServiceEndpoint(ctx context.Context, in *DisableServiceEndPoint, opts ...grpc.CallOption) (*DisabledServiceEndPoint, error) {
 	out := new(DisabledServiceEndPoint)
 	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/DisableServiceEndpoint", in, out, opts...)
@@ -46,6 +59,10 @@ func (c *aPIGateWayClient) DisableServiceEndpoint(ctx context.Context, in *Disab
 		return nil, err
 	}
 	return out, nil
+}
+
+var aPIGateWayGetActiveServiceEndpointsStreamDesc = &grpc.StreamDesc{
+	StreamName: "GetActiveServiceEndpoints",
 }
 
 func (c *aPIGateWayClient) GetActiveServiceEndpoints(ctx context.Context, in *ServiceEndPointsRequest, opts ...grpc.CallOption) (*ServiceEndPointList, error) {
@@ -57,113 +74,305 @@ func (c *aPIGateWayClient) GetActiveServiceEndpoints(ctx context.Context, in *Se
 	return out, nil
 }
 
-// APIGateWayServer is the server API for APIGateWay service.
-// All implementations must embed UnimplementedAPIGateWayServer
-// for forward compatibility
-type APIGateWayServer interface {
-	AddServiceEndpoint(context.Context, *ServiceEndPoint) (*AddedServiceEndPoint, error)
-	DisableServiceEndpoint(context.Context, *DisableServiceEndPoint) (*DisabledServiceEndPoint, error)
-	GetActiveServiceEndpoints(context.Context, *ServiceEndPointsRequest) (*ServiceEndPointList, error)
-	mustEmbedUnimplementedAPIGateWayServer()
+var aPIGateWayAddLifeGuardNodeStreamDesc = &grpc.StreamDesc{
+	StreamName: "AddLifeGuardNode",
 }
 
-// UnimplementedAPIGateWayServer must be embedded to have forward compatible implementations.
-type UnimplementedAPIGateWayServer struct {
+func (c *aPIGateWayClient) AddLifeGuardNode(ctx context.Context, in *AddLifeGuardNodeRequest, opts ...grpc.CallOption) (*AddLifeGuardNodeRequest, error) {
+	out := new(AddLifeGuardNodeRequest)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/AddLifeGuardNode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
-func (UnimplementedAPIGateWayServer) AddServiceEndpoint(context.Context, *ServiceEndPoint) (*AddedServiceEndPoint, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddServiceEndpoint not implemented")
-}
-func (UnimplementedAPIGateWayServer) DisableServiceEndpoint(context.Context, *DisableServiceEndPoint) (*DisabledServiceEndPoint, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DisableServiceEndpoint not implemented")
-}
-func (UnimplementedAPIGateWayServer) GetActiveServiceEndpoints(context.Context, *ServiceEndPointsRequest) (*ServiceEndPointList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetActiveServiceEndpoints not implemented")
-}
-func (UnimplementedAPIGateWayServer) mustEmbedUnimplementedAPIGateWayServer() {}
-
-// UnsafeAPIGateWayServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to APIGateWayServer will
-// result in compilation errors.
-type UnsafeAPIGateWayServer interface {
-	mustEmbedUnimplementedAPIGateWayServer()
+var aPIGateWayRemoveLifeGuardNodeStreamDesc = &grpc.StreamDesc{
+	StreamName: "RemoveLifeGuardNode",
 }
 
-func RegisterAPIGateWayServer(s grpc.ServiceRegistrar, srv APIGateWayServer) {
-	s.RegisterService(&_APIGateWay_serviceDesc, srv)
+func (c *aPIGateWayClient) RemoveLifeGuardNode(ctx context.Context, in *RemoveLifeGuardNodeRequest, opts ...grpc.CallOption) (*RemoveLifeGuardNodeRequest, error) {
+	out := new(RemoveLifeGuardNodeRequest)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/RemoveLifeGuardNode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
-func _APIGateWay_AddServiceEndpoint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+var aPIGateWaySetLifeGuardCoordinatorStreamDesc = &grpc.StreamDesc{
+	StreamName: "SetLifeGuardCoordinator",
+}
+
+func (c *aPIGateWayClient) SetLifeGuardCoordinator(ctx context.Context, in *SetLifeGuardCoordinatorRequest, opts ...grpc.CallOption) (*SetLifeGuardCoordinatorResponse, error) {
+	out := new(SetLifeGuardCoordinatorResponse)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/SetLifeGuardCoordinator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+var aPIGateWayGetLifeGuardCoordinatorStreamDesc = &grpc.StreamDesc{
+	StreamName: "GetLifeGuardCoordinator",
+}
+
+func (c *aPIGateWayClient) GetLifeGuardCoordinator(ctx context.Context, in *GetLifeGuardCoordinatorRequest, opts ...grpc.CallOption) (*GetLifeGuardCoordinatorResponse, error) {
+	out := new(GetLifeGuardCoordinatorResponse)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/GetLifeGuardCoordinator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+var aPIGateWayGetNextLifeGuardStreamDesc = &grpc.StreamDesc{
+	StreamName: "GetNextLifeGuard",
+}
+
+func (c *aPIGateWayClient) GetNextLifeGuard(ctx context.Context, in *GetNextLifeGuardRequest, opts ...grpc.CallOption) (*GetNextLifeGuardResponse, error) {
+	out := new(GetNextLifeGuardResponse)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/GetNextLifeGuard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// APIGateWayService is the service API for APIGateWay service.
+// Fields should be assigned to their respective handler implementations only before
+// RegisterAPIGateWayService is called.  Any unassigned fields will result in the
+// handler for that method returning an Unimplemented error.
+type APIGateWayService struct {
+	AddServiceEndpoint        func(context.Context, *ServiceEndPoint) (*AddedServiceEndPoint, error)
+	DisableServiceEndpoint    func(context.Context, *DisableServiceEndPoint) (*DisabledServiceEndPoint, error)
+	GetActiveServiceEndpoints func(context.Context, *ServiceEndPointsRequest) (*ServiceEndPointList, error)
+	AddLifeGuardNode          func(context.Context, *AddLifeGuardNodeRequest) (*AddLifeGuardNodeRequest, error)
+	RemoveLifeGuardNode       func(context.Context, *RemoveLifeGuardNodeRequest) (*RemoveLifeGuardNodeRequest, error)
+	SetLifeGuardCoordinator   func(context.Context, *SetLifeGuardCoordinatorRequest) (*SetLifeGuardCoordinatorResponse, error)
+	GetLifeGuardCoordinator   func(context.Context, *GetLifeGuardCoordinatorRequest) (*GetLifeGuardCoordinatorResponse, error)
+	GetNextLifeGuard          func(context.Context, *GetNextLifeGuardRequest) (*GetNextLifeGuardResponse, error)
+}
+
+func (s *APIGateWayService) addServiceEndpoint(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ServiceEndPoint)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(APIGateWayServer).AddServiceEndpoint(ctx, in)
+		return s.AddServiceEndpoint(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
+		Server:     s,
 		FullMethod: "/api_gateway.APIGateWay/AddServiceEndpoint",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(APIGateWayServer).AddServiceEndpoint(ctx, req.(*ServiceEndPoint))
+		return s.AddServiceEndpoint(ctx, req.(*ServiceEndPoint))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-
-func _APIGateWay_DisableServiceEndpoint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *APIGateWayService) disableServiceEndpoint(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DisableServiceEndPoint)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(APIGateWayServer).DisableServiceEndpoint(ctx, in)
+		return s.DisableServiceEndpoint(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
+		Server:     s,
 		FullMethod: "/api_gateway.APIGateWay/DisableServiceEndpoint",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(APIGateWayServer).DisableServiceEndpoint(ctx, req.(*DisableServiceEndPoint))
+		return s.DisableServiceEndpoint(ctx, req.(*DisableServiceEndPoint))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-
-func _APIGateWay_GetActiveServiceEndpoints_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *APIGateWayService) getActiveServiceEndpoints(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ServiceEndPointsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(APIGateWayServer).GetActiveServiceEndpoints(ctx, in)
+		return s.GetActiveServiceEndpoints(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
-		Server:     srv,
+		Server:     s,
 		FullMethod: "/api_gateway.APIGateWay/GetActiveServiceEndpoints",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(APIGateWayServer).GetActiveServiceEndpoints(ctx, req.(*ServiceEndPointsRequest))
+		return s.GetActiveServiceEndpoints(ctx, req.(*ServiceEndPointsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+func (s *APIGateWayService) addLifeGuardNode(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddLifeGuardNodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return s.AddLifeGuardNode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     s,
+		FullMethod: "/api_gateway.APIGateWay/AddLifeGuardNode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.AddLifeGuardNode(ctx, req.(*AddLifeGuardNodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+func (s *APIGateWayService) removeLifeGuardNode(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveLifeGuardNodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return s.RemoveLifeGuardNode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     s,
+		FullMethod: "/api_gateway.APIGateWay/RemoveLifeGuardNode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.RemoveLifeGuardNode(ctx, req.(*RemoveLifeGuardNodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+func (s *APIGateWayService) setLifeGuardCoordinator(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetLifeGuardCoordinatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return s.SetLifeGuardCoordinator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     s,
+		FullMethod: "/api_gateway.APIGateWay/SetLifeGuardCoordinator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.SetLifeGuardCoordinator(ctx, req.(*SetLifeGuardCoordinatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+func (s *APIGateWayService) getLifeGuardCoordinator(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLifeGuardCoordinatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return s.GetLifeGuardCoordinator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     s,
+		FullMethod: "/api_gateway.APIGateWay/GetLifeGuardCoordinator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.GetLifeGuardCoordinator(ctx, req.(*GetLifeGuardCoordinatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+func (s *APIGateWayService) getNextLifeGuard(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetNextLifeGuardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return s.GetNextLifeGuard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     s,
+		FullMethod: "/api_gateway.APIGateWay/GetNextLifeGuard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.GetNextLifeGuard(ctx, req.(*GetNextLifeGuardRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _APIGateWay_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "api_gateway.APIGateWay",
-	HandlerType: (*APIGateWayServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "AddServiceEndpoint",
-			Handler:    _APIGateWay_AddServiceEndpoint_Handler,
+// RegisterAPIGateWayService registers a service implementation with a gRPC server.
+func RegisterAPIGateWayService(s grpc.ServiceRegistrar, srv *APIGateWayService) {
+	srvCopy := *srv
+	if srvCopy.AddServiceEndpoint == nil {
+		srvCopy.AddServiceEndpoint = func(context.Context, *ServiceEndPoint) (*AddedServiceEndPoint, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method AddServiceEndpoint not implemented")
+		}
+	}
+	if srvCopy.DisableServiceEndpoint == nil {
+		srvCopy.DisableServiceEndpoint = func(context.Context, *DisableServiceEndPoint) (*DisabledServiceEndPoint, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method DisableServiceEndpoint not implemented")
+		}
+	}
+	if srvCopy.GetActiveServiceEndpoints == nil {
+		srvCopy.GetActiveServiceEndpoints = func(context.Context, *ServiceEndPointsRequest) (*ServiceEndPointList, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method GetActiveServiceEndpoints not implemented")
+		}
+	}
+	if srvCopy.AddLifeGuardNode == nil {
+		srvCopy.AddLifeGuardNode = func(context.Context, *AddLifeGuardNodeRequest) (*AddLifeGuardNodeRequest, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method AddLifeGuardNode not implemented")
+		}
+	}
+	if srvCopy.RemoveLifeGuardNode == nil {
+		srvCopy.RemoveLifeGuardNode = func(context.Context, *RemoveLifeGuardNodeRequest) (*RemoveLifeGuardNodeRequest, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method RemoveLifeGuardNode not implemented")
+		}
+	}
+	if srvCopy.SetLifeGuardCoordinator == nil {
+		srvCopy.SetLifeGuardCoordinator = func(context.Context, *SetLifeGuardCoordinatorRequest) (*SetLifeGuardCoordinatorResponse, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method SetLifeGuardCoordinator not implemented")
+		}
+	}
+	if srvCopy.GetLifeGuardCoordinator == nil {
+		srvCopy.GetLifeGuardCoordinator = func(context.Context, *GetLifeGuardCoordinatorRequest) (*GetLifeGuardCoordinatorResponse, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method GetLifeGuardCoordinator not implemented")
+		}
+	}
+	if srvCopy.GetNextLifeGuard == nil {
+		srvCopy.GetNextLifeGuard = func(context.Context, *GetNextLifeGuardRequest) (*GetNextLifeGuardResponse, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method GetNextLifeGuard not implemented")
+		}
+	}
+	sd := grpc.ServiceDesc{
+		ServiceName: "api_gateway.APIGateWay",
+		Methods: []grpc.MethodDesc{
+			{
+				MethodName: "AddServiceEndpoint",
+				Handler:    srvCopy.addServiceEndpoint,
+			},
+			{
+				MethodName: "DisableServiceEndpoint",
+				Handler:    srvCopy.disableServiceEndpoint,
+			},
+			{
+				MethodName: "GetActiveServiceEndpoints",
+				Handler:    srvCopy.getActiveServiceEndpoints,
+			},
+			{
+				MethodName: "AddLifeGuardNode",
+				Handler:    srvCopy.addLifeGuardNode,
+			},
+			{
+				MethodName: "RemoveLifeGuardNode",
+				Handler:    srvCopy.removeLifeGuardNode,
+			},
+			{
+				MethodName: "SetLifeGuardCoordinator",
+				Handler:    srvCopy.setLifeGuardCoordinator,
+			},
+			{
+				MethodName: "GetLifeGuardCoordinator",
+				Handler:    srvCopy.getLifeGuardCoordinator,
+			},
+			{
+				MethodName: "GetNextLifeGuard",
+				Handler:    srvCopy.getNextLifeGuard,
+			},
 		},
-		{
-			MethodName: "DisableServiceEndpoint",
-			Handler:    _APIGateWay_DisableServiceEndpoint_Handler,
-		},
-		{
-			MethodName: "GetActiveServiceEndpoints",
-			Handler:    _APIGateWay_GetActiveServiceEndpoints_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "api-gateway.proto",
+		Streams:  []grpc.StreamDesc{},
+		Metadata: "api-gateway.proto",
+	}
+
+	s.RegisterService(&sd, nil)
 }
