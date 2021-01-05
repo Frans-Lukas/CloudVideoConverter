@@ -595,10 +595,17 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 	println("Starting new service")
 	scriptPath := "/home/group9/CloudVideoConverter/scripts/tfScripts/Service/startServiceVM.sh"
 	numberOfVms := strconv.Itoa(len(*serv.ActiveServices) + 1)
-	out, err := exec.Command(scriptPath, numberOfVms).Output()
+	cmd := exec.Command(scriptPath, numberOfVms)
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+
 	if err != nil {
-		log.Println("could not increaseNumberOfServices: " + string(out))
-		log.Println(err.Error())
+		log.Println("could not increaseNumberOfServices: " + out.String())
+		log.Println(err.Error(), ": ", stderr.String())
 	}
 	serv.resetVMTimer()
 }
