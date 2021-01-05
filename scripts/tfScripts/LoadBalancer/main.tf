@@ -49,14 +49,19 @@ resource "google_compute_instance_from_machine_image" "tpl" {
     destination = "/tmp/id_rsa"
   }
 //
-//  provisioner "remote-exec" {
-//    inline = [
-//      "sudo chmod -R +x /home/group9/*",
-//      "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh",
-////      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &",
-////      "sleep 1"
-//    ]
-//  }
+  provisioner "remote-exec" {
+    inline = [
+      "cd /home/group9/CloudVideoConverter",
+      "sudo git checkout .",
+      "sudo git pull",
+      "sudo chmod -R +x /home/group9/*",
+      "cd /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway",
+      "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh",
+      "cd /home/group9/CloudVideoConverter",
+      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &",
+      "sleep 1",
+    ]
+  }
 
   service_account {
     scopes = ["cloud-platform"]
