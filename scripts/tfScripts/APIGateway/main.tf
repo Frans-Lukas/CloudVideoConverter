@@ -50,12 +50,16 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   service_account {
     scopes = ["cloud-platform"]
   }
-//
-//  provisioner "remote-exec" {
-//    inline = [
-//      "sudo chmod -R +x /home/group9/*",
-//      "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startApiGateway.sh",
-//      "sleep 1",
-//    ]
-//  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "cd /home/group9/CloudVideoConverter",
+      "sudo git checkout .",
+      "sudo git pull",
+      "sudo chmod -R +x /home/group9/*",
+      "cd /home/group9/CloudVideoConverter/",
+      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startApiGateway.sh &",
+      "sleep 1",
+    ]
+  }
 }

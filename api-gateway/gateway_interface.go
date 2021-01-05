@@ -36,7 +36,8 @@ func (serv *APIGatewayServer) DisableServiceEndpoint(
 ) (*api_gateway.DisabledServiceEndPointResponse, error) {
 	found := false
 	for endPoint := range *serv.endPoints {
-		if endPoint.Ip == in.Ip && endPoint.Port == int(in.Port) {
+		println("iterating ip: ", endPoint.Ip, " comparing with in.ip: ", in.Ip)
+		if endPoint.Ip == in.Ip {
 			println("removing service from gateway, addr: ", in.Ip, ":", in.Port)
 			(*serv.endPoints)[endPoint] = false
 			delete(*serv.endPoints, endPoint)
