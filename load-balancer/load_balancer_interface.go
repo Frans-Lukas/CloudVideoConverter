@@ -606,6 +606,8 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 	if err != nil {
 		log.Println("could not increaseNumberOfServices: " + out.String())
 		log.Println(err.Error(), ": ", stderr.String())
+	} else {
+		log.Println(out.String())
 	}
 	serv.resetVMTimer()
 }
