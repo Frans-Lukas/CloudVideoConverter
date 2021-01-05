@@ -424,7 +424,6 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 }
 
 func DeleteFiles(prefix string) {
-	//filesToRemove := "/home/group9/CloudVideoConverter/localStorage/" + prefix + "*"
 	files, err := filepath.Glob("/home/group9/CloudVideoConverter/localStorage/" + prefix + "*")
 	if err != nil {
 		panic(err)

@@ -68,8 +68,6 @@ func main() {
 	//3. Send work to services loop
 	println("starting worker loop")
 
-	video_converter.DeleteFiles("pA4oRVyQZxJsiLKorzUM")
-
 	go func() {
 		//videoServer.IncreaseNumberOfServices()
 		videoServer.WorkManagementLoop()
