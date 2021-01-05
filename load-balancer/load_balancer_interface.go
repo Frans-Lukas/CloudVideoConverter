@@ -15,6 +15,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -423,22 +424,16 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 }
 
 func DeleteFiles(prefix string) {
-	filesToRemove := "/home/group9/CloudVideoConverter/localStorage/" + prefix + "*"
-	println("Trying to delete files with prefix: ", filesToRemove)
-	println("rm ", filesToRemove)
-	cmd := exec.Command("rm " + filesToRemove)
-
-	var out bytes.Buffer
-	var stderr bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &stderr
-	err := cmd.Run()
-
+	//filesToRemove := "/home/group9/CloudVideoConverter/localStorage/" + prefix + "*"
+	files, err := filepath.Glob("/home/group9/CloudVideoConverter/localStorage/*")
 	if err != nil {
-		log.Println("could not DeleteFiles: " + out.String())
-		log.Println(err.Error(), ": ", stderr.String())
-	} else {
-		log.Println(out.String())
+		panic(err)
+	}
+	for _, f := range files {
+		println("removing file: ", f)
+		if err := os.Remove(f); err != nil {
+			panic(err)
+		}
 	}
 }
 
