@@ -22,7 +22,7 @@ import (
 )
 
 const tokenLength = 20
-const tokenTimeOutSeconds = 60
+const tokenTimeOutSeconds = 5
 const megaByte = 1000000
 const sizeLimit = megaByte * 1
 
@@ -498,6 +498,7 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 				serv.storageClient.DeleteUnconvertedParts(token)
 				serv.storageClient.DeleteConvertedParts(token)
 				delete(*serv.ActiveServices, token)
+				fmt.Printf("map after deletion: %v", *serv.ActiveServices)
 				break
 			}
 		}
