@@ -153,6 +153,7 @@ func makeServiceConnection(address string) VideoConverterClient {
 
 func (serv *VideoConverterServer) RequestUploadToken(ctx context.Context, in *videoconverter.UploadTokenRequest) (*videoconverter.UploadTokenResponse, error) {
 	tokenString := GenerateRandomString()
+	println("received request for upload token, responding with: ", tokenString)
 	creationTime := time.Now()
 	isStarted := false
 	isDone := false
@@ -262,7 +263,7 @@ func (serv *VideoConverterServer) LoadQueueFromDB() {
 
 func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
 	err, filesToConvert := serv.databaseClient.StartConversionForParts(in.Token, in.OutputType)
-	println("starting conversion for ", in.Token)
+	println("load balancer starting conversion for ", in.Token)
 	if err != nil {
 		return &videoconverter.ConversionResponse{}, err
 	}
