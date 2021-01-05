@@ -22,7 +22,14 @@ service LifeGuard {
     rpc IsAlive(IsAliveRequest) returns (IsAliveResponse) {}
     rpc Election(ElectionRequest) returns (ElectionResponse) {}
     rpc Coordinator(CoordinatorRequest) returns (CoordinatorResponse) {}
+    rpc RecreateRing(RecreateRingRequest) returns (RecreateRingResponse) {}
 }
+
+message RecreateRingRequest {
+    int32 InitialSenderId = 1;
+}
+
+message RecreateRingResponse {}
 
 message ElectionRequest{
     int32 highestProcessNumber = 1;
