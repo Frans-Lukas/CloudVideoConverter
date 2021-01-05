@@ -425,6 +425,7 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 func DeleteFiles(prefix string) {
 	filesToRemove := "/home/group9/CloudVideoConverter/localStorage/" + prefix + "*"
 	println("Trying to delete files with prefix: ", filesToRemove)
+	println("rm ", filesToRemove)
 	cmd := exec.Command("rm", filesToRemove)
 
 	var out bytes.Buffer
