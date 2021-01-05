@@ -503,9 +503,9 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 			}
 		}
 		for _, key := range keysToDelete {
-			delete(*serv.ActiveServices, key)
+			delete(*serv.ActiveTokens, key)
 		}
-		fmt.Printf("map after deletion: %v", *serv.ActiveServices)
+		fmt.Printf("map after deletion: %v", *serv.ActiveTokens)
 
 		time.Sleep(time.Second * 5)
 	}
