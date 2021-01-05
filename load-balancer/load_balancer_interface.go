@@ -520,7 +520,10 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 
 func (serv *VideoConverterServer) downloadAndMergeFiles(token string) {
 	serv.storageClient.DownloadConvertedParts(token)
-	mergeVideo(token)
+	err := mergeVideo(token)
+	if err != nil {
+		println(err.Error())
+	}
 }
 
 func (serv *VideoConverterServer) SetApiGatewayAddress(address string) {

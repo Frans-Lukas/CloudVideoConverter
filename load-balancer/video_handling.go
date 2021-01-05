@@ -50,7 +50,8 @@ func mergeVideo(token string) error {
 	videoParts, err := getVideoParts(token)
 
 	if err != nil {
-		log.Fatalf("failed mergeVideo: " + err.Error())
+		log.Println("failed mergeVideo: " + err.Error())
+		return err
 	}
 
 	println("checking if parts are correctr")
