@@ -15,6 +15,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -423,26 +424,17 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 }
 
 func DeleteFiles(prefix string) {
-
-	filesToRemove := "/home/group9/CloudVideoConverter/localStorage/" + prefix + "*"
-	out, err := exec.Command("rm", filesToRemove).Output()
+	files, err := filepath.Glob("/home/group9/CloudVideoConverter/localStorage/" + prefix + "*")
 	if err != nil {
-		log.Println("could not increaseNumberOfServices: " + string(out))
-		log.Println(err.Error())
+		panic(err)
 	}
-	//
-	//files, err := filepath.Glob(constants.LocalStorage + prefix)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//println("Trying to delete files at: ", constants.LocalStorage+prefix, " length of files: ", len(files))
-	//for _, f := range files {
-	//	println("trying to delete file: ", f)
-	//	if err := os.Remove(f); err != nil {
-	//		println("could not delete file: ", err)
-	//	}
-	//	println("deleted: ", f)
-	//}
+	println("trying to delete ", len(files), " number of files.")
+	for _, f := range files {
+		println("removing file: ", f)
+		if err := os.Remove(f); err != nil {
+			panic(err)
+		}
+	}
 }
 
 func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter.DeleteRequest) (*videoconverter.DeleteResponse, error) {
@@ -528,7 +520,10 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 
 func (serv *VideoConverterServer) downloadAndMergeFiles(token string) {
 	serv.storageClient.DownloadConvertedParts(token)
-	mergeVideo(token)
+	err := mergeVideo(token)
+	if err != nil {
+		println(err.Error())
+	}
 }
 
 func (serv *VideoConverterServer) SetApiGatewayAddress(address string) {

@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/constants"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
@@ -13,6 +14,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -22,7 +24,7 @@ func main() {
 	// Set up a connection to the server.
 
 	if len(os.Args) != 3 {
-		println(errors.New("invalid command line arguments, use ./worker {ip} {port}").Error())
+		println(errors.New("invalid command line arguments, use ./worker {api-ip} {api-port}").Error())
 		return
 	}
 	ip := os.Args[1]
@@ -30,32 +32,65 @@ func main() {
 	address := ip + ":" + port
 	println("trying to connect to: ", address)
 
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 	println("connected")
+	//apiConnection := api_gateway.NewAPIGateWayClient(conn)
 	loadBalancerConnection = videoconverter.NewVideoConverterLoadBalancerClient(conn)
 
 	outputExtension := "mkv"
 	storageClient := video_converter.CreateStorageClient()
 	storageClient.DownloadSampleVideos()
-
-	token := upload("video.mp4")
-	requestConversion(token, outputExtension)
-	loopUntilConverted(token)
-	download(token, outputExtension)
+	for {
+		time.Sleep(time.Second * 5)
+		//err := connectToCurrentLoadBalancer(apiConnection)
+		token, err := upload("video.mp4")
+		if err != nil {
+			return
+			continue
+		}
+		err = requestConversion(token, outputExtension)
+		if err != nil {
+			return
+			continue
+		}
+		loopUntilConverted(token)
+		if err != nil {
+			return
+			continue
+		}
+		err = download(token, outputExtension)
+		if err == nil {
+			break
+		}
+	}
 	println("done uploading, converting and downloading videos")
 
 }
 
-func loopUntilConverted(token string) {
+func connectToCurrentLoadBalancer(apiConnection api_gateway.APIGateWayClient) error {
+	ctx := context.Background()
+	loadbalancer, err := apiConnection.GetLifeGuardCoordinator(ctx, &api_gateway.GetLifeGuardCoordinatorRequest{})
+	address := loadbalancer.Ip + ":" + strconv.Itoa(int(loadbalancer.Port))
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	loadBalancerConnection = videoconverter.NewVideoConverterLoadBalancerClient(conn)
+	return err
+}
+
+func loopUntilConverted(token string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	status, err := loadBalancerConnection.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
 	if err != nil {
 		println(" conv check err: ", err.Error())
+		return err
 	}
 	print("in progres..")
 	for status.Code != videoconverter.ConversionStatusCode_Done {
@@ -64,30 +99,35 @@ func loopUntilConverted(token string) {
 		status, err = loadBalancerConnection.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
 		if err != nil {
 			println("conv check err: ", err.Error())
+			return err
 		}
 		time.Sleep(time.Second * 2)
 	}
+	return nil
 }
 
-func requestConversion(token string, outputType string) {
+func requestConversion(token string, outputType string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	println("starting conversion for ", token)
 	_, err := loadBalancerConnection.StartConversion(ctx, &videoconverter.ConversionRequest{Token: token, InputType: "mp4", OutputType: outputType})
 	if err != nil {
 		println(err.Error())
+		return err
 	}
 	println("conversion started")
+	return nil
 }
 
-func upload(fileName string) string {
+func upload(fileName string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
 	stream, err := loadBalancerConnection.Upload(ctx)
 
 	if err != nil {
-		log.Fatal("cannot upload image: ", err)
+		log.Println("cannot upload image: ", err)
+		return "", err
 	}
 
 	ctx2, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -95,7 +135,7 @@ func upload(fileName string) string {
 	token, err := loadBalancerConnection.RequestUploadToken(ctx2, &videoconverter.UploadTokenRequest{})
 	if err != nil {
 		println(err)
-		return ""
+		return "", err
 	}
 
 	req := videoconverter.Chunk{
@@ -112,6 +152,7 @@ func upload(fileName string) string {
 
 	if err != nil {
 		println("cannot open file", err.Error())
+		return "", nil
 	}
 
 	reader := bufio.NewReader(file)
@@ -123,7 +164,8 @@ func upload(fileName string) string {
 			break
 		}
 		if err != nil {
-			log.Fatalf("cannot read chunk to buffer: ", err)
+			log.Println("cannot read chunk to buffer: ", err)
+			return "", nil
 		}
 
 		req := &videoconverter.Chunk{
@@ -132,21 +174,23 @@ func upload(fileName string) string {
 
 		err = stream.Send(req)
 		if err != nil {
-			log.Fatal("cannot send chunk to server: ", err)
+			log.Println("cannot send chunk to server: ", err)
+			return "", nil
 		}
 	}
 
 	res, err := stream.CloseAndRecv()
 	if err != nil {
-		log.Fatal("cannot receive response: ", err)
+		log.Println("cannot receive response: ", err)
+		return "", nil
 	}
 
 	log.Printf("image uploaded with id: %s, size: %d", res.RetrievalToken)
 
-	return res.RetrievalToken
+	return res.RetrievalToken, nil
 }
 
-func download(token string, extension string) {
+func download(token string, extension string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -162,7 +206,7 @@ func download(token string, extension string) {
 		}
 
 		if err != nil {
-			log.Fatalf("Download: %v", err)
+			return errors.New("Download: " + err.Error())
 		}
 
 		buf.Write(data.GetContent())
@@ -170,13 +214,16 @@ func download(token string, extension string) {
 
 	f, err := os.Create(constants.LocalStorage + "downloaded" + "." + extension)
 	if err != nil {
-		log.Fatalf("Download, create file: %v", err)
+		log.Println("Download, create file: %v", err)
+		return errors.New("Download, create file: " + err.Error())
 	}
 
 	_, err = f.Write(buf.Bytes())
 	if err != nil {
-		log.Fatalf("Download, write to file: %v", err)
+		log.Println("Download, write to file: %v", err)
+		return errors.New("Download, write to file: " + err.Error())
 	}
 
 	f.Close()
+	return nil
 }
