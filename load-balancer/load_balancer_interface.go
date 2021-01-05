@@ -98,26 +98,26 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 
 func (serv *VideoConverterServer) PollActiveServices(address string) {
 	unresponsiveClients := make([]string, 0)
-	for i, v := range *serv.ActiveServices {
+	for addr, v := range *serv.ActiveServices {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		_, err := v.client.IsAlive(ctx, &videoconverter.IsAliveRequest{})
 		if err != nil {
 			log.Println("unresponsive client: " + v.address + " " + err.Error())
-			unresponsiveClients = append(unresponsiveClients, i)
+			unresponsiveClients = append(unresponsiveClients, addr)
 		}
 	}
 
 	for _, v := range unresponsiveClients {
 		println("deleting unresponsive client: ", v)
 		delete(*serv.ActiveServices, v)
-		notifyAPIGatewayOfDeadClient(serv.apiGatewayAddress)
+		notifyAPIGatewayOfDeadClient(v, serv.apiGatewayAddress)
 	}
 }
 
-func notifyAPIGatewayOfDeadClient(address string) {
-	println("trying to connect to APIGateway: ", address)
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
+func notifyAPIGatewayOfDeadClient(removeAddr string, apiAddress string) {
+	println("trying to connect to APIGateway: ", apiAddress)
+	conn, err := grpc.Dial(apiAddress, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	if err != nil {
 		log.Println("did not connect to api gateway: %v", err)
 		return
@@ -127,11 +127,11 @@ func notifyAPIGatewayOfDeadClient(address string) {
 	apiGateway := api_gateway.NewAPIGateWayClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	ip := strings.Split(address, ":")[0]
-	portString := strings.Split(address, ":")[1]
+	ip := strings.Split(removeAddr, ":")[0]
+	portString := strings.Split(removeAddr, ":")[1]
 	port, err := strconv.Atoi(portString)
 	if err != nil {
-		log.Println("Failed to split address: " + address)
+		log.Println("Failed to split address: " + removeAddr)
 		return
 	}
 	_, err = apiGateway.DisableServiceEndpoint(ctx, &api_gateway.DisableServiceEndPointRequest{Ip: ip, Port: int32(port)})
