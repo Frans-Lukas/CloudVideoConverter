@@ -25,7 +25,7 @@ func CreateNewServer() APIGatewayServer {
 		endPoints:          &endpoints,
 		lifeGuards:         &lifeGuards,
 		nextLifeGuardId:    0,
-		currentCoordinator: items.LifeGuard{Ip:"", Port:-1},
+		currentCoordinator: items.LifeGuard{Ip: "", Port: -1},
 	}
 	return val
 }
@@ -128,11 +128,11 @@ func (serv *APIGatewayServer) GetLifeGuardCoordinator(
 			serv.currentCoordinator = (*serv.lifeGuards)[0]
 		} else {
 			println("Received request for coordinator before any lifeGuard has joined.")
-			return &api_gateway.GetLifeGuardCoordinatorResponse{Ip:"", Port:-1}, errors.New("request for coordinator before any lifeGuard has joined")
+			return &api_gateway.GetLifeGuardCoordinatorResponse{Ip: "", Port: -1}, errors.New("request for coordinator before any lifeGuard has joined")
 		}
 	}
 
-	return &api_gateway.GetLifeGuardCoordinatorResponse{Ip:serv.currentCoordinator.Ip, Port:int32(serv.currentCoordinator.Port)}, nil
+	return &api_gateway.GetLifeGuardCoordinatorResponse{Ip: serv.currentCoordinator.Ip, Port: int32(serv.currentCoordinator.Port)}, nil
 }
 
 func (serv *APIGatewayServer) GetNextLifeGuard(
@@ -152,10 +152,10 @@ func (serv *APIGatewayServer) GetNextLifeGuard(
 			} else {
 				nextLifeGuard = (*serv.lifeGuards)[keys[i+1]]
 			}
-			return &api_gateway.GetNextLifeGuardResponse{Ip:nextLifeGuard.Ip, Port:int32(nextLifeGuard.Port)}, nil
+			return &api_gateway.GetNextLifeGuardResponse{Ip: nextLifeGuard.Ip, Port: int32(nextLifeGuard.Port)}, nil
 		}
 	}
 
 	println("Did not find nextLifeguard for lifeGuard id: " + strconv.Itoa(int(in.LifeGuardId)))
-	return &api_gateway.GetNextLifeGuardResponse{Ip:"", Port:int32(-1)}, errors.New("could not find you in list of lifeGuards")
+	return &api_gateway.GetNextLifeGuardResponse{Ip: "", Port: int32(-1)}, errors.New("could not find you in list of lifeGuards")
 }
