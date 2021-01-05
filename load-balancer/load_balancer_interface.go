@@ -429,9 +429,11 @@ func DeleteFiles(prefix string) {
 		panic(err)
 	}
 	for _, f := range files {
+		println("trying to delete file: ", f)
 		if err := os.Remove(f); err != nil {
 			println("could not delete file: ", err)
 		}
+		println("deleted: ", f)
 	}
 }
 
