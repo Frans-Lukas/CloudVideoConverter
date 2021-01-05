@@ -118,6 +118,29 @@ func (store *ConversionObjectsClient) StartConversionForParts(token string, outp
 
 	return nil, &fileNames
 }
+func (store *ConversionObjectsClient) RestartConversionForParts(token string) (error, *[]ConversionObjectInfo) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	q := datastore.NewQuery(KIND).Filter("Token =", token)
+	var objects []ConversionObject
+	keys, err := store.GetAll(ctx, q, &objects)
+	if err != nil {
+		log.Println("could not update conversion status for token ", token, " because: ", err.Error())
+		return err, nil
+	}
+	fileNames := make([]ConversionObjectInfo, 0)
+	for i, object := range objects {
+		object.InProgress = false
+		fileNames = append(fileNames, ConversionObjectInfo{keys[i].Name, object.ConversionType})
+		_, err := store.Put(ctx, keys[i], &object)
+		if err != nil {
+			log.Println("failed to add ", keys[i], " to datastore")
+			return err, nil
+		}
+	}
+
+	return nil, &fileNames
+}
 
 func (store *ConversionObjectsClient) GetPartsInProgress() []ConversionObjectInfo {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)

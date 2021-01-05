@@ -243,6 +243,19 @@ func (serv *VideoConverterServer) LoadQueueFromDB() {
 	filesToConvert := serv.databaseClient.GetPartsInProgress()
 	for _, v := range filesToConvert {
 		*serv.ConversionQueue = append(*serv.ConversionQueue, v)
+		token := strings.Split(v.name, "-")[0]
+		println("Timing token: ", token)
+		serv.databaseClient.RestartConversionForParts(token)
+		creationTime := time.Now()
+		isStarted := false
+		isDone := false
+		isFailed := false
+		(*serv.ActiveTokens)[token] = items.Token{
+			CreationTime:      &creationTime,
+			ConversionStarted: &isStarted,
+			ConversionDone:    &isDone,
+			ConversionFailed:  &isFailed,
+		}
 		println("Found part: ", v.name)
 	}
 }
