@@ -489,6 +489,7 @@ func GenerateRandomString() string {
 func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 	for {
 		println("Checking active tokens: ")
+		keysToDelete := make([]string, 0)
 		for token, _ := range *serv.ActiveTokens {
 			println("checking if I can delete token: ", token)
 			if serv.tokenIsInvalid(token) {
@@ -497,11 +498,15 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 				serv.databaseClient.DeleteWithToken(token)
 				serv.storageClient.DeleteUnconvertedParts(token)
 				serv.storageClient.DeleteConvertedParts(token)
-				delete(*serv.ActiveServices, token)
-				fmt.Printf("map after deletion: %v", *serv.ActiveServices)
+				keysToDelete = append(keysToDelete, token)
 				break
 			}
 		}
+		for _, key := range keysToDelete {
+			delete(*serv.ActiveServices, key)
+		}
+		fmt.Printf("map after deletion: %v", *serv.ActiveServices)
+
 		time.Sleep(time.Second * 5)
 	}
 }
