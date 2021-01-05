@@ -7,7 +7,7 @@ service APIGateWay {
   rpc DisableServiceEndpoint(DisableServiceEndPointRequest) returns (DisabledServiceEndPointResponse) {}
   rpc GetActiveServiceEndpoints(ServiceEndPointsRequest) returns (ServiceEndPointList) {}
 
-  rpc AddLifeGuardNode(AddLifeGuardNodeRequest) returns (AddLifeGuardNodeRequest) {}
+  rpc AddLifeGuardNode(AddLifeGuardNodeRequest) returns (AddLifeGuardNodeResponse) {}
   rpc RemoveLifeGuardNode(RemoveLifeGuardNodeRequest) returns (RemoveLifeGuardNodeRequest) {}
   rpc SetLifeGuardCoordinator(SetLifeGuardCoordinatorRequest) returns (SetLifeGuardCoordinatorResponse) {}
   rpc GetLifeGuardCoordinator(GetLifeGuardCoordinatorRequest) returns (GetLifeGuardCoordinatorResponse) {}
