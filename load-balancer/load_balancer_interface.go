@@ -22,7 +22,7 @@ import (
 )
 
 const tokenLength = 20
-const tokenTimeOutSeconds = 60 * 20
+const tokenTimeOutSeconds = 60
 const megaByte = 1000000
 const sizeLimit = megaByte * 1
 
