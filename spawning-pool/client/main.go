@@ -103,6 +103,7 @@ func loopUntilConverted(token string) error {
 		}
 		time.Sleep(time.Second * 2)
 	}
+	return nil
 }
 
 func requestConversion(token string, outputType string) error {
@@ -224,4 +225,5 @@ func download(token string, extension string) error {
 	}
 
 	f.Close()
+	return nil
 }
