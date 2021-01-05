@@ -6,6 +6,50 @@ service APIGateWay {
   rpc AddServiceEndpoint(ServiceEndPoint) returns (AddedServiceEndPoint) {}
   rpc DisableServiceEndpoint(DisableServiceEndPointRequest) returns (DisabledServiceEndPointResponse) {}
   rpc GetActiveServiceEndpoints(ServiceEndPointsRequest) returns (ServiceEndPointList) {}
+
+  rpc AddLifeGuardNode(AddLifeGuardNodeRequest) returns (AddLifeGuardNodeRequest) {}
+  rpc RemoveLifeGuardNode(RemoveLifeGuardNodeRequest) returns (RemoveLifeGuardNodeRequest) {}
+  rpc SetLifeGuardCoordinator(SetLifeGuardCoordinatorRequest) returns (SetLifeGuardCoordinatorResponse) {}
+  rpc GetLifeGuardCoordinator(GetLifeGuardCoordinatorRequest) returns (GetLifeGuardCoordinatorResponse) {}
+  rpc GetNextLifeGuard(GetNextLifeGuardRequest) returns (GetNextLifeGuardResponse) {}
+}
+
+message AddLifeGuardNodeRequest {
+  string ip = 1;
+  int32 port = 2;
+}
+
+message AddLifeGuardNodeResponse {
+  int32 newLifeGuardId = 1;
+}
+
+message RemoveLifeGuardNodeRequest {
+  string ip = 1;
+  int32 port = 2;
+}
+
+message RemoveLifeGuardNodeResponse {}
+
+message SetLifeGuardCoordinatorRequest {
+  int32 lifeGuardId = 1;
+}
+
+message SetLifeGuardCoordinatorResponse {}
+
+message GetLifeGuardCoordinatorRequest {}
+
+message GetLifeGuardCoordinatorResponse {
+  string ip = 1;
+  int32 port = 2;
+}
+
+message GetNextLifeGuardRequest {
+  int32 lifeGuardId = 1;
+}
+
+message GetNextLifeGuardResponse {
+  string ip = 1;
+  int32 port = 2;
 }
 
 message ServiceEndPoint {

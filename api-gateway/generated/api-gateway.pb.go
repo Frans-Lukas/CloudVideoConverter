@@ -130,6 +130,481 @@ func (ConversionStatusCode) EnumDescriptor() ([]byte, []int) {
 	return file_api_gateway_proto_rawDescGZIP(), []int{1}
 }
 
+type AddLifeGuardNodeRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ip   string `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
+	Port int32  `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+}
+
+func (x *AddLifeGuardNodeRequest) Reset() {
+	*x = AddLifeGuardNodeRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddLifeGuardNodeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddLifeGuardNodeRequest) ProtoMessage() {}
+
+func (x *AddLifeGuardNodeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddLifeGuardNodeRequest.ProtoReflect.Descriptor instead.
+func (*AddLifeGuardNodeRequest) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *AddLifeGuardNodeRequest) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+func (x *AddLifeGuardNodeRequest) GetPort() int32 {
+	if x != nil {
+		return x.Port
+	}
+	return 0
+}
+
+type AddLifeGuardNodeResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	NewLifeGuardId int32 `protobuf:"varint,1,opt,name=newLifeGuardId,proto3" json:"newLifeGuardId,omitempty"`
+}
+
+func (x *AddLifeGuardNodeResponse) Reset() {
+	*x = AddLifeGuardNodeResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddLifeGuardNodeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddLifeGuardNodeResponse) ProtoMessage() {}
+
+func (x *AddLifeGuardNodeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddLifeGuardNodeResponse.ProtoReflect.Descriptor instead.
+func (*AddLifeGuardNodeResponse) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *AddLifeGuardNodeResponse) GetNewLifeGuardId() int32 {
+	if x != nil {
+		return x.NewLifeGuardId
+	}
+	return 0
+}
+
+type RemoveLifeGuardNodeRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ip   string `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
+	Port int32  `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+}
+
+func (x *RemoveLifeGuardNodeRequest) Reset() {
+	*x = RemoveLifeGuardNodeRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RemoveLifeGuardNodeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveLifeGuardNodeRequest) ProtoMessage() {}
+
+func (x *RemoveLifeGuardNodeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveLifeGuardNodeRequest.ProtoReflect.Descriptor instead.
+func (*RemoveLifeGuardNodeRequest) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *RemoveLifeGuardNodeRequest) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+func (x *RemoveLifeGuardNodeRequest) GetPort() int32 {
+	if x != nil {
+		return x.Port
+	}
+	return 0
+}
+
+type RemoveLifeGuardNodeResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *RemoveLifeGuardNodeResponse) Reset() {
+	*x = RemoveLifeGuardNodeResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RemoveLifeGuardNodeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveLifeGuardNodeResponse) ProtoMessage() {}
+
+func (x *RemoveLifeGuardNodeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveLifeGuardNodeResponse.ProtoReflect.Descriptor instead.
+func (*RemoveLifeGuardNodeResponse) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{3}
+}
+
+type SetLifeGuardCoordinatorRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	LifeGuardId int32 `protobuf:"varint,1,opt,name=lifeGuardId,proto3" json:"lifeGuardId,omitempty"`
+}
+
+func (x *SetLifeGuardCoordinatorRequest) Reset() {
+	*x = SetLifeGuardCoordinatorRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SetLifeGuardCoordinatorRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetLifeGuardCoordinatorRequest) ProtoMessage() {}
+
+func (x *SetLifeGuardCoordinatorRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetLifeGuardCoordinatorRequest.ProtoReflect.Descriptor instead.
+func (*SetLifeGuardCoordinatorRequest) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *SetLifeGuardCoordinatorRequest) GetLifeGuardId() int32 {
+	if x != nil {
+		return x.LifeGuardId
+	}
+	return 0
+}
+
+type SetLifeGuardCoordinatorResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *SetLifeGuardCoordinatorResponse) Reset() {
+	*x = SetLifeGuardCoordinatorResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SetLifeGuardCoordinatorResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetLifeGuardCoordinatorResponse) ProtoMessage() {}
+
+func (x *SetLifeGuardCoordinatorResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetLifeGuardCoordinatorResponse.ProtoReflect.Descriptor instead.
+func (*SetLifeGuardCoordinatorResponse) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{5}
+}
+
+type GetLifeGuardCoordinatorRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetLifeGuardCoordinatorRequest) Reset() {
+	*x = GetLifeGuardCoordinatorRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetLifeGuardCoordinatorRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetLifeGuardCoordinatorRequest) ProtoMessage() {}
+
+func (x *GetLifeGuardCoordinatorRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetLifeGuardCoordinatorRequest.ProtoReflect.Descriptor instead.
+func (*GetLifeGuardCoordinatorRequest) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{6}
+}
+
+type GetLifeGuardCoordinatorResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ip   string `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
+	Port int32  `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+}
+
+func (x *GetLifeGuardCoordinatorResponse) Reset() {
+	*x = GetLifeGuardCoordinatorResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetLifeGuardCoordinatorResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetLifeGuardCoordinatorResponse) ProtoMessage() {}
+
+func (x *GetLifeGuardCoordinatorResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetLifeGuardCoordinatorResponse.ProtoReflect.Descriptor instead.
+func (*GetLifeGuardCoordinatorResponse) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetLifeGuardCoordinatorResponse) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+func (x *GetLifeGuardCoordinatorResponse) GetPort() int32 {
+	if x != nil {
+		return x.Port
+	}
+	return 0
+}
+
+type GetNextLifeGuardRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	LifeGuardId int32 `protobuf:"varint,1,opt,name=lifeGuardId,proto3" json:"lifeGuardId,omitempty"`
+}
+
+func (x *GetNextLifeGuardRequest) Reset() {
+	*x = GetNextLifeGuardRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetNextLifeGuardRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetNextLifeGuardRequest) ProtoMessage() {}
+
+func (x *GetNextLifeGuardRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetNextLifeGuardRequest.ProtoReflect.Descriptor instead.
+func (*GetNextLifeGuardRequest) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetNextLifeGuardRequest) GetLifeGuardId() int32 {
+	if x != nil {
+		return x.LifeGuardId
+	}
+	return 0
+}
+
+type GetNextLifeGuardResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ip   string `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
+	Port int32  `protobuf:"varint,2,opt,name=port,proto3" json:"port,omitempty"`
+}
+
+func (x *GetNextLifeGuardResponse) Reset() {
+	*x = GetNextLifeGuardResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_gateway_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetNextLifeGuardResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetNextLifeGuardResponse) ProtoMessage() {}
+
+func (x *GetNextLifeGuardResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_gateway_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetNextLifeGuardResponse.ProtoReflect.Descriptor instead.
+func (*GetNextLifeGuardResponse) Descriptor() ([]byte, []int) {
+	return file_api_gateway_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetNextLifeGuardResponse) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+func (x *GetNextLifeGuardResponse) GetPort() int32 {
+	if x != nil {
+		return x.Port
+	}
+	return 0
+}
+
 type ServiceEndPoint struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -142,7 +617,7 @@ type ServiceEndPoint struct {
 func (x *ServiceEndPoint) Reset() {
 	*x = ServiceEndPoint{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[0]
+		mi := &file_api_gateway_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -155,7 +630,7 @@ func (x *ServiceEndPoint) String() string {
 func (*ServiceEndPoint) ProtoMessage() {}
 
 func (x *ServiceEndPoint) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[0]
+	mi := &file_api_gateway_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -168,7 +643,7 @@ func (x *ServiceEndPoint) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceEndPoint.ProtoReflect.Descriptor instead.
 func (*ServiceEndPoint) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{0}
+	return file_api_gateway_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ServiceEndPoint) GetIp() string {
@@ -194,7 +669,7 @@ type ServiceEndPointsRequest struct {
 func (x *ServiceEndPointsRequest) Reset() {
 	*x = ServiceEndPointsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[1]
+		mi := &file_api_gateway_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -207,7 +682,7 @@ func (x *ServiceEndPointsRequest) String() string {
 func (*ServiceEndPointsRequest) ProtoMessage() {}
 
 func (x *ServiceEndPointsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[1]
+	mi := &file_api_gateway_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -220,7 +695,7 @@ func (x *ServiceEndPointsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceEndPointsRequest.ProtoReflect.Descriptor instead.
 func (*ServiceEndPointsRequest) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{1}
+	return file_api_gateway_proto_rawDescGZIP(), []int{11}
 }
 
 type ServiceEndPointList struct {
@@ -234,7 +709,7 @@ type ServiceEndPointList struct {
 func (x *ServiceEndPointList) Reset() {
 	*x = ServiceEndPointList{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[2]
+		mi := &file_api_gateway_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -247,7 +722,7 @@ func (x *ServiceEndPointList) String() string {
 func (*ServiceEndPointList) ProtoMessage() {}
 
 func (x *ServiceEndPointList) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[2]
+	mi := &file_api_gateway_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -260,7 +735,7 @@ func (x *ServiceEndPointList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceEndPointList.ProtoReflect.Descriptor instead.
 func (*ServiceEndPointList) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{2}
+	return file_api_gateway_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ServiceEndPointList) GetEndPoint() []*ServiceEndPoint {
@@ -279,7 +754,7 @@ type AddedServiceEndPoint struct {
 func (x *AddedServiceEndPoint) Reset() {
 	*x = AddedServiceEndPoint{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[3]
+		mi := &file_api_gateway_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -292,7 +767,7 @@ func (x *AddedServiceEndPoint) String() string {
 func (*AddedServiceEndPoint) ProtoMessage() {}
 
 func (x *AddedServiceEndPoint) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[3]
+	mi := &file_api_gateway_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -305,7 +780,7 @@ func (x *AddedServiceEndPoint) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddedServiceEndPoint.ProtoReflect.Descriptor instead.
 func (*AddedServiceEndPoint) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{3}
+	return file_api_gateway_proto_rawDescGZIP(), []int{13}
 }
 
 type DisabledServiceEndPointResponse struct {
@@ -317,7 +792,7 @@ type DisabledServiceEndPointResponse struct {
 func (x *DisabledServiceEndPointResponse) Reset() {
 	*x = DisabledServiceEndPointResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[4]
+		mi := &file_api_gateway_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -330,7 +805,7 @@ func (x *DisabledServiceEndPointResponse) String() string {
 func (*DisabledServiceEndPointResponse) ProtoMessage() {}
 
 func (x *DisabledServiceEndPointResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[4]
+	mi := &file_api_gateway_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -343,7 +818,7 @@ func (x *DisabledServiceEndPointResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisabledServiceEndPointResponse.ProtoReflect.Descriptor instead.
 func (*DisabledServiceEndPointResponse) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{4}
+	return file_api_gateway_proto_rawDescGZIP(), []int{14}
 }
 
 type DisableServiceEndPointRequest struct {
@@ -358,7 +833,7 @@ type DisableServiceEndPointRequest struct {
 func (x *DisableServiceEndPointRequest) Reset() {
 	*x = DisableServiceEndPointRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[5]
+		mi := &file_api_gateway_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -371,7 +846,7 @@ func (x *DisableServiceEndPointRequest) String() string {
 func (*DisableServiceEndPointRequest) ProtoMessage() {}
 
 func (x *DisableServiceEndPointRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[5]
+	mi := &file_api_gateway_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -384,7 +859,7 @@ func (x *DisableServiceEndPointRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableServiceEndPointRequest.ProtoReflect.Descriptor instead.
 func (*DisableServiceEndPointRequest) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{5}
+	return file_api_gateway_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *DisableServiceEndPointRequest) GetIp() string {
@@ -410,7 +885,7 @@ type UploadTokenRequest struct {
 func (x *UploadTokenRequest) Reset() {
 	*x = UploadTokenRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[6]
+		mi := &file_api_gateway_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -423,7 +898,7 @@ func (x *UploadTokenRequest) String() string {
 func (*UploadTokenRequest) ProtoMessage() {}
 
 func (x *UploadTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[6]
+	mi := &file_api_gateway_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -436,7 +911,7 @@ func (x *UploadTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadTokenRequest.ProtoReflect.Descriptor instead.
 func (*UploadTokenRequest) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{6}
+	return file_api_gateway_proto_rawDescGZIP(), []int{16}
 }
 
 type UploadTokenResponse struct {
@@ -450,7 +925,7 @@ type UploadTokenResponse struct {
 func (x *UploadTokenResponse) Reset() {
 	*x = UploadTokenResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[7]
+		mi := &file_api_gateway_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -463,7 +938,7 @@ func (x *UploadTokenResponse) String() string {
 func (*UploadTokenResponse) ProtoMessage() {}
 
 func (x *UploadTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[7]
+	mi := &file_api_gateway_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -476,7 +951,7 @@ func (x *UploadTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadTokenResponse.ProtoReflect.Descriptor instead.
 func (*UploadTokenResponse) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{7}
+	return file_api_gateway_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UploadTokenResponse) GetToken() string {
@@ -499,7 +974,7 @@ type ConversionRequest struct {
 func (x *ConversionRequest) Reset() {
 	*x = ConversionRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[8]
+		mi := &file_api_gateway_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -512,7 +987,7 @@ func (x *ConversionRequest) String() string {
 func (*ConversionRequest) ProtoMessage() {}
 
 func (x *ConversionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[8]
+	mi := &file_api_gateway_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -525,7 +1000,7 @@ func (x *ConversionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversionRequest.ProtoReflect.Descriptor instead.
 func (*ConversionRequest) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{8}
+	return file_api_gateway_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ConversionRequest) GetToken() string {
@@ -560,7 +1035,7 @@ type ConversionResponse struct {
 func (x *ConversionResponse) Reset() {
 	*x = ConversionResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[9]
+		mi := &file_api_gateway_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -573,7 +1048,7 @@ func (x *ConversionResponse) String() string {
 func (*ConversionResponse) ProtoMessage() {}
 
 func (x *ConversionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[9]
+	mi := &file_api_gateway_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -586,7 +1061,7 @@ func (x *ConversionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversionResponse.ProtoReflect.Descriptor instead.
 func (*ConversionResponse) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{9}
+	return file_api_gateway_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ConversionResponse) GetToken() string {
@@ -610,7 +1085,7 @@ type Chunk struct {
 func (x *Chunk) Reset() {
 	*x = Chunk{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[10]
+		mi := &file_api_gateway_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -623,7 +1098,7 @@ func (x *Chunk) String() string {
 func (*Chunk) ProtoMessage() {}
 
 func (x *Chunk) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[10]
+	mi := &file_api_gateway_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -636,7 +1111,7 @@ func (x *Chunk) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Chunk.ProtoReflect.Descriptor instead.
 func (*Chunk) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{10}
+	return file_api_gateway_proto_rawDescGZIP(), []int{20}
 }
 
 func (m *Chunk) GetRequestType() isChunk_RequestType {
@@ -688,7 +1163,7 @@ type ConversionStatusResponse struct {
 func (x *ConversionStatusResponse) Reset() {
 	*x = ConversionStatusResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[11]
+		mi := &file_api_gateway_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -701,7 +1176,7 @@ func (x *ConversionStatusResponse) String() string {
 func (*ConversionStatusResponse) ProtoMessage() {}
 
 func (x *ConversionStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[11]
+	mi := &file_api_gateway_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -714,7 +1189,7 @@ func (x *ConversionStatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversionStatusResponse.ProtoReflect.Descriptor instead.
 func (*ConversionStatusResponse) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{11}
+	return file_api_gateway_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *ConversionStatusResponse) GetCode() ConversionStatusCode {
@@ -742,7 +1217,7 @@ type ConversionStatusRequest struct {
 func (x *ConversionStatusRequest) Reset() {
 	*x = ConversionStatusRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[12]
+		mi := &file_api_gateway_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -755,7 +1230,7 @@ func (x *ConversionStatusRequest) String() string {
 func (*ConversionStatusRequest) ProtoMessage() {}
 
 func (x *ConversionStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[12]
+	mi := &file_api_gateway_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -768,7 +1243,7 @@ func (x *ConversionStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversionStatusRequest.ProtoReflect.Descriptor instead.
 func (*ConversionStatusRequest) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{12}
+	return file_api_gateway_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *ConversionStatusRequest) GetStatusId() string {
@@ -789,7 +1264,7 @@ type UploadStatus struct {
 func (x *UploadStatus) Reset() {
 	*x = UploadStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[13]
+		mi := &file_api_gateway_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -802,7 +1277,7 @@ func (x *UploadStatus) String() string {
 func (*UploadStatus) ProtoMessage() {}
 
 func (x *UploadStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[13]
+	mi := &file_api_gateway_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -815,7 +1290,7 @@ func (x *UploadStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadStatus.ProtoReflect.Descriptor instead.
 func (*UploadStatus) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{13}
+	return file_api_gateway_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *UploadStatus) GetRetrievalToken() string {
@@ -836,7 +1311,7 @@ type DownloadRequest struct {
 func (x *DownloadRequest) Reset() {
 	*x = DownloadRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[14]
+		mi := &file_api_gateway_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -849,7 +1324,7 @@ func (x *DownloadRequest) String() string {
 func (*DownloadRequest) ProtoMessage() {}
 
 func (x *DownloadRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[14]
+	mi := &file_api_gateway_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -862,7 +1337,7 @@ func (x *DownloadRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadRequest.ProtoReflect.Descriptor instead.
 func (*DownloadRequest) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{14}
+	return file_api_gateway_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *DownloadRequest) GetId() string {
@@ -883,7 +1358,7 @@ type DeleteRequest struct {
 func (x *DeleteRequest) Reset() {
 	*x = DeleteRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[15]
+		mi := &file_api_gateway_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -896,7 +1371,7 @@ func (x *DeleteRequest) String() string {
 func (*DeleteRequest) ProtoMessage() {}
 
 func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[15]
+	mi := &file_api_gateway_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -909,7 +1384,7 @@ func (x *DeleteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRequest.ProtoReflect.Descriptor instead.
 func (*DeleteRequest) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{15}
+	return file_api_gateway_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *DeleteRequest) GetId() string {
@@ -930,7 +1405,7 @@ type DeleteResponse struct {
 func (x *DeleteResponse) Reset() {
 	*x = DeleteResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[16]
+		mi := &file_api_gateway_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -943,7 +1418,7 @@ func (x *DeleteResponse) String() string {
 func (*DeleteResponse) ProtoMessage() {}
 
 func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[16]
+	mi := &file_api_gateway_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -956,7 +1431,7 @@ func (x *DeleteResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteResponse.ProtoReflect.Descriptor instead.
 func (*DeleteResponse) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{16}
+	return file_api_gateway_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *DeleteResponse) GetCode() UploadStatusCode {
@@ -978,7 +1453,7 @@ type DownloadStatus struct {
 func (x *DownloadStatus) Reset() {
 	*x = DownloadStatus{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_gateway_proto_msgTypes[17]
+		mi := &file_api_gateway_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -991,7 +1466,7 @@ func (x *DownloadStatus) String() string {
 func (*DownloadStatus) ProtoMessage() {}
 
 func (x *DownloadStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_api_gateway_proto_msgTypes[17]
+	mi := &file_api_gateway_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1004,7 +1479,7 @@ func (x *DownloadStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadStatus.ProtoReflect.Descriptor instead.
 func (*DownloadStatus) Descriptor() ([]byte, []int) {
-	return file_api_gateway_proto_rawDescGZIP(), []int{17}
+	return file_api_gateway_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *DownloadStatus) GetMessage() string {
@@ -1026,101 +1501,170 @@ var File_api_gateway_proto protoreflect.FileDescriptor
 var file_api_gateway_proto_rawDesc = []byte{
 	0x0a, 0x11, 0x61, 0x70, 0x69, 0x2d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x12, 0x0b, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79,
-	0x22, 0x35, 0x0a, 0x0f, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f,
-	0x69, 0x6e, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x02, 0x69, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x05, 0x52, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x22, 0x19, 0x0a, 0x17, 0x53, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x22, 0x4f, 0x0a, 0x13, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64,
-	0x50, 0x6f, 0x69, 0x6e, 0x74, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x38, 0x0a, 0x08, 0x65, 0x6e, 0x64,
-	0x50, 0x6f, 0x69, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x61, 0x70,
-	0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
-	0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x08, 0x65, 0x6e, 0x64, 0x50, 0x6f,
-	0x69, 0x6e, 0x74, 0x22, 0x16, 0x0a, 0x14, 0x41, 0x64, 0x64, 0x65, 0x64, 0x53, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x22, 0x21, 0x0a, 0x1f, 0x44,
-	0x69, 0x73, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e,
-	0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x43,
-	0x0a, 0x1d, 0x44, 0x69, 0x73, 0x61, 0x62, 0x6c, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
-	0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x12,
-	0x12, 0x0a, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x70,
-	0x6f, 0x72, 0x74, 0x22, 0x14, 0x0a, 0x12, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x6f, 0x6b,
-	0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x2b, 0x0a, 0x13, 0x55, 0x70, 0x6c,
-	0x6f, 0x61, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x12, 0x14, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x67, 0x0a, 0x11, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72,
-	0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x54,
-	0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x54, 0x6f, 0x6b, 0x65,
-	0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12,
-	0x1e, 0x0a, 0x0a, 0x4f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x0a, 0x4f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x54, 0x79, 0x70, 0x65, 0x22,
-	0x2a, 0x0a, 0x12, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x4a, 0x0a, 0x05, 0x43,
-	0x68, 0x75, 0x6e, 0x6b, 0x12, 0x16, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x1a, 0x0a, 0x07,
-	0x43, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x48, 0x00, 0x52,
-	0x07, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x42, 0x0d, 0x0a, 0x0b, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x22, 0x71, 0x0a, 0x18, 0x43, 0x6f, 0x6e, 0x76, 0x65,
-	0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x35, 0x0a, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x0e, 0x32, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e,
-	0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
-	0x43, 0x6f, 0x64, 0x65, 0x52, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x44, 0x6f,
-	0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
-	0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x49, 0x64, 0x22, 0x35, 0x0a, 0x17, 0x43, 0x6f,
-	0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x49,
-	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x49,
-	0x64, 0x22, 0x36, 0x0a, 0x0c, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75,
-	0x73, 0x12, 0x26, 0x0a, 0x0e, 0x52, 0x65, 0x74, 0x72, 0x69, 0x65, 0x76, 0x61, 0x6c, 0x54, 0x6f,
-	0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x52, 0x65, 0x74, 0x72, 0x69,
-	0x65, 0x76, 0x61, 0x6c, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x21, 0x0a, 0x0f, 0x44, 0x6f, 0x77,
-	0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02,
-	0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x64, 0x22, 0x1f, 0x0a, 0x0d,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
-	0x02, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x64, 0x22, 0x43, 0x0a,
-	0x0e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x31, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x1d, 0x2e,
+	0x22, 0x3d, 0x0a, 0x17, 0x41, 0x64, 0x64, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64,
+	0x4e, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69,
+	0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x70,
+	0x6f, 0x72, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x22,
+	0x42, 0x0a, 0x18, 0x41, 0x64, 0x64, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x4e,
+	0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x26, 0x0a, 0x0e, 0x6e,
+	0x65, 0x77, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x49, 0x64, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x05, 0x52, 0x0e, 0x6e, 0x65, 0x77, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72,
+	0x64, 0x49, 0x64, 0x22, 0x40, 0x0a, 0x1a, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x4c, 0x69, 0x66,
+	0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
+	0x70, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x04, 0x70, 0x6f, 0x72, 0x74, 0x22, 0x1d, 0x0a, 0x1b, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x4c,
+	0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x42, 0x0a, 0x1e, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47,
+	0x75, 0x61, 0x72, 0x64, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x69, 0x6e, 0x61, 0x74, 0x6f, 0x72, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x20, 0x0a, 0x0b, 0x6c, 0x69, 0x66, 0x65, 0x47, 0x75,
+	0x61, 0x72, 0x64, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0b, 0x6c, 0x69, 0x66,
+	0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x49, 0x64, 0x22, 0x21, 0x0a, 0x1f, 0x53, 0x65, 0x74, 0x4c,
+	0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x69, 0x6e, 0x61,
+	0x74, 0x6f, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x20, 0x0a, 0x1e, 0x47,
+	0x65, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x43, 0x6f, 0x6f, 0x72, 0x64,
+	0x69, 0x6e, 0x61, 0x74, 0x6f, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x45, 0x0a,
+	0x1f, 0x47, 0x65, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x43, 0x6f, 0x6f,
+	0x72, 0x64, 0x69, 0x6e, 0x61, 0x74, 0x6f, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70,
+	0x12, 0x12, 0x0a, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04,
+	0x70, 0x6f, 0x72, 0x74, 0x22, 0x3b, 0x0a, 0x17, 0x47, 0x65, 0x74, 0x4e, 0x65, 0x78, 0x74, 0x4c,
+	0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x20, 0x0a, 0x0b, 0x6c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x49, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x0b, 0x6c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x49,
+	0x64, 0x22, 0x3e, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x4e, 0x65, 0x78, 0x74, 0x4c, 0x69, 0x66, 0x65,
+	0x47, 0x75, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a,
+	0x02, 0x69, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x12, 0x12, 0x0a,
+	0x04, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x70, 0x6f, 0x72,
+	0x74, 0x22, 0x35, 0x0a, 0x0f, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50,
+	0x6f, 0x69, 0x6e, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x02, 0x69, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x05, 0x52, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x22, 0x19, 0x0a, 0x17, 0x53, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x22, 0x4f, 0x0a, 0x13, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e,
+	0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x38, 0x0a, 0x08, 0x65, 0x6e,
+	0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x61,
+	0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69,
+	0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x08, 0x65, 0x6e, 0x64, 0x50,
+	0x6f, 0x69, 0x6e, 0x74, 0x22, 0x16, 0x0a, 0x14, 0x41, 0x64, 0x64, 0x65, 0x64, 0x53, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x22, 0x21, 0x0a, 0x1f,
+	0x44, 0x69, 0x73, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45,
+	0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x43, 0x0a, 0x1d, 0x44, 0x69, 0x73, 0x61, 0x62, 0x6c, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70,
+	0x12, 0x12, 0x0a, 0x04, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04,
+	0x70, 0x6f, 0x72, 0x74, 0x22, 0x14, 0x0a, 0x12, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x54, 0x6f,
+	0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x2b, 0x0a, 0x13, 0x55, 0x70,
+	0x6c, 0x6f, 0x61, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x14, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x67, 0x0a, 0x11, 0x43, 0x6f, 0x6e, 0x76, 0x65,
+	0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05,
+	0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x54, 0x6f, 0x6b,
+	0x65, 0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x54, 0x79, 0x70, 0x65,
+	0x12, 0x1e, 0x0a, 0x0a, 0x4f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x4f, 0x75, 0x74, 0x70, 0x75, 0x74, 0x54, 0x79, 0x70, 0x65,
+	0x22, 0x2a, 0x0a, 0x12, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x4a, 0x0a, 0x05,
+	0x43, 0x68, 0x75, 0x6e, 0x6b, 0x12, 0x16, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x1a, 0x0a,
+	0x07, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x48, 0x00,
+	0x52, 0x07, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x42, 0x0d, 0x0a, 0x0b, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x22, 0x71, 0x0a, 0x18, 0x43, 0x6f, 0x6e, 0x76,
+	0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x35, 0x0a, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0e, 0x32, 0x21, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79,
+	0x2e, 0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75,
+	0x73, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x44,
+	0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0a, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x49, 0x64, 0x22, 0x35, 0x0a, 0x17, 0x43,
+	0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x49, 0x64, 0x22, 0x36, 0x0a, 0x0c, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74,
+	0x75, 0x73, 0x12, 0x26, 0x0a, 0x0e, 0x52, 0x65, 0x74, 0x72, 0x69, 0x65, 0x76, 0x61, 0x6c, 0x54,
+	0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x52, 0x65, 0x74, 0x72,
+	0x69, 0x65, 0x76, 0x61, 0x6c, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x21, 0x0a, 0x0f, 0x44, 0x6f,
+	0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
+	0x02, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x64, 0x22, 0x1f, 0x0a,
+	0x0d, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e,
+	0x0a, 0x02, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x64, 0x22, 0x43,
+	0x0a, 0x0e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x31, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x1d,
+	0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x55, 0x70, 0x6c,
+	0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x04, 0x63,
+	0x6f, 0x64, 0x65, 0x22, 0x5d, 0x0a, 0x0e, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x53,
+	0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12,
+	0x31, 0x0a, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x1d, 0x2e,
 	0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x55, 0x70, 0x6c, 0x6f,
-	0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x04, 0x63, 0x6f,
-	0x64, 0x65, 0x22, 0x5d, 0x0a, 0x0e, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74,
-	0x61, 0x74, 0x75, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x31,
-	0x0a, 0x04, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x1d, 0x2e, 0x61,
-	0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61,
-	0x64, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x04, 0x43, 0x6f, 0x64,
-	0x65, 0x2a, 0x38, 0x0a, 0x10, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75,
-	0x73, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e,
-	0x10, 0x00, 0x12, 0x06, 0x0a, 0x02, 0x4f, 0x6b, 0x10, 0x01, 0x12, 0x0f, 0x0a, 0x0b, 0x49, 0x6e,
-	0x74, 0x65, 0x72, 0x72, 0x75, 0x70, 0x74, 0x65, 0x64, 0x10, 0x02, 0x2a, 0x4c, 0x0a, 0x14, 0x43,
-	0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43,
-	0x6f, 0x64, 0x65, 0x12, 0x0e, 0x0a, 0x0a, 0x49, 0x6e, 0x50, 0x72, 0x6f, 0x67, 0x72, 0x65, 0x73,
-	0x73, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x44, 0x6f, 0x6e, 0x65, 0x10, 0x01, 0x12, 0x0a, 0x0a,
-	0x06, 0x46, 0x61, 0x69, 0x6c, 0x65, 0x64, 0x10, 0x02, 0x12, 0x0e, 0x0a, 0x0a, 0x4e, 0x6f, 0x74,
-	0x53, 0x74, 0x61, 0x72, 0x74, 0x65, 0x64, 0x10, 0x03, 0x32, 0xc2, 0x02, 0x0a, 0x0a, 0x41, 0x50,
-	0x49, 0x47, 0x61, 0x74, 0x65, 0x57, 0x61, 0x79, 0x12, 0x57, 0x0a, 0x12, 0x41, 0x64, 0x64, 0x53,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x70, 0x6f, 0x69, 0x6e, 0x74, 0x12, 0x1c,
-	0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x53, 0x65, 0x72,
-	0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x1a, 0x21, 0x2e, 0x61,
-	0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x41, 0x64, 0x64, 0x65, 0x64,
-	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x22,
-	0x00, 0x12, 0x74, 0x0a, 0x16, 0x44, 0x69, 0x73, 0x61, 0x62, 0x6c, 0x65, 0x53, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x70, 0x6f, 0x69, 0x6e, 0x74, 0x12, 0x2a, 0x2e, 0x61, 0x70,
-	0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x44, 0x69, 0x73, 0x61, 0x62, 0x6c,
-	0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2c, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61,
-	0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x44, 0x69, 0x73, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x53, 0x65,
-	0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x65, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x41, 0x63,
-	0x74, 0x69, 0x76, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x70, 0x6f,
-	0x69, 0x6e, 0x74, 0x73, 0x12, 0x24, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77,
-	0x61, 0x79, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69,
-	0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x61, 0x70, 0x69,
-	0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x4c, 0x69, 0x73, 0x74, 0x22, 0x00, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x61, 0x64, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x04, 0x43, 0x6f,
+	0x64, 0x65, 0x2a, 0x38, 0x0a, 0x10, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x53, 0x74, 0x61, 0x74,
+	0x75, 0x73, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x6e, 0x6b, 0x6e, 0x6f, 0x77,
+	0x6e, 0x10, 0x00, 0x12, 0x06, 0x0a, 0x02, 0x4f, 0x6b, 0x10, 0x01, 0x12, 0x0f, 0x0a, 0x0b, 0x49,
+	0x6e, 0x74, 0x65, 0x72, 0x72, 0x75, 0x70, 0x74, 0x65, 0x64, 0x10, 0x02, 0x2a, 0x4c, 0x0a, 0x14,
+	0x43, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x43, 0x6f, 0x64, 0x65, 0x12, 0x0e, 0x0a, 0x0a, 0x49, 0x6e, 0x50, 0x72, 0x6f, 0x67, 0x72, 0x65,
+	0x73, 0x73, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x44, 0x6f, 0x6e, 0x65, 0x10, 0x01, 0x12, 0x0a,
+	0x0a, 0x06, 0x46, 0x61, 0x69, 0x6c, 0x65, 0x64, 0x10, 0x02, 0x12, 0x0e, 0x0a, 0x0a, 0x4e, 0x6f,
+	0x74, 0x53, 0x74, 0x61, 0x72, 0x74, 0x65, 0x64, 0x10, 0x03, 0x32, 0xe2, 0x06, 0x0a, 0x0a, 0x41,
+	0x50, 0x49, 0x47, 0x61, 0x74, 0x65, 0x57, 0x61, 0x79, 0x12, 0x57, 0x0a, 0x12, 0x41, 0x64, 0x64,
+	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x70, 0x6f, 0x69, 0x6e, 0x74, 0x12,
+	0x1c, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x53, 0x65,
+	0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x1a, 0x21, 0x2e,
+	0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x41, 0x64, 0x64, 0x65,
+	0x64, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74,
+	0x22, 0x00, 0x12, 0x74, 0x0a, 0x16, 0x44, 0x69, 0x73, 0x61, 0x62, 0x6c, 0x65, 0x53, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x70, 0x6f, 0x69, 0x6e, 0x74, 0x12, 0x2a, 0x2e, 0x61,
+	0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x44, 0x69, 0x73, 0x61, 0x62,
+	0x6c, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e,
+	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2c, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67,
+	0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x44, 0x69, 0x73, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x53,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x65, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x41,
+	0x63, 0x74, 0x69, 0x76, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x70,
+	0x6f, 0x69, 0x6e, 0x74, 0x73, 0x12, 0x24, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65,
+	0x77, 0x61, 0x79, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f,
+	0x69, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x61, 0x70,
+	0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x45, 0x6e, 0x64, 0x50, 0x6f, 0x69, 0x6e, 0x74, 0x4c, 0x69, 0x73, 0x74, 0x22, 0x00, 0x12,
+	0x60, 0x0a, 0x10, 0x41, 0x64, 0x64, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x4e,
+	0x6f, 0x64, 0x65, 0x12, 0x24, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61,
+	0x79, 0x2e, 0x41, 0x64, 0x64, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x4e, 0x6f,
+	0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x24, 0x2e, 0x61, 0x70, 0x69, 0x5f,
+	0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x41, 0x64, 0x64, 0x4c, 0x69, 0x66, 0x65, 0x47,
+	0x75, 0x61, 0x72, 0x64, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22,
+	0x00, 0x12, 0x69, 0x0a, 0x13, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x4c, 0x69, 0x66, 0x65, 0x47,
+	0x75, 0x61, 0x72, 0x64, 0x4e, 0x6f, 0x64, 0x65, 0x12, 0x27, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67,
+	0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x4c, 0x69, 0x66,
+	0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x27, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e,
+	0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x4e,
+	0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x00, 0x12, 0x76, 0x0a, 0x17,
+	0x53, 0x65, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x43, 0x6f, 0x6f, 0x72,
+	0x64, 0x69, 0x6e, 0x61, 0x74, 0x6f, 0x72, 0x12, 0x2b, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61,
+	0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61,
+	0x72, 0x64, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x69, 0x6e, 0x61, 0x74, 0x6f, 0x72, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x2c, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77,
+	0x61, 0x79, 0x2e, 0x53, 0x65, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x43,
+	0x6f, 0x6f, 0x72, 0x64, 0x69, 0x6e, 0x61, 0x74, 0x6f, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x76, 0x0a, 0x17, 0x47, 0x65, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47,
+	0x75, 0x61, 0x72, 0x64, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x69, 0x6e, 0x61, 0x74, 0x6f, 0x72, 0x12,
+	0x2b, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x47, 0x65,
+	0x74, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x69,
+	0x6e, 0x61, 0x74, 0x6f, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2c, 0x2e, 0x61,
+	0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x47, 0x65, 0x74, 0x4c, 0x69,
+	0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x43, 0x6f, 0x6f, 0x72, 0x64, 0x69, 0x6e, 0x61, 0x74,
+	0x6f, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x61, 0x0a, 0x10,
+	0x47, 0x65, 0x74, 0x4e, 0x65, 0x78, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64,
+	0x12, 0x24, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2e, 0x47,
+	0x65, 0x74, 0x4e, 0x65, 0x78, 0x74, 0x4c, 0x69, 0x66, 0x65, 0x47, 0x75, 0x61, 0x72, 0x64, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x25, 0x2e, 0x61, 0x70, 0x69, 0x5f, 0x67, 0x61, 0x74,
+	0x65, 0x77, 0x61, 0x79, 0x2e, 0x47, 0x65, 0x74, 0x4e, 0x65, 0x78, 0x74, 0x4c, 0x69, 0x66, 0x65,
+	0x47, 0x75, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1136,45 +1680,65 @@ func file_api_gateway_proto_rawDescGZIP() []byte {
 }
 
 var file_api_gateway_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_api_gateway_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_api_gateway_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_api_gateway_proto_goTypes = []interface{}{
 	(UploadStatusCode)(0),                   // 0: api_gateway.UploadStatusCode
 	(ConversionStatusCode)(0),               // 1: api_gateway.ConversionStatusCode
-	(*ServiceEndPoint)(nil),                 // 2: api_gateway.ServiceEndPoint
-	(*ServiceEndPointsRequest)(nil),         // 3: api_gateway.ServiceEndPointsRequest
-	(*ServiceEndPointList)(nil),             // 4: api_gateway.ServiceEndPointList
-	(*AddedServiceEndPoint)(nil),            // 5: api_gateway.AddedServiceEndPoint
-	(*DisabledServiceEndPointResponse)(nil), // 6: api_gateway.DisabledServiceEndPointResponse
-	(*DisableServiceEndPointRequest)(nil),   // 7: api_gateway.DisableServiceEndPointRequest
-	(*UploadTokenRequest)(nil),              // 8: api_gateway.UploadTokenRequest
-	(*UploadTokenResponse)(nil),             // 9: api_gateway.UploadTokenResponse
-	(*ConversionRequest)(nil),               // 10: api_gateway.ConversionRequest
-	(*ConversionResponse)(nil),              // 11: api_gateway.ConversionResponse
-	(*Chunk)(nil),                           // 12: api_gateway.Chunk
-	(*ConversionStatusResponse)(nil),        // 13: api_gateway.ConversionStatusResponse
-	(*ConversionStatusRequest)(nil),         // 14: api_gateway.ConversionStatusRequest
-	(*UploadStatus)(nil),                    // 15: api_gateway.UploadStatus
-	(*DownloadRequest)(nil),                 // 16: api_gateway.DownloadRequest
-	(*DeleteRequest)(nil),                   // 17: api_gateway.DeleteRequest
-	(*DeleteResponse)(nil),                  // 18: api_gateway.DeleteResponse
-	(*DownloadStatus)(nil),                  // 19: api_gateway.DownloadStatus
+	(*AddLifeGuardNodeRequest)(nil),         // 2: api_gateway.AddLifeGuardNodeRequest
+	(*AddLifeGuardNodeResponse)(nil),        // 3: api_gateway.AddLifeGuardNodeResponse
+	(*RemoveLifeGuardNodeRequest)(nil),      // 4: api_gateway.RemoveLifeGuardNodeRequest
+	(*RemoveLifeGuardNodeResponse)(nil),     // 5: api_gateway.RemoveLifeGuardNodeResponse
+	(*SetLifeGuardCoordinatorRequest)(nil),  // 6: api_gateway.SetLifeGuardCoordinatorRequest
+	(*SetLifeGuardCoordinatorResponse)(nil), // 7: api_gateway.SetLifeGuardCoordinatorResponse
+	(*GetLifeGuardCoordinatorRequest)(nil),  // 8: api_gateway.GetLifeGuardCoordinatorRequest
+	(*GetLifeGuardCoordinatorResponse)(nil), // 9: api_gateway.GetLifeGuardCoordinatorResponse
+	(*GetNextLifeGuardRequest)(nil),         // 10: api_gateway.GetNextLifeGuardRequest
+	(*GetNextLifeGuardResponse)(nil),        // 11: api_gateway.GetNextLifeGuardResponse
+	(*ServiceEndPoint)(nil),                 // 12: api_gateway.ServiceEndPoint
+	(*ServiceEndPointsRequest)(nil),         // 13: api_gateway.ServiceEndPointsRequest
+	(*ServiceEndPointList)(nil),             // 14: api_gateway.ServiceEndPointList
+	(*AddedServiceEndPoint)(nil),            // 15: api_gateway.AddedServiceEndPoint
+	(*DisabledServiceEndPointResponse)(nil), // 16: api_gateway.DisabledServiceEndPointResponse
+	(*DisableServiceEndPointRequest)(nil),   // 17: api_gateway.DisableServiceEndPointRequest
+	(*UploadTokenRequest)(nil),              // 18: api_gateway.UploadTokenRequest
+	(*UploadTokenResponse)(nil),             // 19: api_gateway.UploadTokenResponse
+	(*ConversionRequest)(nil),               // 20: api_gateway.ConversionRequest
+	(*ConversionResponse)(nil),              // 21: api_gateway.ConversionResponse
+	(*Chunk)(nil),                           // 22: api_gateway.Chunk
+	(*ConversionStatusResponse)(nil),        // 23: api_gateway.ConversionStatusResponse
+	(*ConversionStatusRequest)(nil),         // 24: api_gateway.ConversionStatusRequest
+	(*UploadStatus)(nil),                    // 25: api_gateway.UploadStatus
+	(*DownloadRequest)(nil),                 // 26: api_gateway.DownloadRequest
+	(*DeleteRequest)(nil),                   // 27: api_gateway.DeleteRequest
+	(*DeleteResponse)(nil),                  // 28: api_gateway.DeleteResponse
+	(*DownloadStatus)(nil),                  // 29: api_gateway.DownloadStatus
 }
 var file_api_gateway_proto_depIdxs = []int32{
-	2, // 0: api_gateway.ServiceEndPointList.endPoint:type_name -> api_gateway.ServiceEndPoint
-	1, // 1: api_gateway.ConversionStatusResponse.Code:type_name -> api_gateway.ConversionStatusCode
-	0, // 2: api_gateway.DeleteResponse.code:type_name -> api_gateway.UploadStatusCode
-	0, // 3: api_gateway.DownloadStatus.Code:type_name -> api_gateway.UploadStatusCode
-	2, // 4: api_gateway.APIGateWay.AddServiceEndpoint:input_type -> api_gateway.ServiceEndPoint
-	7, // 5: api_gateway.APIGateWay.DisableServiceEndpoint:input_type -> api_gateway.DisableServiceEndPointRequest
-	3, // 6: api_gateway.APIGateWay.GetActiveServiceEndpoints:input_type -> api_gateway.ServiceEndPointsRequest
-	5, // 7: api_gateway.APIGateWay.AddServiceEndpoint:output_type -> api_gateway.AddedServiceEndPoint
-	6, // 8: api_gateway.APIGateWay.DisableServiceEndpoint:output_type -> api_gateway.DisabledServiceEndPointResponse
-	4, // 9: api_gateway.APIGateWay.GetActiveServiceEndpoints:output_type -> api_gateway.ServiceEndPointList
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	12, // 0: api_gateway.ServiceEndPointList.endPoint:type_name -> api_gateway.ServiceEndPoint
+	1,  // 1: api_gateway.ConversionStatusResponse.Code:type_name -> api_gateway.ConversionStatusCode
+	0,  // 2: api_gateway.DeleteResponse.code:type_name -> api_gateway.UploadStatusCode
+	0,  // 3: api_gateway.DownloadStatus.Code:type_name -> api_gateway.UploadStatusCode
+	12, // 4: api_gateway.APIGateWay.AddServiceEndpoint:input_type -> api_gateway.ServiceEndPoint
+	17, // 5: api_gateway.APIGateWay.DisableServiceEndpoint:input_type -> api_gateway.DisableServiceEndPointRequest
+	13, // 6: api_gateway.APIGateWay.GetActiveServiceEndpoints:input_type -> api_gateway.ServiceEndPointsRequest
+	2,  // 7: api_gateway.APIGateWay.AddLifeGuardNode:input_type -> api_gateway.AddLifeGuardNodeRequest
+	4,  // 8: api_gateway.APIGateWay.RemoveLifeGuardNode:input_type -> api_gateway.RemoveLifeGuardNodeRequest
+	6,  // 9: api_gateway.APIGateWay.SetLifeGuardCoordinator:input_type -> api_gateway.SetLifeGuardCoordinatorRequest
+	8,  // 10: api_gateway.APIGateWay.GetLifeGuardCoordinator:input_type -> api_gateway.GetLifeGuardCoordinatorRequest
+	10, // 11: api_gateway.APIGateWay.GetNextLifeGuard:input_type -> api_gateway.GetNextLifeGuardRequest
+	15, // 12: api_gateway.APIGateWay.AddServiceEndpoint:output_type -> api_gateway.AddedServiceEndPoint
+	16, // 13: api_gateway.APIGateWay.DisableServiceEndpoint:output_type -> api_gateway.DisabledServiceEndPointResponse
+	14, // 14: api_gateway.APIGateWay.GetActiveServiceEndpoints:output_type -> api_gateway.ServiceEndPointList
+	2,  // 15: api_gateway.APIGateWay.AddLifeGuardNode:output_type -> api_gateway.AddLifeGuardNodeRequest
+	4,  // 16: api_gateway.APIGateWay.RemoveLifeGuardNode:output_type -> api_gateway.RemoveLifeGuardNodeRequest
+	7,  // 17: api_gateway.APIGateWay.SetLifeGuardCoordinator:output_type -> api_gateway.SetLifeGuardCoordinatorResponse
+	9,  // 18: api_gateway.APIGateWay.GetLifeGuardCoordinator:output_type -> api_gateway.GetLifeGuardCoordinatorResponse
+	11, // 19: api_gateway.APIGateWay.GetNextLifeGuard:output_type -> api_gateway.GetNextLifeGuardResponse
+	12, // [12:20] is the sub-list for method output_type
+	4,  // [4:12] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_api_gateway_proto_init() }
@@ -1184,7 +1748,7 @@ func file_api_gateway_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_api_gateway_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ServiceEndPoint); i {
+			switch v := v.(*AddLifeGuardNodeRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1196,7 +1760,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ServiceEndPointsRequest); i {
+			switch v := v.(*AddLifeGuardNodeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1208,7 +1772,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ServiceEndPointList); i {
+			switch v := v.(*RemoveLifeGuardNodeRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1220,7 +1784,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AddedServiceEndPoint); i {
+			switch v := v.(*RemoveLifeGuardNodeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1232,7 +1796,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DisabledServiceEndPointResponse); i {
+			switch v := v.(*SetLifeGuardCoordinatorRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1244,7 +1808,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DisableServiceEndPointRequest); i {
+			switch v := v.(*SetLifeGuardCoordinatorResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1256,7 +1820,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UploadTokenRequest); i {
+			switch v := v.(*GetLifeGuardCoordinatorRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1268,7 +1832,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UploadTokenResponse); i {
+			switch v := v.(*GetLifeGuardCoordinatorResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1280,7 +1844,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConversionRequest); i {
+			switch v := v.(*GetNextLifeGuardRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1292,7 +1856,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConversionResponse); i {
+			switch v := v.(*GetNextLifeGuardResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1304,7 +1868,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Chunk); i {
+			switch v := v.(*ServiceEndPoint); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1316,7 +1880,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConversionStatusResponse); i {
+			switch v := v.(*ServiceEndPointsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1328,7 +1892,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConversionStatusRequest); i {
+			switch v := v.(*ServiceEndPointList); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1340,7 +1904,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UploadStatus); i {
+			switch v := v.(*AddedServiceEndPoint); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1352,7 +1916,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DownloadRequest); i {
+			switch v := v.(*DisabledServiceEndPointResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1364,7 +1928,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRequest); i {
+			switch v := v.(*DisableServiceEndPointRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1376,7 +1940,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteResponse); i {
+			switch v := v.(*UploadTokenRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1388,6 +1952,126 @@ func file_api_gateway_proto_init() {
 			}
 		}
 		file_api_gateway_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UploadTokenResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConversionRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConversionResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Chunk); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConversionStatusResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConversionStatusRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UploadStatus); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DownloadRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_gateway_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DownloadStatus); i {
 			case 0:
 				return &v.state
@@ -1400,7 +2084,7 @@ func file_api_gateway_proto_init() {
 			}
 		}
 	}
-	file_api_gateway_proto_msgTypes[10].OneofWrappers = []interface{}{
+	file_api_gateway_proto_msgTypes[20].OneofWrappers = []interface{}{
 		(*Chunk_Token)(nil),
 		(*Chunk_Content)(nil),
 	}
@@ -1410,7 +2094,7 @@ func file_api_gateway_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_gateway_proto_rawDesc,
 			NumEnums:      2,
-			NumMessages:   18,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -1440,6 +2124,11 @@ type APIGateWayClient interface {
 	AddServiceEndpoint(ctx context.Context, in *ServiceEndPoint, opts ...grpc.CallOption) (*AddedServiceEndPoint, error)
 	DisableServiceEndpoint(ctx context.Context, in *DisableServiceEndPointRequest, opts ...grpc.CallOption) (*DisabledServiceEndPointResponse, error)
 	GetActiveServiceEndpoints(ctx context.Context, in *ServiceEndPointsRequest, opts ...grpc.CallOption) (*ServiceEndPointList, error)
+	AddLifeGuardNode(ctx context.Context, in *AddLifeGuardNodeRequest, opts ...grpc.CallOption) (*AddLifeGuardNodeRequest, error)
+	RemoveLifeGuardNode(ctx context.Context, in *RemoveLifeGuardNodeRequest, opts ...grpc.CallOption) (*RemoveLifeGuardNodeRequest, error)
+	SetLifeGuardCoordinator(ctx context.Context, in *SetLifeGuardCoordinatorRequest, opts ...grpc.CallOption) (*SetLifeGuardCoordinatorResponse, error)
+	GetLifeGuardCoordinator(ctx context.Context, in *GetLifeGuardCoordinatorRequest, opts ...grpc.CallOption) (*GetLifeGuardCoordinatorResponse, error)
+	GetNextLifeGuard(ctx context.Context, in *GetNextLifeGuardRequest, opts ...grpc.CallOption) (*GetNextLifeGuardResponse, error)
 }
 
 type aPIGateWayClient struct {
@@ -1477,11 +2166,61 @@ func (c *aPIGateWayClient) GetActiveServiceEndpoints(ctx context.Context, in *Se
 	return out, nil
 }
 
+func (c *aPIGateWayClient) AddLifeGuardNode(ctx context.Context, in *AddLifeGuardNodeRequest, opts ...grpc.CallOption) (*AddLifeGuardNodeRequest, error) {
+	out := new(AddLifeGuardNodeRequest)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/AddLifeGuardNode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIGateWayClient) RemoveLifeGuardNode(ctx context.Context, in *RemoveLifeGuardNodeRequest, opts ...grpc.CallOption) (*RemoveLifeGuardNodeRequest, error) {
+	out := new(RemoveLifeGuardNodeRequest)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/RemoveLifeGuardNode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIGateWayClient) SetLifeGuardCoordinator(ctx context.Context, in *SetLifeGuardCoordinatorRequest, opts ...grpc.CallOption) (*SetLifeGuardCoordinatorResponse, error) {
+	out := new(SetLifeGuardCoordinatorResponse)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/SetLifeGuardCoordinator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIGateWayClient) GetLifeGuardCoordinator(ctx context.Context, in *GetLifeGuardCoordinatorRequest, opts ...grpc.CallOption) (*GetLifeGuardCoordinatorResponse, error) {
+	out := new(GetLifeGuardCoordinatorResponse)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/GetLifeGuardCoordinator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIGateWayClient) GetNextLifeGuard(ctx context.Context, in *GetNextLifeGuardRequest, opts ...grpc.CallOption) (*GetNextLifeGuardResponse, error) {
+	out := new(GetNextLifeGuardResponse)
+	err := c.cc.Invoke(ctx, "/api_gateway.APIGateWay/GetNextLifeGuard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // APIGateWayServer is the server API for APIGateWay service.
 type APIGateWayServer interface {
 	AddServiceEndpoint(context.Context, *ServiceEndPoint) (*AddedServiceEndPoint, error)
 	DisableServiceEndpoint(context.Context, *DisableServiceEndPointRequest) (*DisabledServiceEndPointResponse, error)
 	GetActiveServiceEndpoints(context.Context, *ServiceEndPointsRequest) (*ServiceEndPointList, error)
+	AddLifeGuardNode(context.Context, *AddLifeGuardNodeRequest) (*AddLifeGuardNodeRequest, error)
+	RemoveLifeGuardNode(context.Context, *RemoveLifeGuardNodeRequest) (*RemoveLifeGuardNodeRequest, error)
+	SetLifeGuardCoordinator(context.Context, *SetLifeGuardCoordinatorRequest) (*SetLifeGuardCoordinatorResponse, error)
+	GetLifeGuardCoordinator(context.Context, *GetLifeGuardCoordinatorRequest) (*GetLifeGuardCoordinatorResponse, error)
+	GetNextLifeGuard(context.Context, *GetNextLifeGuardRequest) (*GetNextLifeGuardResponse, error)
 }
 
 // UnimplementedAPIGateWayServer can be embedded to have forward compatible implementations.
@@ -1496,6 +2235,21 @@ func (*UnimplementedAPIGateWayServer) DisableServiceEndpoint(context.Context, *D
 }
 func (*UnimplementedAPIGateWayServer) GetActiveServiceEndpoints(context.Context, *ServiceEndPointsRequest) (*ServiceEndPointList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetActiveServiceEndpoints not implemented")
+}
+func (*UnimplementedAPIGateWayServer) AddLifeGuardNode(context.Context, *AddLifeGuardNodeRequest) (*AddLifeGuardNodeRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddLifeGuardNode not implemented")
+}
+func (*UnimplementedAPIGateWayServer) RemoveLifeGuardNode(context.Context, *RemoveLifeGuardNodeRequest) (*RemoveLifeGuardNodeRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveLifeGuardNode not implemented")
+}
+func (*UnimplementedAPIGateWayServer) SetLifeGuardCoordinator(context.Context, *SetLifeGuardCoordinatorRequest) (*SetLifeGuardCoordinatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetLifeGuardCoordinator not implemented")
+}
+func (*UnimplementedAPIGateWayServer) GetLifeGuardCoordinator(context.Context, *GetLifeGuardCoordinatorRequest) (*GetLifeGuardCoordinatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLifeGuardCoordinator not implemented")
+}
+func (*UnimplementedAPIGateWayServer) GetNextLifeGuard(context.Context, *GetNextLifeGuardRequest) (*GetNextLifeGuardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetNextLifeGuard not implemented")
 }
 
 func RegisterAPIGateWayServer(s *grpc.Server, srv APIGateWayServer) {
@@ -1556,6 +2310,96 @@ func _APIGateWay_GetActiveServiceEndpoints_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _APIGateWay_AddLifeGuardNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddLifeGuardNodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIGateWayServer).AddLifeGuardNode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api_gateway.APIGateWay/AddLifeGuardNode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIGateWayServer).AddLifeGuardNode(ctx, req.(*AddLifeGuardNodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIGateWay_RemoveLifeGuardNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveLifeGuardNodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIGateWayServer).RemoveLifeGuardNode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api_gateway.APIGateWay/RemoveLifeGuardNode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIGateWayServer).RemoveLifeGuardNode(ctx, req.(*RemoveLifeGuardNodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIGateWay_SetLifeGuardCoordinator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetLifeGuardCoordinatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIGateWayServer).SetLifeGuardCoordinator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api_gateway.APIGateWay/SetLifeGuardCoordinator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIGateWayServer).SetLifeGuardCoordinator(ctx, req.(*SetLifeGuardCoordinatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIGateWay_GetLifeGuardCoordinator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLifeGuardCoordinatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIGateWayServer).GetLifeGuardCoordinator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api_gateway.APIGateWay/GetLifeGuardCoordinator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIGateWayServer).GetLifeGuardCoordinator(ctx, req.(*GetLifeGuardCoordinatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _APIGateWay_GetNextLifeGuard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetNextLifeGuardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIGateWayServer).GetNextLifeGuard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api_gateway.APIGateWay/GetNextLifeGuard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIGateWayServer).GetNextLifeGuard(ctx, req.(*GetNextLifeGuardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _APIGateWay_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "api_gateway.APIGateWay",
 	HandlerType: (*APIGateWayServer)(nil),
@@ -1571,6 +2415,26 @@ var _APIGateWay_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetActiveServiceEndpoints",
 			Handler:    _APIGateWay_GetActiveServiceEndpoints_Handler,
+		},
+		{
+			MethodName: "AddLifeGuardNode",
+			Handler:    _APIGateWay_AddLifeGuardNode_Handler,
+		},
+		{
+			MethodName: "RemoveLifeGuardNode",
+			Handler:    _APIGateWay_RemoveLifeGuardNode_Handler,
+		},
+		{
+			MethodName: "SetLifeGuardCoordinator",
+			Handler:    _APIGateWay_SetLifeGuardCoordinator_Handler,
+		},
+		{
+			MethodName: "GetLifeGuardCoordinator",
+			Handler:    _APIGateWay_GetLifeGuardCoordinator_Handler,
+		},
+		{
+			MethodName: "GetNextLifeGuard",
+			Handler:    _APIGateWay_GetNextLifeGuard_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
