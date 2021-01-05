@@ -77,37 +77,37 @@ func (server *LifeGuardServer) ConnectToLifeGuard() videoconverter.LifeGuardClie
 	return lifeGuardConnection
 }
 
-func (serv *LifeGuardServer) IsAlive(ctx context.Context, in *videoconverter.IsAliveRequest) (*videoconverter.IsAliveResponse, error) {
+func (server *LifeGuardServer) IsAlive(ctx context.Context, in *videoconverter.IsAliveRequest) (*videoconverter.IsAliveResponse, error) {
 	return &videoconverter.IsAliveResponse{}, nil
 }
 
-func (serv *LifeGuardServer) Election(ctx context.Context, in *videoconverter.ElectionRequest) (*videoconverter.ElectionResponse, error) {
-	if serv.startedElection {
-		serv.shouldSendCoordinatorMessage = true
-		serv.newElectionRequest = in
-	} else if in.HighestProcessNumber == serv.id {
-		serv.shouldSendElectionMessage = true
-		serv.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: serv.id}
-	} else if in.HighestProcessNumber < serv.id {
-		serv.shouldSendElectionMessage = true
-		serv.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: serv.id}
+func (server *LifeGuardServer) Election(ctx context.Context, in *videoconverter.ElectionRequest) (*videoconverter.ElectionResponse, error) {
+	if server.startedElection {
+		server.shouldSendCoordinatorMessage = true
+		server.newElectionRequest = in
+	} else if in.HighestProcessNumber == server.id {
+		server.shouldSendElectionMessage = true
+		server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id}
+	} else if in.HighestProcessNumber < server.id {
+		server.shouldSendElectionMessage = true
+		server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id}
 	} else {
-		serv.shouldSendElectionMessage = true
-		serv.newElectionRequest = in
+		server.shouldSendElectionMessage = true
+		server.newElectionRequest = in
 	}
 	return &videoconverter.ElectionResponse{}, nil
 }
 
-func (serv *LifeGuardServer) Coordinator(ctx context.Context, in *videoconverter.CoordinatorRequest) (*videoconverter.CoordinatorResponse, error) {
-	if in.HighestProcessNumber == serv.id {
-		serv.isCoordinator = true
+func (server *LifeGuardServer) Coordinator(ctx context.Context, in *videoconverter.CoordinatorRequest) (*videoconverter.CoordinatorResponse, error) {
+	if in.HighestProcessNumber == server.id {
+		server.isCoordinator = true
 	}
 
-	if serv.startedCoordination {
-		serv.newElectionRequest = nil
+	if server.startedCoordination {
+		server.newElectionRequest = nil
 	} else {
-		serv.shouldSendCoordinatorMessage = true
-		serv.newCoordinatorRequest = in
+		server.shouldSendCoordinatorMessage = true
+		server.newCoordinatorRequest = in
 	}
 
 	return &videoconverter.CoordinatorResponse{}, nil
@@ -125,7 +125,7 @@ func (server *LifeGuardServer) checkIfNextLifeGuardIsAlive(client videoconverter
 func (server *LifeGuardServer) startElection() {
 	server.startedElection = true
 	server.shouldSendElectionMessage = true
-	server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber:server.id}
+	server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id}
 }
 
 func (server *LifeGuardServer) sendElectionMessage(client videoconverter.LifeGuardClient) {
