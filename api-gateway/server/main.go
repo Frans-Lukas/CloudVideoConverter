@@ -28,7 +28,7 @@ func main() {
 	s := grpc.NewServer()
 
 	apiServer := api_gateway.CreateNewServer()
-	api_gateway2.RegisterAPIGateWayServer(s, apiServer.APIGateWayServer)
+	api_gateway2.RegisterAPIGateWayServer(s, &apiServer)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

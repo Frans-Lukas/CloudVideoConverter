@@ -10,7 +10,7 @@ import (
 )
 
 type APIGatewayServer struct {
-	api_gateway.APIGateWayServer
+	api_gateway.UnimplementedAPIGateWayServer
 	endPoints *map[items.EndPoint]bool
 
 	lifeGuards         *map[int]items.LifeGuard
