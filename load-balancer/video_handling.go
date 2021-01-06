@@ -59,6 +59,7 @@ func mergeVideo(token string) error {
 	if len(videoParts) > 0 {
 		println("merging")
 		performMerge(videoParts, token)
+		return nil
 	}
 
 	return errors.New("video parts are invalid")
@@ -120,7 +121,7 @@ func getVideoParts(token string) ([]string, error) {
 	listOfFiles := getFiles()
 	parts := make([]string, 0)
 	for _, v := range listOfFiles {
-		if isAPart(token, v) {
+		if isAConvertedPart(token, v) {
 			println("adding part " + v)
 			parts = append(parts, v)
 		}
@@ -132,8 +133,8 @@ func getVideoParts(token string) ([]string, error) {
 	return parts, nil
 }
 
-func isAPart(token string, potentialPart string) bool {
-	matched, _ := regexp.MatchString(token+"-[0-9]+", potentialPart)
+func isAConvertedPart(token string, potentialPart string) bool {
+	matched, _ := regexp.MatchString(token+"-[0-9]+.*converted", potentialPart)
 	return matched
 }
 
