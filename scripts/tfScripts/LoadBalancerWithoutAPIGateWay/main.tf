@@ -4,7 +4,7 @@ variable "instance_count" {
 }
 
 provider "google-beta" {
-  credentials = file("SSDNIA.json")
+  credentials = file("/tmp/SSDNIA.json")
   project     = var.project
   region      = var.region
   zone        = var.zone
@@ -34,7 +34,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
   }
 
   provisioner "file" {
-    source = "SSDNIA.json"
+    source = "/tmp/SSDNIA.json"
     destination = "/tmp/SSDNIA.json"
   }
 
