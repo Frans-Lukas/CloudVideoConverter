@@ -261,21 +261,21 @@ func (cli *StorageClient) DownloadConvertedParts(token string) {
 			println("iterator done")
 			break
 		}
-		println("downloading part")
+		println("downloading part: ", attrs.Name)
 		if err != nil {
 			log.Fatal(err)
 		}
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 		rc, err := bkt.Object(attrs.Name).NewReader(ctx)
 		if err != nil {
-			log.Fatalf("DownloadConvertedParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
+			log.Printf("DownloadConvertedParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
 			return
 		}
 		defer rc.Close()
 		slurp, err := ioutil.ReadAll(rc)
 		println("read " + strconv.Itoa(len(slurp)) + " bytes from downloaded file")
 		if err != nil {
-			log.Fatalf("DownloadConvertedParts: unable to open file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
+			log.Printf("DownloadConvertedParts: unable to read file from bucket %q, file %q: %v", constants.ConvertedVideosBucketName, attrs.Name, err)
 			return
 		}
 
