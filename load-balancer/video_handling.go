@@ -54,7 +54,7 @@ func mergeVideo(token string) error {
 		return err
 	}
 
-	println("checking if parts are correctr")
+	println("checking if parts are correct")
 
 	if len(videoParts) > 0 {
 		println("merging")

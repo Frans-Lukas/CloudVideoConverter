@@ -225,7 +225,7 @@ func (serv *VideoConverterServer) SendWorkToClients() {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		println("Checking if ", addr, " can work")
+		//println("Checking if ", addr, " can work")
 		response, err := client.client.AvailableForWork(ctx, &videoconverter.AvailableForWorkRequest{})
 		if err != nil {
 			println(" conv check err: ", err.Error())
@@ -393,9 +393,9 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 }
 
 func (serv *VideoConverterServer) MarkTokenAsComplete(ctx context.Context, in *videoconverter.MarkTokenAsCompleteRequest) (*videoconverter.MarkTokenAsCompleteResponse, error) {
-	DeleteFiles(in.Token)
-	serv.storageClient.DeleteConvertedParts(in.Token)
-	serv.databaseClient.DeleteWithToken(in.Token)
+	//DeleteFiles(in.Token)
+	//serv.storageClient.DeleteConvertedParts(in.Token)
+	//serv.databaseClient.DeleteWithToken(in.Token)
 	return &videoconverter.MarkTokenAsCompleteResponse{}, nil
 }
 
