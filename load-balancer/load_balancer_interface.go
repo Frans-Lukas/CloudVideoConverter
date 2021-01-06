@@ -88,7 +88,7 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 	*serv.ActiveServices = make(map[string]VideoConverterClient)
 	for _, v := range endPoints.EndPoint {
 		address := v.Ip + ":" + strconv.Itoa(int(v.Port))
-		//println("got service endpoint: ", address)
+		println("got service endpoint: ", address)
 		if _, ok := (*serv.ActiveServices)[address]; !ok {
 			(*serv.ActiveServices)[address] = makeServiceConnection(address)
 		}
@@ -201,7 +201,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		if len(tokens) > 0 {
 			for _, token := range tokens {
 				if convertedFileExists(token) {
-					//println(token, " is already merged, skipping.")
+					println(token, " is already merged, skipping.")
 				} else {
 					serv.downloadAndMergeFiles(token)
 					println("conversion for ", token, " is done and merged!")
@@ -225,7 +225,7 @@ func (serv *VideoConverterServer) SendWorkToClients() {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		//println("Checking if ", addr, " can work")
+		println("Checking if ", addr, " can work")
 		response, err := client.client.AvailableForWork(ctx, &videoconverter.AvailableForWorkRequest{})
 		if err != nil {
 			println(" conv check err: ", err.Error())
@@ -393,9 +393,9 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 }
 
 func (serv *VideoConverterServer) MarkTokenAsComplete(ctx context.Context, in *videoconverter.MarkTokenAsCompleteRequest) (*videoconverter.MarkTokenAsCompleteResponse, error) {
-	//DeleteFiles(in.Token)
-	//serv.storageClient.DeleteConvertedParts(in.Token)
-	//serv.databaseClient.DeleteWithToken(in.Token)
+	DeleteFiles(in.Token)
+	serv.storageClient.DeleteConvertedParts(in.Token)
+	serv.databaseClient.DeleteWithToken(in.Token)
 	return &videoconverter.MarkTokenAsCompleteResponse{}, nil
 }
 
@@ -594,9 +594,9 @@ func (serv *VideoConverterServer) handleQueueFromDB() {
 	keys, unfinishedParts := serv.databaseClient.GetUnfinishedParts()
 	newConversionQueue := make([]ConversionObjectInfo, 0)
 	for index, v := range unfinishedParts {
-		if _, ok := (*serv.ActiveServices)[v.ConverterAddress]; !ok && v.InProgress {
+		if _, ok := (*serv.ActiveServices)[v.ConverterAddress]; !ok && v.InProgress && !v.Done {
 			serv.databaseClient.MarkConversionAsNotInProgress(keys[index].Name)
-		} else if v.InProgress == false {
+		} else if v.InProgress == false && !v.Done {
 			newConversionQueue = append(newConversionQueue, ConversionObjectInfo{
 				name:       keys[index].Name,
 				outputType: v.ConversionType,
