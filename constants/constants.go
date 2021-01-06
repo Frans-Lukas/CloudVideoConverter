@@ -3,6 +3,7 @@ package constants
 import "time"
 
 const LocalStorage = "localStorage/"
+const TFScripts = "tfScripts/"
 const ConvertedVideosBucketName = "converted_video_parts_1"
 const SampleVideosBucketName = "videos_to_download"
 const UnconvertedVideosBucketName = "uncoverted_video_parts_1"
