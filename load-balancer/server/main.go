@@ -21,6 +21,7 @@ package main
 
 import (
 	"errors"
+	"github.com/Frans-Lukas/cloudvideoconverter/lifeGuard/server"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"google.golang.org/grpc"
@@ -39,13 +40,26 @@ const (
 
 func main() {
 
-	if len(os.Args) != 3 {
-		println(errors.New("invalid command line arguments, use ./loadBalancer {port} {api-gateway ip:port}").Error())
+	if len(os.Args) != 5 {
+		println(errors.New("invalid command line arguments, use ./loadBalancer {ip} {loadBalancerPort} {lifeGuardPort} {api-gateway ip:port}").Error())
 		return
 	}
-	port := os.Args[1]
+
+	coordinatorStatus := make(chan *bool)
+
+	go server.StartLifeGuard(os.Args[1], os.Args[3], os.Args[4], coordinatorStatus)
+
+	for status := range coordinatorStatus {
+		if *status == true{
+			//you are now the responsible load balancer
+			break
+		}
+	}
+
+
+	port := os.Args[2]
 	port = ":" + port
-	apiGatewayAddress := os.Args[2]
+	apiGatewayAddress := os.Args[4]
 
 	println("running on port: " + port)
 	rand.Seed(time.Now().UnixNano())

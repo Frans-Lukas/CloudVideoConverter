@@ -8,7 +8,6 @@ import (
 	"log"
 	"math/rand"
 	"net"
-	"os"
 	"time"
 )
 
@@ -21,6 +20,7 @@ func StartLifeGuard(ip string, port string, gateWayAddress string, coordinatorSt
 
 	//ip := os.Args[1]
 	//port := os.Args[2]
+	portNumber := port
 	port = ":" + port
 	//gateWayAddress := os.Args[3]
 	println("running on port: " + port)
@@ -42,11 +42,12 @@ func StartLifeGuard(ip string, port string, gateWayAddress string, coordinatorSt
 	defer conn.Close()
 	println("connected")
 	c := api_gateway.NewAPIGateWayClient(conn)
-	lifeGuardServer.SetupAPIConnections(ip, os.Args[2], c)
+	lifeGuardServer.SetupAPIConnections(ip, portNumber, c)
 
 	go func() {
 		lifeGuardServer.HandleLifeGuardDuties()
 	}()
+
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

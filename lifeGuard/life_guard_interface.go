@@ -54,6 +54,7 @@ func CreateNewLifeGuardServer(coordinatorStatus chan *bool) LifeGuardServer {
 		recreateRingSenderId:         -1,
 		yourAddress:                  "",
 		targetIsCoordinator:          false,
+
 		shouldSetCoordinator:         false,
 		shouldRestartDeadLifeGuards:  false,
 	}
@@ -63,6 +64,7 @@ func CreateNewLifeGuardServer(coordinatorStatus chan *bool) LifeGuardServer {
 func (server *LifeGuardServer) HandleLifeGuardDuties() {
 
 	for {
+
 		if server.shouldRestartDeadLifeGuards {
 			server.restartDeadLifeGuards()
 		}
