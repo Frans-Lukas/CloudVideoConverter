@@ -25,6 +25,7 @@ type LifeGuardServer struct {
 	startedElection              bool
 	startedCoordination          bool
 	isCoordinator                bool
+	isCoordinatorOutput          chan <- *bool
 	shouldRecreateRing           bool
 	recreateRingSenderId         int
 	yourAddress                  string
@@ -32,7 +33,7 @@ type LifeGuardServer struct {
 	shouldSetCoordinator         bool
 }
 
-func CreateNewLifeGuardServer() LifeGuardServer {
+func CreateNewLifeGuardServer(coordinatorStatus chan *bool) LifeGuardServer {
 	val := LifeGuardServer{
 		targetLifeGuard:              "NOT SET",
 		targetLifeGuardConnection:    nil,
@@ -45,6 +46,7 @@ func CreateNewLifeGuardServer() LifeGuardServer {
 		startedElection:              false,
 		startedCoordination:          false,
 		isCoordinator:                false,
+		isCoordinatorOutput:          coordinatorStatus,
 		shouldRecreateRing:           false,
 		recreateRingSenderId:         -1,
 		yourAddress:                  "",
@@ -138,7 +140,7 @@ func (server *LifeGuardServer) Election(ctx context.Context, in *videoconverter.
 func (server *LifeGuardServer) Coordinator(ctx context.Context, in *videoconverter.CoordinatorRequest) (*videoconverter.CoordinatorResponse, error) {
 	if in.HighestProcessNumber == server.id {
 		println("is coordinator")
-		server.isCoordinator = true
+		server.updateIsCoordinator(true)
 		server.shouldSetCoordinator = true
 	}
 
@@ -286,7 +288,7 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 
 	if err != nil {
 		println("getLifeGuardCoordinator: " + err.Error())
-		server.isCoordinator = false
+		server.updateIsCoordinator(false)
 		return
 	}
 
@@ -300,14 +302,13 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 	coordinatorLifeGuard := res.Ip + ":" + strconv.Itoa(int(res.Port))
 
 	if coordinatorLifeGuard == server.yourAddress {
-		server.isCoordinator = true
-		println("is coordinator")
+		server.updateIsCoordinator(true)
 		server.targetIsCoordinator = false
 	} else if coordinatorLifeGuard == server.targetLifeGuard {
-		server.isCoordinator = false
+		server.updateIsCoordinator(false)
 		server.targetIsCoordinator = true
 	} else {
-		server.isCoordinator = false
+		server.updateIsCoordinator(false)
 		server.targetIsCoordinator = false
 	}
 }
@@ -341,4 +342,15 @@ func (server *LifeGuardServer) setCoordinator() {
 	}
 
 	server.shouldSetCoordinator = false
+}
+
+func (server *LifeGuardServer) updateIsCoordinator(b bool) {
+	if b {
+		println("is coordinator")
+	} else {
+		println("is NOT coordinator")
+	}
+	server.isCoordinator = b
+	server.isCoordinatorOutput <- &b
+	println("outputedcoordinatormessage")
 }

@@ -1,7 +1,6 @@
-package main
+package server
 
 import (
-	"errors"
 	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/lifeGuard"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
@@ -13,17 +12,17 @@ import (
 	"time"
 )
 
-func main() {
-	println(len(os.Args))
+func StartLifeGuard(ip string, port string, gateWayAddress string, coordinatorStatus chan *bool) {
+	/*println(len(os.Args))
 	if len(os.Args) != 4 {
 		println(errors.New("invalid command line arguments, {thisIp} {port} {api-gateway ip:port}").Error())
 		return
-	}
+	}*/
 
-	ip := os.Args[1]
-	port := os.Args[2]
+	//ip := os.Args[1]
+	//port := os.Args[2]
 	port = ":" + port
-	gateWayAddress := os.Args[3]
+	//gateWayAddress := os.Args[3]
 	println("running on port: " + port)
 	rand.Seed(time.Now().UnixNano())
 	lis, err := net.Listen("tcp", port)
@@ -32,7 +31,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	lifeGuardServer := lifeGuardInterface.CreateNewLifeGuardServer()
+	lifeGuardServer := lifeGuardInterface.CreateNewLifeGuardServer(coordinatorStatus)
 	videoconverter.RegisterLifeGuardServer(s, &lifeGuardServer)
 
 	println("trying to connect to API Gateway: ", gateWayAddress)
