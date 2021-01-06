@@ -1,11 +1,13 @@
 package lifeGuardInterface
 
 import (
+	"bytes"
 	"github.com/Frans-Lukas/cloudvideoconverter/api-gateway/generated"
 	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer/generated"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
+	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -25,12 +27,13 @@ type LifeGuardServer struct {
 	startedElection              bool
 	startedCoordination          bool
 	isCoordinator                bool
-	isCoordinatorOutput          chan <- *bool
+	isCoordinatorOutput          chan<- *bool
 	shouldRecreateRing           bool
 	recreateRingSenderId         int
 	yourAddress                  string
 	targetIsCoordinator          bool
 	shouldSetCoordinator         bool
+	shouldRestartDeadLifeGuards  bool
 }
 
 func CreateNewLifeGuardServer(coordinatorStatus chan *bool) LifeGuardServer {
@@ -52,6 +55,7 @@ func CreateNewLifeGuardServer(coordinatorStatus chan *bool) LifeGuardServer {
 		yourAddress:                  "",
 		targetIsCoordinator:          false,
 		shouldSetCoordinator:         false,
+		shouldRestartDeadLifeGuards:  false,
 	}
 	return val
 }
@@ -59,7 +63,12 @@ func CreateNewLifeGuardServer(coordinatorStatus chan *bool) LifeGuardServer {
 func (server *LifeGuardServer) HandleLifeGuardDuties() {
 
 	for {
+		if server.shouldRestartDeadLifeGuards {
+			server.restartDeadLifeGuards()
+		}
+
 		server.checkIfNextLifeGuardIsAlive()
+
 		if server.shouldRecreateRing {
 			server.recreateRingProcedure()
 		}
@@ -81,10 +90,6 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 			server.setCoordinator()
 		}
 
-		if server.isCoordinator {
-			//TODO coordinator stuff
-		}
-
 		if server.shouldStartElection {
 			server.startElection()
 		}
@@ -101,7 +106,6 @@ func (server *LifeGuardServer) ConnectToLifeGuard() {
 
 	conn, err := grpc.Dial(server.targetLifeGuard, grpc.WithInsecure(), grpc.WithTimeout(time.Second*10))
 	for i := 0; i < 3; i++ {
-		//TODO if it cannot connect for a while, start it yourself
 		if err == nil {
 			break
 		}
@@ -160,7 +164,7 @@ func (server *LifeGuardServer) RecreateRing(ctx context.Context, in *videoconver
 		println("RecreateRing Completed!!!")
 		if server.shouldSendElectionMessage {
 			server.shouldStartElection = true
-			server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id, InitialSenderId:server.id}
+			server.newElectionRequest = &videoconverter.ElectionRequest{HighestProcessNumber: server.id, InitialSenderId: server.id}
 		}
 	} else {
 		println("recreateRing id: " + strconv.Itoa(int(in.InitialSenderId)))
@@ -183,6 +187,7 @@ func (server *LifeGuardServer) checkIfNextLifeGuardIsAlive() {
 	if err != nil {
 		println("response to IsAlive: %v", err)
 		if server.targetIsCoordinator {
+			server.shouldRestartDeadLifeGuards = true
 			server.shouldStartElection = true
 		}
 		server.removeTargetLifeGuard()
@@ -352,5 +357,43 @@ func (server *LifeGuardServer) updateIsCoordinator(b bool) {
 	}
 	server.isCoordinator = b
 	server.isCoordinatorOutput <- &b
-	println("outputedcoordinatormessage")
+}
+
+func (server *LifeGuardServer) getDesiredLifeGuards() int {
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	res, err := (*server.APIGateway).GetMaxLifeGuards(ctx, &api_gateway.GetMaxLifeGuardsRequest{})
+	if err != nil {
+		println("getDesiredLifeGuards: " + err.Error())
+		return -1
+	}
+
+	return int(res.MaxLifeGuards)
+}
+
+func (server *LifeGuardServer) restartDeadLifeGuards() {
+	desiredNumber := server.getDesiredLifeGuards()
+
+	go server.executeLifeGuardRestart(desiredNumber)
+
+	server.shouldRestartDeadLifeGuards = false
+}
+
+func (server *LifeGuardServer) executeLifeGuardRestart(desiredNumber int) {
+	println("./scripts/tfScripts/LoadBalancerWithoutAPIGateWay/startLoadBalancerVMsFromLifeGuard.sh", desiredNumber)
+	cmd := exec.Command("./scripts/tfScripts/LoadBalancerWithoutAPIGateWay/startLoadBalancerVMsFromLifeGuard.sh", strconv.Itoa(desiredNumber))
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	if err != nil {
+		println("executeLifeGuardRestart: " + err.Error())
+		println(out.String())
+		println(stderr.String())
+
+		return
+	}
+
+	println("done with executeLifeGuardRestart")
 }

@@ -16,6 +16,7 @@ type APIGatewayServer struct {
 	lifeGuards         *map[int]items.LifeGuard
 	nextLifeGuardId    int
 	currentCoordinator items.LifeGuard
+	maxLifeGuards      int32
 }
 
 func CreateNewServer() APIGatewayServer {
@@ -26,6 +27,7 @@ func CreateNewServer() APIGatewayServer {
 		lifeGuards:         &lifeGuards,
 		nextLifeGuardId:    0,
 		currentCoordinator: items.LifeGuard{Ip: "", Port: -1},
+		maxLifeGuards:      0,
 	}
 	return val
 }
@@ -86,6 +88,11 @@ func (serv *APIGatewayServer) AddLifeGuardNode(
 	println("added lifeGuard: " + in.Ip + ":" + strconv.Itoa(int(in.Port)) + " with id: " + strconv.Itoa(serv.nextLifeGuardId))
 
 	serv.nextLifeGuardId += 1
+
+	if int32(len(*serv.lifeGuards)) > serv.maxLifeGuards {
+		serv.maxLifeGuards = int32(len(*serv.lifeGuards))
+		println("max lifeguards increased to: " + strconv.Itoa(int(serv.maxLifeGuards)))
+	}
 
 	return &api_gateway.AddLifeGuardNodeResponse{NewLifeGuardId: int32(serv.nextLifeGuardId - 1)}, nil
 }
@@ -153,4 +160,10 @@ func (serv *APIGatewayServer) GetNextLifeGuard(
 
 	println("Did not find nextLifeguard for lifeGuard id: " + strconv.Itoa(int(in.LifeGuardId)))
 	return &api_gateway.GetNextLifeGuardResponse{Ip: "", Port: int32(-1)}, errors.New("could not find you in list of lifeGuards")
+}
+
+func (serv *APIGatewayServer) GetMaxLifeGuards(
+	ctx context.Context, in *api_gateway.GetMaxLifeGuardsRequest,
+) (*api_gateway.GetMaxLifeGuardsResponse, error) {
+	return &api_gateway.GetMaxLifeGuardsResponse{MaxLifeGuards:serv.maxLifeGuards}, nil
 }

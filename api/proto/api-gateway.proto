@@ -12,6 +12,13 @@ service APIGateWay {
   rpc SetLifeGuardCoordinator(SetLifeGuardCoordinatorRequest) returns (SetLifeGuardCoordinatorResponse) {}
   rpc GetLifeGuardCoordinator(GetLifeGuardCoordinatorRequest) returns (GetLifeGuardCoordinatorResponse) {}
   rpc GetNextLifeGuard(GetNextLifeGuardRequest) returns (GetNextLifeGuardResponse) {}
+  rpc GetMaxLifeGuards(GetMaxLifeGuardsRequest) returns (GetMaxLifeGuardsResponse) {}
+}
+
+message GetMaxLifeGuardsRequest {}
+
+message GetMaxLifeGuardsResponse {
+  int32 maxLifeGuards = 1;
 }
 
 message AddLifeGuardNodeRequest {
