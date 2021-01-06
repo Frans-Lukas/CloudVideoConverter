@@ -7,16 +7,22 @@ while true; do
     do
         if [[ $line == *"load-balancer"* ]]; then
             echo "killing '$line'"
-            gcloud compute instances delete $line --zone=europe-north1-a
+            if (( RANDOM % 100 <= 25 )); then
+                gcloud compute instances delete $line --zone=europe-north1-a -q
+                break
+            fi
         elif [[ $line == *"service-provider"* ]]; then
             echo "killing '$line'"
-            gcloud compute instances delete $line --zone=europe-north1-a
+            if (( RANDOM % 100 <= 25 )); then
+                gcloud compute instances delete $line --zone=europe-north1-a -q
+                break
+            fi
         elif [[ $line == *"api-gateway"* ]]; then
             echo "ignoring '$line'"
         elif [[ $line == *"spawning-pool"* ]]; then
             echo "ignoring '$line'"
         fi
     done < <(printf '%s\n' "$instances")
-    sleep 15
+    sleep RANDOM % 25 + 5
 done
 #gcloud compute instances delete
