@@ -109,6 +109,7 @@ func (serv *APIGatewayServer) RemoveLifeGuardNode(
 
 			if serv.currentCoordinator.Port == int(in.Port) && serv.currentCoordinator.Ip == in.Ip {
 				serv.currentCoordinator = items.LifeGuard{Port: -1, Ip: ""}
+				serv.currentLoadBalancer = items.EndPoint{Ip: "", Port: -1}
 			}
 
 			break
