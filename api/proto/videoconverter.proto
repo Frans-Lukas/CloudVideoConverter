@@ -8,6 +8,7 @@ service VideoConverterLoadBalancer {
     rpc StartConversion(ConversionRequest) returns (ConversionResponse) {}
     rpc ConversionStatus(ConversionStatusRequest) returns (ConversionStatusResponse) {}
     rpc Download(DownloadRequest) returns (stream Chunk) {}
+    rpc MarkTokenAsComplete(MarkTokenAsCompleteRequest) returns (MarkTokenAsCompleteResponse) {}
     rpc Delete(DeleteRequest) returns (DeleteResponse) {}
 }
 
@@ -48,6 +49,12 @@ message CoordinatorResponse{}
 message IsAliveRequest{}
 
 message IsAliveResponse{}
+
+message MarkTokenAsCompleteRequest{
+    string Token = 1;
+}
+
+message MarkTokenAsCompleteResponse{}
 
 message ShutDownRequest{}
 

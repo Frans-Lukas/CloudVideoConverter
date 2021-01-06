@@ -375,7 +375,7 @@ func uploadFiles(fileNames []string) {
 
 func (server *VideoConverterServer) tokenIsInvalid(token string) bool {
 	if tokenCreationTime, ok := (*server.ActiveTokens)[token]; ok {
-		println("Time since token was created: ", time.Since(*tokenCreationTime.CreationTime).Seconds())
+		//println("Time since token was created: ", time.Since(*tokenCreationTime.CreationTime).Seconds())
 		if time.Since(*tokenCreationTime.CreationTime).Seconds() < tokenTimeOutSeconds {
 			return false
 		}
@@ -412,11 +412,14 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 		})
 	}
 
-	DeleteFiles(token)
-	serv.storageClient.DeleteConvertedParts(token)
-	serv.databaseClient.DeleteWithToken(token)
-
 	return nil
+}
+
+func (serv *VideoConverterServer) MarkTokenAsComplete(ctx context.Context, in *videoconverter.MarkTokenAsCompleteRequest) (*videoconverter.MarkTokenAsCompleteResponse, error) {
+	DeleteFiles(in.Token)
+	serv.storageClient.DeleteConvertedParts(in.Token)
+	serv.databaseClient.DeleteWithToken(in.Token)
+	return &videoconverter.MarkTokenAsCompleteResponse{}, nil
 }
 
 func DeleteFiles(prefix string) {
@@ -488,10 +491,10 @@ func GenerateRandomString() string {
 
 func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 	for {
-		println("Checking active tokens: ")
+		//println("Checking active tokens: ")
 		keysToDelete := make([]string, 0)
 		for token, _ := range *serv.ActiveTokens {
-			println("checking if I can delete token: ", token)
+			//println("checking if I can delete token: ", token)
 			if serv.tokenIsInvalid(token) {
 				println("deleting invalid token from everywhere.")
 				DeleteFiles(token)
@@ -505,7 +508,7 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 		for _, key := range keysToDelete {
 			delete(*serv.ActiveTokens, key)
 		}
-		fmt.Printf("map after deletion: %v", *serv.ActiveTokens)
+		//fmt.Printf("map after deletion: %v", *serv.ActiveTokens)
 
 		time.Sleep(time.Second * 5)
 	}
