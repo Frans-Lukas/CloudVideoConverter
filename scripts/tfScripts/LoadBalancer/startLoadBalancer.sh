@@ -9,7 +9,7 @@ IP=$(gcloud compute instances describe api-gateway-0 --format='get(networkInterf
 while true
 do
     /usr/local/go/bin/go run load-balancer/server/main.go 50052 "$IP:50051"
-    echo "Server 'myserver' crashed with exit code $?.  Respawning.." >&2
+    echo "Server 'load balancer' crashed with exit code $?.  Respawning.."
     sleep 1
 done
 
