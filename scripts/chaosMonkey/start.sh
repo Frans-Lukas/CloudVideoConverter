@@ -4,6 +4,6 @@ gcloud auth activate-service-account fast-blueprint-296210@appspot.gserviceaccou
 instances=$(gcloud compute instances list --format='table(name)')
 while read -r line
 do
-    echo "$line"
+    echo $line
 done < <($instances)
 #gcloud compute instances delete
