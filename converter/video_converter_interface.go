@@ -1,6 +1,7 @@
 package converter
 
 import (
+	"bytes"
 	"context"
 	"github.com/Frans-Lukas/cloudvideoconverter/constants"
 	"github.com/Frans-Lukas/cloudvideoconverter/helpers"
@@ -62,15 +63,23 @@ func (serv *VideoConverterServiceServer) performConversion(app string, arg0 stri
 	println("has downloaded file and is ACTUALLY starting conversion")
 	println(app, " ", arg0, " ", arg1, " ", arg2)
 	cmd := exec.Command(app, arg0, arg1, arg2)
-	*(*serv.ActiveConversions)[token].ConversionStarted = true
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
 	err := cmd.Run()
+	*(*serv.ActiveConversions)[token].ConversionStarted = true
 	if err != nil {
 		*(*serv.ActiveConversions)[token].ConversionFailed = true
-		println("failed to convert ", err.Error())
+		log.Println("failed to convert " + out.String())
+		log.Println(err.Error(), ": ", stderr.String())
 		return
 	} else {
 		*(*serv.ActiveConversions)[token].ConversionDone = true
+		log.Println(out.String())
 	}
+
 	file, err := os.Open(arg2)
 	defer file.Close()
 	if err != nil {

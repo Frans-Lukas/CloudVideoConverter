@@ -232,6 +232,7 @@ func (serv *VideoConverterServer) SendWorkToClients() {
 		response, err := client.client.AvailableForWork(ctx, &videoconverter.AvailableForWorkRequest{})
 		if err != nil {
 			println(" conv check err: ", err.Error())
+			return
 		}
 		if response.AvailableForWork {
 			println("sending work to ", addr)
@@ -585,7 +586,7 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 
 func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
 	//println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60-time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
-	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > constants.MinutesBetweenVMCreationAndDeletion
+	return time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds() > constants.SecondsBetweenVMCreationAndDeletion
 }
 
 func (serv *VideoConverterServer) resetVMTimer() {

@@ -97,7 +97,7 @@ func (store *ConversionObjectsClient) MarkConversionAsNotInProgress(file string)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	correctFile := helpers.ChangeFileExtension(file, "mp4")
-	println("correctFile: ", correctFile)
+	//println("correctFile: ", correctFile)
 	q := datastore.NewQuery(KIND).Filter("__key__ =", datastore.NameKey(KIND, correctFile, nil))
 	var objects []ConversionObject
 	keys, err := store.GetAll(ctx, q, &objects)
