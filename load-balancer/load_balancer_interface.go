@@ -88,7 +88,7 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 	*serv.ActiveServices = make(map[string]VideoConverterClient)
 	for _, v := range endPoints.EndPoint {
 		address := v.Ip + ":" + strconv.Itoa(int(v.Port))
-		println("got service endpoint: ", address)
+		//println("got service endpoint: ", address)
 		if _, ok := (*serv.ActiveServices)[address]; !ok {
 			(*serv.ActiveServices)[address] = makeServiceConnection(address)
 		}
@@ -228,7 +228,7 @@ func (serv *VideoConverterServer) SendWorkToClients() {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		println("Checking if ", addr, " can work")
+		//println("Checking if ", addr, " can work")
 		response, err := client.client.AvailableForWork(ctx, &videoconverter.AvailableForWorkRequest{})
 		if err != nil {
 			println(" conv check err: ", err.Error())
