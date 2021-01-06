@@ -44,7 +44,6 @@ func main() {
 	println("connected")
 	c := api_gateway.NewAPIGateWayClient(conn)
 	lifeGuardServer.SetupAPIConnections(ip, os.Args[2], c)
-	conn.Close()
 
 	go func() {
 		lifeGuardServer.HandleLifeGuardDuties()
