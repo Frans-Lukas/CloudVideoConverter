@@ -5,5 +5,5 @@ instances=$(gcloud compute instances list --format='table(name)')
 while read -r line
 do
     echo "$line"
-done < <(instances)
+done < <($instances)
 #gcloud compute instances delete
