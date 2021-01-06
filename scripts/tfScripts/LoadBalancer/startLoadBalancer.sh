@@ -9,7 +9,7 @@ MY_IP=$(curl https://ipinfo.io/ip)
 
 while true
 do
-    /usr/local/go/bin/go run load-balancer/server/main.go MY_IP 50052 50054 "$IP:50051"
+    /usr/local/go/bin/go run load-balancer/server/main.go ${MY_IP} 50052 50054 "$IP:50051"
     echo "Server 'load balancer' crashed with exit code $?.  Respawning.."
     sleep 1
 done
