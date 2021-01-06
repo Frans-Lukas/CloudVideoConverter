@@ -61,8 +61,8 @@ func (serv *VideoConverterServiceServer) StartConversion(ctx context.Context, in
 
 func (serv *VideoConverterServiceServer) performConversion(app string, arg0 string, arg1 string, arg2 string, token string) {
 	println("has downloaded file and is ACTUALLY starting conversion")
-	println(app, " ", arg0, " ", arg1, " ", arg2)
-	cmd := exec.Command(app, arg0, arg1, arg2)
+	println(app, " -y ", arg0, " ", arg1, " ", arg2)
+	cmd := exec.Command(app, "-y", arg0, arg1, arg2)
 
 	var out bytes.Buffer
 	var stderr bytes.Buffer
