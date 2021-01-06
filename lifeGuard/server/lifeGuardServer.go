@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func StartLifeGuard(ip string, port string, gateWayAddress string, coordinatorStatus chan *bool) {
+func StartLifeGuard(ip string, port string, loadBalancerPort int, gateWayAddress string, coordinatorStatus chan *bool) {
 	/*println(len(os.Args))
 	if len(os.Args) != 4 {
 		println(errors.New("invalid command line arguments, {thisIp} {port} {api-gateway ip:port}").Error())
@@ -31,7 +31,7 @@ func StartLifeGuard(ip string, port string, gateWayAddress string, coordinatorSt
 	}
 	s := grpc.NewServer()
 
-	lifeGuardServer := lifeGuardInterface.CreateNewLifeGuardServer(coordinatorStatus)
+	lifeGuardServer := lifeGuardInterface.CreateNewLifeGuardServer(coordinatorStatus, loadBalancerPort)
 	videoconverter.RegisterLifeGuardServer(s, &lifeGuardServer)
 
 	println("trying to connect to API Gateway: ", gateWayAddress)

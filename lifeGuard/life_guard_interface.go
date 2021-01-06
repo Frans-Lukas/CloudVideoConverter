@@ -34,9 +34,10 @@ type LifeGuardServer struct {
 	targetIsCoordinator          bool
 	shouldSetCoordinator         bool
 	shouldRestartDeadLifeGuards  bool
+	loadBalancerPort             int
 }
 
-func CreateNewLifeGuardServer(coordinatorStatus chan *bool) LifeGuardServer {
+func CreateNewLifeGuardServer(coordinatorStatus chan *bool, loadBalancerPort int) LifeGuardServer {
 	val := LifeGuardServer{
 		targetLifeGuard:              "NOT SET",
 		targetLifeGuardConnection:    nil,
@@ -57,6 +58,8 @@ func CreateNewLifeGuardServer(coordinatorStatus chan *bool) LifeGuardServer {
 
 		shouldSetCoordinator:         false,
 		shouldRestartDeadLifeGuards:  false,
+
+		loadBalancerPort:             loadBalancerPort,
 	}
 	return val
 }
@@ -341,7 +344,7 @@ func (server *LifeGuardServer) removeTargetLifeGuard() {
 
 func (server *LifeGuardServer) setCoordinator() {
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
-	_, err := (*server.APIGateway).SetLifeGuardCoordinator(ctx, &api_gateway.SetLifeGuardCoordinatorRequest{LifeGuardId: server.id})
+	_, err := (*server.APIGateway).SetLifeGuardCoordinator(ctx, &api_gateway.SetLifeGuardCoordinatorRequest{LifeGuardId: server.id, LoadBalancerPort: int32(server.loadBalancerPort)})
 
 	if err != nil {
 		println("setCoordinator: " + err.Error())

@@ -7,12 +7,21 @@ service APIGateWay {
   rpc DisableServiceEndpoint(DisableServiceEndPointRequest) returns (DisabledServiceEndPointResponse) {}
   rpc GetActiveServiceEndpoints(ServiceEndPointsRequest) returns (ServiceEndPointList) {}
 
-  rpc AddLifeGuardNode(AddLifeGuardNodeRequest) returns (AddLifeGuardNodeResponse) {}
-  rpc RemoveLifeGuardNode(RemoveLifeGuardNodeRequest) returns (RemoveLifeGuardNodeResponse) {}
   rpc SetLifeGuardCoordinator(SetLifeGuardCoordinatorRequest) returns (SetLifeGuardCoordinatorResponse) {}
   rpc GetLifeGuardCoordinator(GetLifeGuardCoordinatorRequest) returns (GetLifeGuardCoordinatorResponse) {}
+  rpc GetCurrentLoadBalancer(GetCurrentLoadBalancerRequest) returns (GetCurrentLoadBalancerResponse) {}
+
+  rpc AddLifeGuardNode(AddLifeGuardNodeRequest) returns (AddLifeGuardNodeResponse) {}
+  rpc RemoveLifeGuardNode(RemoveLifeGuardNodeRequest) returns (RemoveLifeGuardNodeResponse) {}
   rpc GetNextLifeGuard(GetNextLifeGuardRequest) returns (GetNextLifeGuardResponse) {}
   rpc GetMaxLifeGuards(GetMaxLifeGuardsRequest) returns (GetMaxLifeGuardsResponse) {}
+}
+
+message GetCurrentLoadBalancerRequest {}
+
+message GetCurrentLoadBalancerResponse {
+  string ip = 1;
+  int32 port = 2;
 }
 
 message GetMaxLifeGuardsRequest {}
@@ -39,6 +48,7 @@ message RemoveLifeGuardNodeResponse {}
 
 message SetLifeGuardCoordinatorRequest {
   int32 lifeGuardId = 1;
+  int32 loadBalancerPort = 2;
 }
 
 message SetLifeGuardCoordinatorResponse {}

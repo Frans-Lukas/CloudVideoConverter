@@ -29,6 +29,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -47,15 +48,19 @@ func main() {
 
 	coordinatorStatus := make(chan *bool)
 
-	go server.StartLifeGuard(os.Args[1], os.Args[3], os.Args[4], coordinatorStatus)
+	loadBalancerPort, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		log.Fatalf("loadBalancer port is not an int")
+	}
+
+	go server.StartLifeGuard(os.Args[1], os.Args[3], loadBalancerPort, os.Args[4], coordinatorStatus)
 
 	for status := range coordinatorStatus {
-		if *status == true{
+		if *status == true {
 			//you are now the responsible load balancer
 			break
 		}
 	}
-
 
 	port := os.Args[2]
 	port = ":" + port

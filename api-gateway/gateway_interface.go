@@ -13,21 +13,23 @@ type APIGatewayServer struct {
 	api_gateway.UnimplementedAPIGateWayServer
 	endPoints *map[items.EndPoint]bool
 
-	lifeGuards         *map[int]items.LifeGuard
-	nextLifeGuardId    int
-	currentCoordinator items.LifeGuard
-	maxLifeGuards      int32
+	lifeGuards          *map[int]items.LifeGuard
+	nextLifeGuardId     int
+	currentCoordinator  items.LifeGuard
+	currentLoadBalancer items.EndPoint
+	maxLifeGuards       int32
 }
 
 func CreateNewServer() APIGatewayServer {
 	endpoints := make(map[items.EndPoint]bool, 0)
 	lifeGuards := make(map[int]items.LifeGuard, 0)
 	val := APIGatewayServer{
-		endPoints:          &endpoints,
-		lifeGuards:         &lifeGuards,
-		nextLifeGuardId:    0,
-		currentCoordinator: items.LifeGuard{Ip: "", Port: -1},
-		maxLifeGuards:      0,
+		endPoints:           &endpoints,
+		lifeGuards:          &lifeGuards,
+		nextLifeGuardId:     0,
+		currentCoordinator:  items.LifeGuard{Ip: "", Port: -1},
+		currentLoadBalancer: items.EndPoint{Ip: "", Port: -1},
+		maxLifeGuards:       0,
 	}
 	return val
 }
@@ -106,7 +108,7 @@ func (serv *APIGatewayServer) RemoveLifeGuardNode(
 			delete(*serv.lifeGuards, k)
 
 			if serv.currentCoordinator.Port == int(in.Port) && serv.currentCoordinator.Ip == in.Ip {
-				serv.currentCoordinator = items.LifeGuard{Port:-1, Ip:""}
+				serv.currentCoordinator = items.LifeGuard{Port: -1, Ip: ""}
 			}
 
 			break
@@ -127,6 +129,10 @@ func (serv *APIGatewayServer) SetLifeGuardCoordinator(
 
 	serv.currentCoordinator = lifeGuard
 	println("New Coordinator: " + lifeGuard.Ip + ":" + strconv.Itoa(lifeGuard.Port) + " with id: " + strconv.Itoa(int(in.LifeGuardId)))
+
+	serv.currentLoadBalancer = items.EndPoint{Ip:lifeGuard.Ip, Port: int(in.LoadBalancerPort)}
+	println("New loadBalancer: " + serv.currentLoadBalancer.Ip + ":" + strconv.Itoa(serv.currentLoadBalancer.Port))
+
 	return &api_gateway.SetLifeGuardCoordinatorResponse{}, nil
 }
 
@@ -135,6 +141,12 @@ func (serv *APIGatewayServer) GetLifeGuardCoordinator(
 ) (*api_gateway.GetLifeGuardCoordinatorResponse, error) {
 
 	return &api_gateway.GetLifeGuardCoordinatorResponse{Ip: serv.currentCoordinator.Ip, Port: int32(serv.currentCoordinator.Port)}, nil
+}
+
+func (serv *APIGatewayServer) GetCurrentLoadBalancer(
+	ctx context.Context, in *api_gateway.GetCurrentLoadBalancerRequest,
+) (*api_gateway.GetCurrentLoadBalancerResponse, error) {
+	return &api_gateway.GetCurrentLoadBalancerResponse{Ip: serv.currentLoadBalancer.Ip, Port: int32(serv.currentLoadBalancer.Port)}, nil
 }
 
 func (serv *APIGatewayServer) GetNextLifeGuard(
@@ -165,5 +177,5 @@ func (serv *APIGatewayServer) GetNextLifeGuard(
 func (serv *APIGatewayServer) GetMaxLifeGuards(
 	ctx context.Context, in *api_gateway.GetMaxLifeGuardsRequest,
 ) (*api_gateway.GetMaxLifeGuardsResponse, error) {
-	return &api_gateway.GetMaxLifeGuardsResponse{MaxLifeGuards:serv.maxLifeGuards}, nil
+	return &api_gateway.GetMaxLifeGuardsResponse{MaxLifeGuards: serv.maxLifeGuards}, nil
 }
