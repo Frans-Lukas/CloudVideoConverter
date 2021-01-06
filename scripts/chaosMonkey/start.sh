@@ -6,14 +6,16 @@ while true; do
     while IFS= read -r line
     do
         if [[ $line == *"load-balancer"* ]]; then
-            echo "killing '$line'"
+            echo "rolling if killing '$line'"
             if (( RANDOM % 100 <= 25 )); then
+                echo "killing '$line'"
                 gcloud compute instances delete $line --zone=europe-north1-a -q
                 break
             fi
         elif [[ $line == *"service-provider"* ]]; then
-            echo "killing '$line'"
+            echo "rolling if killing '$line'"
             if (( RANDOM % 100 <= 25 )); then
+                echo "killing '$line'"
                 gcloud compute instances delete $line --zone=europe-north1-a -q
                 break
             fi
