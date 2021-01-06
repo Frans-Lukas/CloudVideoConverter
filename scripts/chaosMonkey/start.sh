@@ -5,12 +5,12 @@ while true; do
     instances="$(gcloud compute instances list --format='table(name)')"
     while IFS= read -r line
     do
-        if [[ $line == "START" ]]; then
-            echo $line
-        elif [[ $line == *"load-balancer"* ]]; then
+        if [[ $line == *"load-balancer"* ]]; then
             echo "killing '$line'"
+            gcloud compute instances delete $line --zone=europe-north1-a
         elif [[ $line == *"service-provider"* ]]; then
             echo "killing '$line'"
+            gcloud compute instances delete $line --zone=europe-north1-a
         elif [[ $line == *"api-gateway"* ]]; then
             echo "ignoring '$line'"
         elif [[ $line == *"spawning-pool"* ]]; then
