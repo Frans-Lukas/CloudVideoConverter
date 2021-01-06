@@ -131,7 +131,7 @@ func (serv *APIGatewayServer) SetLifeGuardCoordinator(
 	serv.currentCoordinator = lifeGuard
 	println("New Coordinator: " + lifeGuard.Ip + ":" + strconv.Itoa(lifeGuard.Port) + " with id: " + strconv.Itoa(int(in.LifeGuardId)))
 
-	serv.currentLoadBalancer = items.EndPoint{Ip:lifeGuard.Ip, Port: int(in.LoadBalancerPort)}
+	serv.currentLoadBalancer = items.EndPoint{Ip: lifeGuard.Ip, Port: int(in.LoadBalancerPort)}
 	println("New loadBalancer: " + serv.currentLoadBalancer.Ip + ":" + strconv.Itoa(serv.currentLoadBalancer.Port))
 
 	return &api_gateway.SetLifeGuardCoordinatorResponse{}, nil
@@ -147,6 +147,10 @@ func (serv *APIGatewayServer) GetLifeGuardCoordinator(
 func (serv *APIGatewayServer) GetCurrentLoadBalancer(
 	ctx context.Context, in *api_gateway.GetCurrentLoadBalancerRequest,
 ) (*api_gateway.GetCurrentLoadBalancerResponse, error) {
+	if serv.currentLoadBalancer.Port == -1 || serv.currentLoadBalancer.Ip == "" {
+		return &api_gateway.GetCurrentLoadBalancerResponse{Ip: "", Port: -1}, errors.New("loadBalancer not set")
+	}
+
 	return &api_gateway.GetCurrentLoadBalancerResponse{Ip: serv.currentLoadBalancer.Ip, Port: int32(serv.currentLoadBalancer.Port)}, nil
 }
 
