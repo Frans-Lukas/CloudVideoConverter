@@ -38,28 +38,28 @@ func main() {
 	}
 	defer conn.Close()
 	println("connected")
-	//apiConnection := api_gateway.NewAPIGateWayClient(conn)
-	loadBalancerConnection = videoconverter.NewVideoConverterLoadBalancerClient(conn)
+	apiConnection := api_gateway.NewAPIGateWayClient(conn)
+	//loadBalancerConnection = videoconverter.NewVideoConverterLoadBalancerClient(conn)
 
 	outputExtension := "mkv"
 	storageClient := video_converter.CreateStorageClient()
 	storageClient.DownloadSampleVideos()
 	for {
 		time.Sleep(time.Second * 5)
-		//err := connectToCurrentLoadBalancer(apiConnection)
+		err := connectToCurrentLoadBalancer(apiConnection)
+		if err != nil {
+			continue
+		}
 		token, err := upload("video.mp4")
 		if err != nil {
-			return
 			continue
 		}
 		err = requestConversion(token, outputExtension)
 		if err != nil {
-			return
 			continue
 		}
 		loopUntilConverted(token)
 		if err != nil {
-			return
 			continue
 		}
 		err = download(token, outputExtension)
@@ -77,7 +77,11 @@ func main() {
 
 func connectToCurrentLoadBalancer(apiConnection api_gateway.APIGateWayClient) error {
 	ctx := context.Background()
-	loadbalancer, err := apiConnection.GetLifeGuardCoordinator(ctx, &api_gateway.GetLifeGuardCoordinatorRequest{})
+	loadbalancer, err := apiConnection.GetCurrentLoadBalancer(ctx, &api_gateway.GetCurrentLoadBalancerRequest{})
+	if err != nil {
+		println("Error getting current load balancer: ", err.Error())
+		return
+	}
 	address := loadbalancer.Ip + ":" + strconv.Itoa(int(loadbalancer.Port))
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	if err != nil {
