@@ -56,10 +56,10 @@ func CreateNewLifeGuardServer(coordinatorStatus chan *bool, loadBalancerPort int
 		yourAddress:                  "",
 		targetIsCoordinator:          false,
 
-		shouldSetCoordinator:         false,
-		shouldRestartDeadLifeGuards:  false,
+		shouldSetCoordinator:        false,
+		shouldRestartDeadLifeGuards: false,
 
-		loadBalancerPort:             loadBalancerPort,
+		loadBalancerPort: loadBalancerPort,
 	}
 	return val
 }
@@ -99,7 +99,7 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 			server.startElection()
 		}
 
-		time.Sleep(time.Second)
+		time.Sleep(time.Second * 20)
 	}
 }
 
