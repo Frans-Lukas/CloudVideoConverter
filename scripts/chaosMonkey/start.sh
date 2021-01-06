@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]; then
+    echo "The number of arguments passed is incorrect, please give sleep interval as ./start {min} {max - min}"
+    exit 1
+fi
+
 gcloud auth activate-service-account fast-blueprint-296210@appspot.gserviceaccount.com --key-file=/tmp/SSDNIA.json
 while true; do
     instances="$(gcloud compute instances list --format='table(name)')"
@@ -25,6 +30,6 @@ while true; do
             echo "ignoring '$line'"
         fi
     done < <(printf '%s\n' "$instances")
-    sleep RANDOM % 25 + 5
+    sleep $[($RANDOM % $2) + $1]s
 done
 #gcloud compute instances delete
