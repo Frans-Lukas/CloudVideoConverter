@@ -42,13 +42,13 @@ resource "google_compute_instance_from_machine_image" "tpl" {
     destination = "/tmp/id_rsa"
   }
 
-//  provisioner "remote-exec" {
-//    inline = [
-//      "sudo chmod +x /home/group9/CloudVideoConverter/scripts/tfScripts/Service/startService.sh",
-//      "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/Service/startService.sh &",
-//      "sleep 1",
-//    ]
-//  }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo chmod +x /home/group9/CloudVideoConverter/scripts/chaosMonkey/start.sh",
+      "sudo nohup /home/group9/CloudVideoConverter/scripts/chaosMonkey/start.sh 1 10 &",
+      "sleep 1",
+    ]
+  }
 
   service_account {
     scopes = ["cloud-platform"]
