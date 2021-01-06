@@ -33,12 +33,14 @@ message RecreateRingResponse {}
 
 message ElectionRequest{
     int32 highestProcessNumber = 1;
+    int32 initialSenderId = 2;
 }
 
 message ElectionResponse{}
 
 message CoordinatorRequest{
     int32 highestProcessNumber = 1;
+    int32 initialSenderId = 2;
 }
 
 message CoordinatorResponse{}
