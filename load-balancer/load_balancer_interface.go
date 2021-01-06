@@ -191,15 +191,15 @@ func saveFile(fileName string, imageBytes *bytes.Buffer) error {
 func (serv *VideoConverterServer) WorkManagementLoop() {
 	for {
 		// Update Clients
-		println("updating services and queue")
+		//println("updating services and queue")
 		serv.UpdateActiveServices(serv.apiGatewayAddress)
 		serv.PollActiveServices(serv.apiGatewayAddress)
 		serv.handleQueueFromDB()
 
 		// Handle Videos
-		println("sending work to clients")
+		//println("sending work to clients")
 		serv.SendWorkToClients()
-		println("checking if can merge")
+		//println("checking if can merge")
 		tokens := serv.databaseClient.CheckForMergeableFiles()
 		if len(tokens) > 0 {
 			for _, token := range tokens {
