@@ -16,30 +16,34 @@ import (
 
 type VideoConverterServiceServer struct {
 	videoconverter.UnimplementedVideoConverterServiceServer
-	ActiveTokens   *map[string]items.Token
-	databaseClient *video_converter.ConversionObjectsClient
-	storageClient  *video_converter.StorageClient
+	ActiveConversions *map[string]items.Token
+	thisAddress       string
+	databaseClient    *video_converter.ConversionObjectsClient
+	storageClient     *video_converter.StorageClient
 }
 
-func CreateNewVideoConverterServiceServer() VideoConverterServiceServer {
+func CreateNewVideoConverterServiceServer(address string) VideoConverterServiceServer {
 	activeTokens := make(map[string]items.Token, 0)
 	dataBaseClient := video_converter.NewConversionObjectsClient()
 	storageClient := video_converter.CreateStorageClient()
 	val := VideoConverterServiceServer{
-		ActiveTokens:   &activeTokens,
-		databaseClient: &dataBaseClient,
-		storageClient:  &storageClient,
+		ActiveConversions: &activeTokens,
+		databaseClient:    &dataBaseClient,
+		storageClient:     &storageClient,
+		thisAddress:       address,
 	}
 	return val
 }
 
 func (serv *VideoConverterServiceServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
 	println("starting conversion for ", in.Token, " to type: ", in.OutputType)
+	//serv.databaseClient.
 	creationTime := time.Now()
 	isStarted := false
 	isDone := false
 	isFailed := false
-	(*serv.ActiveTokens)[in.Token] = items.Token{
+	fileName := in.Token
+	(*serv.ActiveConversions)[fileName] = items.Token{
 		CreationTime:      &creationTime,
 		ConversionStarted: &isStarted,
 		ConversionDone:    &isDone,
@@ -47,7 +51,9 @@ func (serv *VideoConverterServiceServer) StartConversion(ctx context.Context, in
 		OutputType:        &in.OutputType,
 	}
 
-	serv.actuallyStartConversion(in.Token, in.OutputType)
+	serv.databaseClient.SetConversionInProgressForPart(fileName, serv.thisAddress)
+
+	serv.actuallyStartConversion(fileName, in.OutputType)
 
 	return &videoconverter.ConversionResponse{}, nil
 }
@@ -56,14 +62,14 @@ func (serv *VideoConverterServiceServer) performConversion(app string, arg0 stri
 	println("has downloaded file and is ACTUALLY starting conversion")
 	println(app, " ", arg0, " ", arg1, " ", arg2)
 	cmd := exec.Command(app, arg0, arg1, arg2)
-	*(*serv.ActiveTokens)[token].ConversionStarted = true
+	*(*serv.ActiveConversions)[token].ConversionStarted = true
 	err := cmd.Run()
 	if err != nil {
-		*(*serv.ActiveTokens)[token].ConversionFailed = true
+		*(*serv.ActiveConversions)[token].ConversionFailed = true
 		println("failed to convert ", err.Error())
 		return
 	} else {
-		*(*serv.ActiveTokens)[token].ConversionDone = true
+		*(*serv.ActiveConversions)[token].ConversionDone = true
 	}
 	file, err := os.Open(arg2)
 	defer file.Close()
@@ -75,7 +81,7 @@ func (serv *VideoConverterServiceServer) performConversion(app string, arg0 stri
 }
 
 func (serv *VideoConverterServiceServer) AvailableForWork(ctx context.Context, in *videoconverter.AvailableForWorkRequest) (*videoconverter.AvailableForWorkResponse, error) {
-	for _, v := range *serv.ActiveTokens {
+	for _, v := range *serv.ActiveConversions {
 		if !*v.ConversionDone {
 			//TODO decide if inProgress is a good response
 			return &videoconverter.AvailableForWorkResponse{AvailableForWork: false}, nil
@@ -113,7 +119,7 @@ func (serv *VideoConverterServiceServer) downloadFileToConvert(token string) {
 func (serv *VideoConverterServiceServer) HandleConversionsLoop() {
 	for {
 		println("handling any converted files.")
-		for fileName, token := range *serv.ActiveTokens {
+		for fileName, token := range *serv.ActiveConversions {
 			if *token.ConversionDone {
 				correctFileName := helpers.ChangeFileExtension(fileName, *token.OutputType)
 				println("uploading ", correctFileName)
@@ -122,7 +128,7 @@ func (serv *VideoConverterServiceServer) HandleConversionsLoop() {
 				serv.storageClient.DeleteUnconvertedPart(fileName)
 				DeleteFiles(fileName)
 				DeleteFiles(correctFileName)
-				delete(*serv.ActiveTokens, fileName)
+				delete(*serv.ActiveConversions, fileName)
 				continue
 			}
 
@@ -135,17 +141,17 @@ func (serv *VideoConverterServiceServer) HandleConversionsLoop() {
 	}
 }
 
-func (serv *VideoConverterServiceServer) actuallyStartConversion(token string, outputType string) {
-	filePath := constants.LocalStorage + token
+func (serv *VideoConverterServiceServer) actuallyStartConversion(fileName string, outputType string) {
+	filePath := constants.LocalStorage + fileName
 
 	app := "ffmpeg"
 	arg0 := "-i"
 	arg1 := filePath
-	arg2 := helpers.ChangeFileExtension(constants.LocalStorage+token, outputType)
+	arg2 := helpers.ChangeFileExtension(constants.LocalStorage+fileName, outputType)
 
 	go func() {
-		serv.downloadFileToConvert(token)
-		serv.performConversion(app, arg0, arg1, arg2, token)
+		serv.downloadFileToConvert(fileName)
+		serv.performConversion(app, arg0, arg1, arg2, fileName)
 	}()
 }
 

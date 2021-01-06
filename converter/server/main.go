@@ -29,6 +29,7 @@ func main() {
 	ip := os.Args[1]
 	port := os.Args[2]
 	port = ":" + port
+	thisIp := ip + port
 	gateWayAddress := os.Args[3]
 	println("running on port: " + port)
 	rand.Seed(time.Now().UnixNano())
@@ -38,7 +39,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	videoConverterServer := converter.CreateNewVideoConverterServiceServer()
+	videoConverterServer := converter.CreateNewVideoConverterServiceServer(thisIp)
 	videoconverter.RegisterVideoConverterServiceServer(s, &videoConverterServer)
 
 	go func() {

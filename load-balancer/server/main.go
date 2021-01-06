@@ -62,9 +62,6 @@ func main() {
 	videoServer.UpdateActiveServices(apiGatewayAddress)
 	videoServer.SetApiGatewayAddress(apiGatewayAddress)
 
-	//2. Load work from database
-	println("loading queue from DB")
-	videoServer.LoadQueueFromDB()
 	//3. Send work to services loop
 	println("starting worker loop")
 
