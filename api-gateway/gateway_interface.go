@@ -175,7 +175,7 @@ func (serv *APIGatewayServer) GetNextLifeGuard(
 		}
 	}
 
-	println("Did not find nextLifeguard for lifeGuard id: " + strconv.Itoa(int(in.LifeGuardId)))
+	//println("Did not find nextLifeguard for lifeGuard id: " + strconv.Itoa(int(in.LifeGuardId)))
 	return &api_gateway.GetNextLifeGuardResponse{Ip: "", Port: int32(-1)}, errors.New("could not find you in list of lifeGuards")
 }
 
