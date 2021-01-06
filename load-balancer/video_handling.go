@@ -46,19 +46,36 @@ func splitVideo(token string) error {
 
 }
 
+func getConvertedVideoParts(token string) ([]string, error) {
+	listOfFiles := getFiles()
+	parts := make([]string, 0)
+	for _, v := range listOfFiles {
+		if isAConvertedPart(token, v) {
+			println("adding part " + v)
+			parts = append(parts, v)
+		}
+	}
+
+	if len(parts) == 0 {
+		return parts, errors.New("split video parts not found")
+	}
+	return parts, nil
+}
+
 func mergeVideo(token string) error {
-	videoParts, err := getVideoParts(token)
+	videoParts, err := getConvertedVideoParts(token)
 
 	if err != nil {
 		log.Println("failed mergeVideo: " + err.Error())
 		return err
 	}
 
-	println("checking if parts are correctr")
+	println("checking if parts are correct")
 
 	if len(videoParts) > 0 {
 		println("merging")
 		performMerge(videoParts, token)
+		return nil
 	}
 
 	return errors.New("video parts are invalid")
@@ -116,6 +133,7 @@ func correctVideoParts(videoParts []string) bool {
 	}
 	return false
 }
+
 func getVideoParts(token string) ([]string, error) {
 	listOfFiles := getFiles()
 	parts := make([]string, 0)
@@ -133,7 +151,11 @@ func getVideoParts(token string) ([]string, error) {
 }
 
 func isAPart(token string, potentialPart string) bool {
-	matched, _ := regexp.MatchString(token+"-[0-9]+", potentialPart)
+	matched, _ := regexp.MatchString(token+"-[0-9]+.", potentialPart)
+	return matched
+}
+func isAConvertedPart(token string, potentialPart string) bool {
+	matched, _ := regexp.MatchString(token+"-[0-9]+.*converted", potentialPart)
 	return matched
 }
 

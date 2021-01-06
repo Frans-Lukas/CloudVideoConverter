@@ -93,7 +93,30 @@ func (store *ConversionObjectsClient) MarkConversionAsDone(file string) (error) 
 	return nil
 }
 
-func (store *ConversionObjectsClient) StartConversionForParts(token string, outputType string) (error, *[]ConversionObjectInfo) {
+func (store *ConversionObjectsClient) MarkConversionAsNotInProgress(file string) (error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	correctFile := helpers.ChangeFileExtension(file, "mp4")
+	//println("correctFile: ", correctFile)
+	q := datastore.NewQuery(KIND).Filter("__key__ =", datastore.NameKey(KIND, correctFile, nil))
+	var objects []ConversionObject
+	keys, err := store.GetAll(ctx, q, &objects)
+	if err != nil {
+		log.Println("could not update conversion status for token ", correctFile, " because: ", err.Error())
+		return err
+	}
+	for i, object := range objects {
+		object.InProgress = false
+		_, err := store.Put(ctx, keys[i], &object)
+		if err != nil {
+			log.Println("failed to add ", keys[i], " to datastore")
+			return err
+		}
+	}
+	return nil
+}
+
+func (store *ConversionObjectsClient) SetConversionTypeForParts(token string, outputType string) (error, *[]ConversionObjectInfo) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	q := datastore.NewQuery(KIND).Filter("Token =", token)
@@ -105,8 +128,33 @@ func (store *ConversionObjectsClient) StartConversionForParts(token string, outp
 	}
 	fileNames := make([]ConversionObjectInfo, 0)
 	for i, object := range objects {
-		object.InProgress = true
+		//object.InProgress = true
 		object.ConversionType = outputType
+		//object.ConversionStartTime = time.Now()
+		fileNames = append(fileNames, ConversionObjectInfo{keys[i].Name, object.ConversionType})
+		_, err := store.Put(ctx, keys[i], &object)
+		if err != nil {
+			log.Println("failed to add ", keys[i], " to datastore")
+			return err, nil
+		}
+	}
+
+	return nil, &fileNames
+}
+func (store *ConversionObjectsClient) SetConversionInProgressForPart(fileName string, converterAddress string) (error, *[]ConversionObjectInfo) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	q := datastore.NewQuery(KIND).Filter("__key__ =", datastore.NameKey(KIND, fileName, nil))
+	var objects []ConversionObject
+	keys, err := store.GetAll(ctx, q, &objects)
+	if err != nil {
+		log.Println("could not update conversion status for file ", fileName, " because: ", err.Error())
+		return err, nil
+	}
+	fileNames := make([]ConversionObjectInfo, 0)
+	for i, object := range objects {
+		object.InProgress = true
+		object.ConverterAddress = converterAddress
 		object.ConversionStartTime = time.Now()
 		fileNames = append(fileNames, ConversionObjectInfo{keys[i].Name, object.ConversionType})
 		_, err := store.Put(ctx, keys[i], &object)
@@ -200,6 +248,18 @@ func (store *ConversionObjectsClient) GetFinishedParts() ([]*datastore.Key, []Co
 	return keys, objects
 }
 
+func (store *ConversionObjectsClient) GetUnfinishedParts() ([]*datastore.Key, []ConversionObject) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	q := datastore.NewQuery(KIND).Filter("Done =", false)
+	var objects []ConversionObject
+	keys, err := store.GetAll(ctx, q, &objects)
+	if err != nil {
+		log.Println("Could not get finished parts")
+	}
+	return keys, objects
+}
+
 func (store *ConversionObjectsClient) DeleteAllEntities() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -213,4 +273,7 @@ func (store *ConversionObjectsClient) DeleteAllEntities() {
 	ctx, cancel = context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	store.DeleteMulti(ctx, keys)
+}
+func (store *ConversionObjectsClient) SetConversionAddressForPart(filename string, address string) {
+
 }

@@ -88,7 +88,7 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 	*serv.ActiveServices = make(map[string]VideoConverterClient)
 	for _, v := range endPoints.EndPoint {
 		address := v.Ip + ":" + strconv.Itoa(int(v.Port))
-		println("got service endpoint: ", address)
+		//println("got service endpoint: ", address)
 		if _, ok := (*serv.ActiveServices)[address]; !ok {
 			(*serv.ActiveServices)[address] = makeServiceConnection(address)
 		}
@@ -141,13 +141,13 @@ func notifyAPIGatewayOfDeadClient(removeAddr string, apiAddress string) {
 }
 
 func makeServiceConnection(address string) VideoConverterClient {
-	println("connecting to service endpoint: ", address)
+	//println("connecting to service endpoint: ", address)
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
-	println("connected to service endpoint!")
+	//println("connected to service endpoint!")
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	println("connected")
+	//println("connected")
 	return VideoConverterClient{client: videoconverter.NewVideoConverterServiceClient(conn), address: address}
 }
 
@@ -191,16 +191,20 @@ func saveFile(fileName string, imageBytes *bytes.Buffer) error {
 func (serv *VideoConverterServer) WorkManagementLoop() {
 	for {
 		// Update Clients
+		//println("updating services and queue")
 		serv.UpdateActiveServices(serv.apiGatewayAddress)
 		serv.PollActiveServices(serv.apiGatewayAddress)
+		serv.handleQueueFromDB()
 
 		// Handle Videos
+		//println("sending work to clients")
 		serv.SendWorkToClients()
+		//println("checking if can merge")
 		tokens := serv.databaseClient.CheckForMergeableFiles()
 		if len(tokens) > 0 {
 			for _, token := range tokens {
 				if convertedFileExists(token) {
-					//println(token, " is already merged, skipping.")
+					println(token, " is already merged, skipping.")
 				} else {
 					serv.downloadAndMergeFiles(token)
 					println("conversion for ", token, " is done and merged!")
@@ -224,10 +228,11 @@ func (serv *VideoConverterServer) SendWorkToClients() {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		println("Checking if ", addr, " can work")
+		//println("Checking if ", addr, " can work")
 		response, err := client.client.AvailableForWork(ctx, &videoconverter.AvailableForWorkRequest{})
 		if err != nil {
 			println(" conv check err: ", err.Error())
+			return
 		}
 		if response.AvailableForWork {
 			println("sending work to ", addr)
@@ -235,34 +240,14 @@ func (serv *VideoConverterServer) SendWorkToClients() {
 			defer cancel()
 			nextJob := (*serv.ConversionQueue)[0]
 			*serv.ConversionQueue = (*serv.ConversionQueue)[1:]
+			serv.databaseClient.SetConversionAddressForPart(nextJob.name, client.address)
 			client.client.StartConversion(ctx, &videoconverter.ConversionRequest{Token: nextJob.name, OutputType: nextJob.outputType})
 		}
 	}
 }
 
-func (serv *VideoConverterServer) LoadQueueFromDB() {
-	filesToConvert := serv.databaseClient.GetPartsInProgress()
-	for _, v := range filesToConvert {
-		*serv.ConversionQueue = append(*serv.ConversionQueue, v)
-		token := strings.Split(v.name, "-")[0]
-		println("Timing token: ", token)
-		serv.databaseClient.RestartConversionForParts(token)
-		creationTime := time.Now()
-		isStarted := false
-		isDone := false
-		isFailed := false
-		(*serv.ActiveTokens)[token] = items.Token{
-			CreationTime:      &creationTime,
-			ConversionStarted: &isStarted,
-			ConversionDone:    &isDone,
-			ConversionFailed:  &isFailed,
-		}
-		println("Found part: ", v.name)
-	}
-}
-
 func (serv *VideoConverterServer) StartConversion(ctx context.Context, in *videoconverter.ConversionRequest) (*videoconverter.ConversionResponse, error) {
-	err, filesToConvert := serv.databaseClient.StartConversionForParts(in.Token, in.OutputType)
+	err, filesToConvert := serv.databaseClient.SetConversionTypeForParts(in.Token, in.OutputType)
 	println("load balancer starting conversion for ", in.Token)
 	if err != nil {
 		return &videoconverter.ConversionResponse{}, err
@@ -347,10 +332,6 @@ func (serv *VideoConverterServer) sendVideoInformationToDatabase(token string) {
 		log.Println("failed to get video parts, " + err.Error())
 	}
 	serv.databaseClient.AddParts(fileNames, len(fileNames), "mkv", token)
-}
-
-func deleteFullVideo(token string) {
-
 }
 
 func sendVideosToCloudStorage(token string) {
@@ -508,7 +489,7 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 		for _, key := range keysToDelete {
 			delete(*serv.ActiveTokens, key)
 		}
-		//fmt.Printf("map after deletion: %v", *serv.ActiveTokens)
+		//fmt.Printf("map after deletion: %v", *serv.ActiveConversions)
 
 		time.Sleep(time.Second * 5)
 	}
@@ -605,10 +586,36 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 
 func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
 	//println("Time till VM can be created or deleted: " + fmt.Sprintf("%f", 60-time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds()))
-	return time.Since(*serv.timeSinceVMCreationOrDeletion).Minutes() > constants.MinutesBetweenVMCreationAndDeletion
+	return time.Since(*serv.timeSinceVMCreationOrDeletion).Seconds() > constants.SecondsBetweenVMCreationAndDeletion
 }
 
 func (serv *VideoConverterServer) resetVMTimer() {
 	now := time.Now()
 	serv.timeSinceVMCreationOrDeletion = &now
+}
+
+func (serv *VideoConverterServer) handleQueueFromDB() {
+	keys, unfinishedParts := serv.databaseClient.GetUnfinishedParts()
+	newConversionQueue := make([]ConversionObjectInfo, 0)
+	for index, v := range unfinishedParts {
+		if _, ok := (*serv.ActiveServices)[v.ConverterAddress]; !ok && v.InProgress && !v.Done {
+			serv.databaseClient.MarkConversionAsNotInProgress(keys[index].Name)
+		} else if v.InProgress == false && !v.Done {
+			newConversionQueue = append(newConversionQueue, ConversionObjectInfo{
+				name:       keys[index].Name,
+				outputType: v.ConversionType,
+			})
+			creationTime := v.ConversionStartTime
+			isStarted := false
+			isDone := false
+			isFailed := false
+			(*serv.ActiveTokens)[v.Token] = items.Token{
+				CreationTime:      &creationTime,
+				ConversionStarted: &isStarted,
+				ConversionDone:    &isDone,
+				ConversionFailed:  &isFailed,
+			}
+		}
+	}
+	serv.ConversionQueue = &newConversionQueue
 }

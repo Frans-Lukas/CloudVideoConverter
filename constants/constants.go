@@ -10,4 +10,4 @@ const ProjectID = "fast-blueprint-296210"
 const FinishedConversionExtension = ".converted"
 const WorkManagementLoopSleepTime = time.Millisecond * 500
 const DownloadChunkSizeInBytes = 1000
-const MinutesBetweenVMCreationAndDeletion = 1
+const SecondsBetweenVMCreationAndDeletion = 20
