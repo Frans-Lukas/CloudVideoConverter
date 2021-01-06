@@ -5,15 +5,15 @@ while true; do
     instances="$(gcloud compute instances list --format='table(name)')"
     while IFS= read -r line
     do
-        if [[ "$line" == "START" ]]; then
+        if [[ '$line' == "START" ]]; then
             echo $line
-        elif [["$line" == *"load-balancer"*]]; then
+        elif [['$line' == *"load-balancer"*]]; then
             echo "killing '$line'"
-        elif [["$line" == *"service-provider"*]]; then
+        elif [['$line' == *"service-provider"*]]; then
             echo "killing '$line'"
-        elif [["$line" == *"api-gateway"*]]; then
+        elif [['$line' == *"api-gateway"*]]; then
             echo "ignoring '$line'"
-        elif [["$line" == *"spawning-pool"*]]; then
+        elif [['$line' == *"spawning-pool"*]]; then
             echo "ignoring '$line'"
         fi
     done < <(printf '%s\n' "$instances")
