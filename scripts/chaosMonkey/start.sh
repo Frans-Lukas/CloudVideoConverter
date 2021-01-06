@@ -25,6 +25,6 @@ while true; do
             echo "ignoring '$line'"
         fi
     done < <(printf '%s\n' "$instances")
-    sleep RANDOM % 25 + 5
+    sleep $[($RANDOM % 25) + 5]s
 done
 #gcloud compute instances delete
