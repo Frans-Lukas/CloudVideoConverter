@@ -412,11 +412,14 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 		})
 	}
 
-	DeleteFiles(token)
-	serv.storageClient.DeleteConvertedParts(token)
-	serv.databaseClient.DeleteWithToken(token)
-
 	return nil
+}
+
+func (serv *VideoConverterServer) MarkTokenAsComplete(ctx context.Context, in *videoconverter.MarkTokenAsCompleteRequest) (*videoconverter.MarkTokenAsCompleteResponse, error) {
+	DeleteFiles(in.Token)
+	serv.storageClient.DeleteConvertedParts(in.Token)
+	serv.databaseClient.DeleteWithToken(in.Token)
+	return &videoconverter.MarkTokenAsCompleteResponse{}, nil
 }
 
 func DeleteFiles(prefix string) {
