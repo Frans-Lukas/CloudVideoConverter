@@ -67,7 +67,7 @@ func CreateNewLifeGuardServer(coordinatorStatus chan *bool, loadBalancerPort int
 func (server *LifeGuardServer) HandleLifeGuardDuties() {
 
 	for {
-		time.Sleep(time.Second * 20)
+		time.Sleep(time.Second * 3)
 
 		if server.shouldRestartDeadLifeGuards {
 			server.restartDeadLifeGuards()
