@@ -4,14 +4,17 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 )
 
 const url = "https://api.moogsoft.ai/express/v1/integrations/metrics"
 
+var apiKey = ""
+
 func PrintKeyValue(key string, value int) {
-	apiKey := os.Getenv("MOOGSOFT_API_KEY")
+	if apiKey == "" {
+		readApiKey()
+	}
 	if apiKey == "" {
 		log.Printf("MOOGSOFT_API_KEY not set.")
 		return
@@ -38,4 +41,12 @@ func PrintKeyValue(key string, value int) {
 		return
 	}
 	println("response: ", body)
+}
+func readApiKey() {
+	dat, err := ioutil.ReadFile("/tmp/MOOGSOFT_KEY.json")
+	if err != nil {
+		println("can't read moogsoft key file")
+		return
+	}
+	apiKey = string(dat)
 }
