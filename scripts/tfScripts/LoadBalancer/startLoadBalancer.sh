@@ -12,6 +12,7 @@ echo $MY_IP
 
 while true
 do
+    sudo pkill main
     /usr/local/go/bin/go run load-balancer/server/main.go $MY_IP 50052 50054 "$IP:50051"
     echo "Server 'load balancer' crashed with exit code $?.  Respawning.."
     sleep 5
