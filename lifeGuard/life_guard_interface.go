@@ -308,9 +308,8 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 	}
 
 	if res.Port == -1 || res.Ip == "" {
-		if server.targetLifeGuard == server.yourAddress {
-			server.startElection()
-		}
+		println("Coordinator not set, starting election")
+		server.startElection()
 		return
 	}
 
