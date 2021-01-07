@@ -62,6 +62,13 @@ func main() {
 		}
 	}
 
+	//so that the channel will always be emptied
+	go func() {
+		for _ := range coordinatorStatus {
+
+		}
+	}()
+
 	port := os.Args[2]
 	port = ":" + port
 	apiGatewayAddress := os.Args[4]
