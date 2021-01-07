@@ -72,7 +72,7 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 	for {
 		time.Sleep(time.Second * 3)
 
-		if server.shouldRestartDeadLifeGuards && math.Mod(i, 4) == 0{
+		if server.shouldRestartDeadLifeGuards && math.Mod(i, 4) == 0 {
 			server.restartDeadLifeGuards()
 		}
 
@@ -283,6 +283,7 @@ func (server *LifeGuardServer) recreateRingProcedure() {
 }
 
 func (server *LifeGuardServer) getNextLifeGuard() {
+	println("Seeking next lifeGuard for id: ", server.id)
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	res, err := (*server.APIGateway).GetNextLifeGuard(ctx, &api_gateway.GetNextLifeGuardRequest{LifeGuardId: server.id})
 
