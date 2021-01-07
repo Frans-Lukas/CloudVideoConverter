@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/Frans-Lukas/cloudvideoconverter/load-balancer"
 	"log"
 	"os"
 	"os/exec"
@@ -13,6 +14,8 @@ var activeWorkers int
 
 func main() {
 	println("Choose an option: ")
+
+	video_converter.PrintKeyValue("test", 1)
 	for {
 		println("1. Add a work creator.")
 		println("2. Remove a work creator.")

@@ -20,8 +20,9 @@ func PrintKeyValue(key string, value int) {
 		log.Printf("MOOGSOFT_API_KEY not set.")
 		return
 	}
+	println("using apikey: ", apiKey)
 	client := http.Client{}
-	var jsonStr = []byte(`{"metric": "` + key + `", data: ` + strconv.Itoa(value) +
+	var jsonStr = []byte(`{"metric": "` + key + `", "data": ` + strconv.Itoa(value) +
 		`, "source": "www.videoconversionservice.com", "key": "dev", "tags": {"key": "value"}, "utc_offset": "GMT+01:00"}`)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	if err != nil {
@@ -29,7 +30,8 @@ func PrintKeyValue(key string, value int) {
 		return
 	}
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("apiKey-Type", apiKey)
+	req.Header.Add("apiKey", apiKey)
+	println(string(jsonStr))
 	resp, err := client.Do(req)
 	defer resp.Body.Close()
 	if err != nil {
