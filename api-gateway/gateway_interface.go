@@ -182,5 +182,6 @@ func (serv *APIGatewayServer) GetNextLifeGuard(
 func (serv *APIGatewayServer) GetMaxLifeGuards(
 	ctx context.Context, in *api_gateway.GetMaxLifeGuardsRequest,
 ) (*api_gateway.GetMaxLifeGuardsResponse, error) {
-	return &api_gateway.GetMaxLifeGuardsResponse{MaxLifeGuards: serv.maxLifeGuards}, nil
+	isMax := int(serv.maxLifeGuards) == len(*serv.lifeGuards)
+	return &api_gateway.GetMaxLifeGuardsResponse{MaxLifeGuards: serv.maxLifeGuards, IsCurrentlyMaxNumber: isMax}, nil
 }
