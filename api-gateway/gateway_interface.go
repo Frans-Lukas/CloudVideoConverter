@@ -86,6 +86,14 @@ func (serv *APIGatewayServer) AddLifeGuardNode(
 		Ip:   in.Ip,
 		Port: int(in.Port),
 	}
+
+	// check if lifeGuard existed previously
+	for id, lifeGuard := range *serv.lifeGuards {
+		if lifeGuard.Ip == in.Ip && lifeGuard.Port == int(in.Port) {
+			return &api_gateway.AddLifeGuardNodeResponse{NewLifeGuardId: int32(id)}, nil
+		}
+	}
+
 	(*serv.lifeGuards)[serv.nextLifeGuardId] = newLifeGuard
 	println("added lifeGuard: " + in.Ip + ":" + strconv.Itoa(int(in.Port)) + " with id: " + strconv.Itoa(serv.nextLifeGuardId))
 
