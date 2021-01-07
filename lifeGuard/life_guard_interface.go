@@ -184,6 +184,7 @@ func (server *LifeGuardServer) RecreateRing(ctx context.Context, in *videoconver
 }
 
 func (server *LifeGuardServer) checkIfNextLifeGuardIsAlive() {
+	println("checkIfNextLifeGuardIsAlive: sending to target: " + server.targetLifeGuard)
 
 	if server.targetLifeGuard == "NOT SET" || server.targetLifeGuard == "" {
 		println("checkIfNextLifeGuardIsAlive: target not set")
@@ -384,6 +385,7 @@ func (server *LifeGuardServer) getDesiredLifeGuards() *api_gateway.GetMaxLifeGua
 }
 
 func (server *LifeGuardServer) restartDeadLifeGuards() {
+	println("restartDeadLifeGuards: checking desired number")
 	desiredNumber := server.getDesiredLifeGuards()
 
 	if desiredNumber.IsCurrentlyMaxNumber {
