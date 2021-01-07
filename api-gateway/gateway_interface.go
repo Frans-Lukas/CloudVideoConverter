@@ -90,6 +90,7 @@ func (serv *APIGatewayServer) AddLifeGuardNode(
 	// check if lifeGuard existed previously
 	for id, lifeGuard := range *serv.lifeGuards {
 		if lifeGuard.Ip == in.Ip && lifeGuard.Port == int(in.Port) {
+			println("lifeguard: ip: ")
 			return &api_gateway.AddLifeGuardNodeResponse{NewLifeGuardId: int32(id)}, nil
 		}
 	}

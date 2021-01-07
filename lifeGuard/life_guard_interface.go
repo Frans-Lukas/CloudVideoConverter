@@ -196,10 +196,10 @@ func (server *LifeGuardServer) checkIfNextLifeGuardIsAlive() {
 
 	if err != nil {
 		println("response to IsAlive: %v", err)
-		if server.targetIsCoordinator {
-			server.shouldRestartDeadLifeGuards = true
-			server.shouldStartElection = true
-		}
+
+		server.shouldRestartDeadLifeGuards = true
+		server.shouldStartElection = true
+
 		server.removeTargetLifeGuard()
 		server.shouldRecreateRing = true
 		server.recreateRingSenderId = int(server.id)
@@ -331,6 +331,7 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 }
 
 func (server *LifeGuardServer) removeTargetLifeGuard() {
+	println("removeTargetLifeGuard: removing lifeGuard: " + server.targetLifeGuard)
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 
 	splitAddress := strings.Split(server.targetLifeGuard, ":")
