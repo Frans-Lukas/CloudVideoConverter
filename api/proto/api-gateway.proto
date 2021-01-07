@@ -28,6 +28,7 @@ message GetMaxLifeGuardsRequest {}
 
 message GetMaxLifeGuardsResponse {
   int32 maxLifeGuards = 1;
+  bool isCurrentlyMaxNumber = 2;
 }
 
 message AddLifeGuardNodeRequest {

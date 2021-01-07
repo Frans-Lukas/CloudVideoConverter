@@ -70,7 +70,11 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 		time.Sleep(time.Second * 3)
 
 		if server.shouldRestartDeadLifeGuards {
-			server.restartDeadLifeGuards()
+			if !server.checkIfCorrectNumberOfLifeGuards() {
+				server.restartDeadLifeGuards()
+			} else {
+				server.shouldRestartDeadLifeGuards = false
+			}
 		}
 
 		server.checkIfNextLifeGuardIsAlive()
@@ -363,23 +367,27 @@ func (server *LifeGuardServer) updateIsCoordinator(b bool) {
 	server.isCoordinatorOutput <- &b
 }
 
-func (server *LifeGuardServer) getDesiredLifeGuards() int {
+func (server *LifeGuardServer) getDesiredLifeGuards() *api_gateway.GetMaxLifeGuardsResponse {
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	res, err := (*server.APIGateway).GetMaxLifeGuards(ctx, &api_gateway.GetMaxLifeGuardsRequest{})
 	if err != nil {
 		println("getDesiredLifeGuards: " + err.Error())
-		return -1
+		return res
 	}
 
-	return int(res.MaxLifeGuards)
+	return res
 }
 
 func (server *LifeGuardServer) restartDeadLifeGuards() {
 	desiredNumber := server.getDesiredLifeGuards()
 
-	go server.executeLifeGuardRestart(desiredNumber)
+	if desiredNumber.IsCurrentlyMaxNumber {
+		println("Is max lifeGuards!")
+		server.shouldRestartDeadLifeGuards = false
+		return
+	}
 
-	server.shouldRestartDeadLifeGuards = false
+	go server.executeLifeGuardRestart(int(desiredNumber.MaxLifeGuards))
 }
 
 func (server *LifeGuardServer) executeLifeGuardRestart(desiredNumber int) {
