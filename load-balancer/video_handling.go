@@ -211,6 +211,7 @@ func getVideoSize(filePath string) int {
 	}
 	return int(fi.Size())
 }
+
 func getVideoTimeInSeconds(filePath string) (float64, string) {
 	println(filePath)
 	cmd := exec.Command("ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", filePath)
