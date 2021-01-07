@@ -70,11 +70,7 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 		time.Sleep(time.Second * 3)
 
 		if server.shouldRestartDeadLifeGuards {
-			if !server.checkIfCorrectNumberOfLifeGuards() {
-				server.restartDeadLifeGuards()
-			} else {
-				server.shouldRestartDeadLifeGuards = false
-			}
+			server.restartDeadLifeGuards()
 		}
 
 		server.checkIfNextLifeGuardIsAlive()
