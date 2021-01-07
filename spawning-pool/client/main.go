@@ -78,6 +78,7 @@ func main() {
 func connectToCurrentLoadBalancer(apiConnection api_gateway.APIGateWayClient) error {
 	ctx := context.Background()
 	loadbalancer, err := apiConnection.GetCurrentLoadBalancer(ctx, &api_gateway.GetCurrentLoadBalancerRequest{})
+	println("loadBalancer ip: ", loadbalancer.Ip, " port: ", loadbalancer.Port)
 	if err != nil {
 		println("Error getting current load balancer: ", err.Error())
 		return err
@@ -87,7 +88,6 @@ func connectToCurrentLoadBalancer(apiConnection api_gateway.APIGateWayClient) er
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	defer conn.Close()
 	loadBalancerConnection = videoconverter.NewVideoConverterLoadBalancerClient(conn)
 	return err
 }
