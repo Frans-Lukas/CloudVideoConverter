@@ -29,6 +29,7 @@ const sizeLimit = megaByte * 1
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
 	ActiveTokens                  *map[string]items.Token
+	originalQueueLen              int
 	ConversionQueue               *[]ConversionObjectInfo
 	ActiveServices                *map[string]VideoConverterClient
 	databaseClient                *ConversionObjectsClient
@@ -56,6 +57,7 @@ func CreateNewServer() VideoConverterServer {
 	timer := time.Time{}
 	val := VideoConverterServer{
 		ActiveTokens:                  &activeTokens,
+		originalQueueLen:              0,
 		ConversionQueue:               &conversionQueue,
 		ActiveServices:                &activeServices,
 		databaseClient:                &dataBaseClient,
@@ -520,15 +522,13 @@ func (serv *VideoConverterServer) manageClients() {
 }
 
 func (serv *VideoConverterServer) shouldReduceNumberOfServices() bool {
-	count := serv.countNonFinishedConversions()
-
-	return count < len(*serv.ActiveServices) && serv.enoughTimeSinceVMCreationOrDeletion()
+	diff := serv.originalQueueLen - (len(*serv.ActiveServices) / 2)
+	return diff <= 0
 }
 
 func (serv *VideoConverterServer) shouldIncreaseNumberOfServices() bool {
-	count := serv.countNonFinishedConversions()
-
-	return count > len(*serv.ActiveServices) && serv.enoughTimeSinceVMCreationOrDeletion()
+	diff := len(*serv.ConversionQueue) - len(*serv.ActiveServices)
+	return diff > 0
 }
 
 func (serv *VideoConverterServer) countNonFinishedConversions() int {
@@ -601,6 +601,7 @@ func (serv *VideoConverterServer) resetVMTimer() {
 func (serv *VideoConverterServer) handleQueueFromDB() {
 	keys, unfinishedParts := serv.databaseClient.GetUnfinishedParts()
 	newConversionQueue := make([]ConversionObjectInfo, 0)
+	serv.originalQueueLen = len(unfinishedParts)
 	for index, v := range unfinishedParts {
 		if _, ok := (*serv.ActiveServices)[v.ConverterAddress]; !ok && v.InProgress && !v.Done {
 			serv.databaseClient.MarkConversionAsNotInProgress(keys[index].Name)
