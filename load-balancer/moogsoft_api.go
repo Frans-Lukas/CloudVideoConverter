@@ -1,6 +1,7 @@
 package video_converter
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -22,7 +23,7 @@ func PrintKeyValue(key string, value int) {
 	client := http.Client{}
 	var jsonStr = []byte(`{"metric": "` + key + `", data: ` + strconv.Itoa(value) +
 		`, "source": "www.videoconversionservice.com", "key": "dev", "tags": {"key": "value"}, "utc_offset": "GMT+01:00"}`)
-	req, err := http.NewRequest("POST", url, jsonStr)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		println("Can't create request for ", url)
 		return
