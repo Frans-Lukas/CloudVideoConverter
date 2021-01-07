@@ -46,20 +46,23 @@ func main() {
 	if !video_converter.FileExists("video.mp4") {
 		storageClient.DownloadSampleVideos()
 	}
+	err = connectToCurrentLoadBalancer(apiConnection)
+	if err != nil {
+		log.Fatalf("could not connect to current load balancer, retarting, %v", err.Error())
+
+	}
+	token, err := upload("video.mp4")
+	if err != nil {
+		log.Fatalf("could not upload to current load balancer, retarting, %v", err.Error())
+	}
+	err = requestConversion(token, outputExtension)
+	if err != nil {
+		log.Fatalf("could not requestConverison from current load balancer, retarting, %v", err.Error())
+	}
+
 	for {
 		time.Sleep(time.Second * 5)
 		err := connectToCurrentLoadBalancer(apiConnection)
-		if err != nil {
-			continue
-		}
-		token, err := upload("video.mp4")
-		if err != nil {
-			continue
-		}
-		err = requestConversion(token, outputExtension)
-		if err != nil {
-			continue
-		}
 		loopUntilConverted(token)
 		if err != nil {
 			continue
