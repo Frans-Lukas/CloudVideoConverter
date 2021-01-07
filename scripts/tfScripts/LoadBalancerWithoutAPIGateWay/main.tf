@@ -38,6 +38,10 @@ resource "google_compute_instance_from_machine_image" "tpl" {
     destination = "/tmp/SSDNIA.json"
   }
 
+  provisioner "file" {
+    source = "/tmp/MOOGSOFT_KEY.json"
+    destination = "/tmp/MOOGSOFT_KEY.json"
+  }
 
   provisioner "file" {
     source = "/tmp/id_rsa.pub"

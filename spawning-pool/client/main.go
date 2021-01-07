@@ -69,6 +69,9 @@ func workLoadGenerator(apiConnection api_gateway.APIGateWayClient, outputExtensi
 	if err != nil {
 		log.Fatalf("could not requestConverison from current load balancer, retarting, %v", err.Error())
 	}
+
+	start := time.Now()
+
 	for {
 		time.Sleep(time.Second * 5)
 		err := connectToCurrentLoadBalancer(apiConnection)
@@ -88,6 +91,10 @@ func workLoadGenerator(apiConnection api_gateway.APIGateWayClient, outputExtensi
 			break
 		}
 	}
+
+	elapsed := time.Since(start)
+	video_converter.PrintKeyValue("conversionTime", int(elapsed.Seconds()))
+
 	println("done uploading, converting and downloading videos")
 }
 

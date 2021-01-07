@@ -194,6 +194,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		//println("updating services and queue")
 		serv.UpdateActiveServices(serv.apiGatewayAddress)
 		serv.PollActiveServices(serv.apiGatewayAddress)
+		PrintKeyValue("numberOfActiveServices", len(*serv.ActiveServices))
 		serv.handleQueueFromDB()
 
 		// Handle Videos
@@ -622,4 +623,5 @@ func (serv *VideoConverterServer) handleQueueFromDB() {
 		}
 	}
 	serv.ConversionQueue = &newConversionQueue
+	PrintKeyValue("sizeOfQueue", len(*serv.ConversionQueue))
 }
