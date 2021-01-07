@@ -80,11 +80,11 @@ func main() {
 func connectToCurrentLoadBalancer(apiConnection api_gateway.APIGateWayClient) error {
 	ctx := context.Background()
 	loadbalancer, err := apiConnection.GetCurrentLoadBalancer(ctx, &api_gateway.GetCurrentLoadBalancerRequest{})
-	println("loadBalancer ip: ", loadbalancer.Ip, " port: ", loadbalancer.Port)
 	if err != nil {
 		println("Error getting current load balancer: ", err.Error())
 		return err
 	}
+	println("loadBalancer ip: ", loadbalancer.Ip, " port: ", loadbalancer.Port)
 	address := loadbalancer.Ip + ":" + strconv.Itoa(int(loadbalancer.Port))
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	if err != nil {
