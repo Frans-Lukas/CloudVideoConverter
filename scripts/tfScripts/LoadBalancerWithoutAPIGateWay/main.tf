@@ -56,6 +56,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
       "sudo git pull",
       "sudo chmod -R +x /home/group9/*",
       "cd /home/group9/CloudVideoConverter",
+      "sudo rm nohup.out",
       "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &",
       "sleep 1",
     ]
