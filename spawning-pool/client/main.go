@@ -43,7 +43,9 @@ func main() {
 
 	outputExtension := "mkv"
 	storageClient := video_converter.CreateStorageClient()
-	storageClient.DownloadSampleVideos()
+	if !video_converter.FileExists("video.mp4") {
+		storageClient.DownloadSampleVideos()
+	}
 	for {
 		time.Sleep(time.Second * 5)
 		err := connectToCurrentLoadBalancer(apiConnection)

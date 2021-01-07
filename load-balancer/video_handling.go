@@ -167,8 +167,19 @@ func convertedFileExists(token string) bool {
 		}
 	}
 	return false
-
 }
+
+func FileExists(fileName string) bool {
+	files := getFiles()
+	for _, v := range files {
+		println("Iterating file ", v, " comparing with ", fileName)
+		if v == fileName {
+			return true
+		}
+	}
+	return false
+}
+
 func isConvertedFile(file string, token string) bool {
 	fileName := strings.Split(file, ".")[0]
 	fileExtension := strings.Split(file, ".")[1]
