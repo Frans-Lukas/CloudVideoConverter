@@ -70,8 +70,11 @@ func main() {
 		err = download(token, outputExtension)
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
+		if err != nil {
+			continue
+		}
 
-		loadBalancerConnection.MarkTokenAsComplete(ctx, &videoconverter.MarkTokenAsCompleteRequest{Token: token})
+		_, err = loadBalancerConnection.MarkTokenAsComplete(ctx, &videoconverter.MarkTokenAsCompleteRequest{Token: token})
 		if err == nil {
 			break
 		}
