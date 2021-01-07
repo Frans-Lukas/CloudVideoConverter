@@ -55,7 +55,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
 
   provisioner "file" {
-    source = "/tmp/MOOGSOFT_KEY.json"
+    source = "../LoadBalancer/MOOGSOFT_KEY.json"
     destination = "/tmp/MOOGSOFT_KEY.json"
   }
 

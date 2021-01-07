@@ -41,7 +41,7 @@ func PrintKeyValue(key string, value int) {
 		println("PrintKeyValue response failed! ", err.Error())
 		return
 	}
-	println("response: ", body)
+	println("response: ", string(body))
 }
 func readApiKey() {
 	dat, err := ioutil.ReadFile("/tmp/MOOGSOFT_KEY.json")
