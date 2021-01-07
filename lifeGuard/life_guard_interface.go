@@ -72,7 +72,7 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 	for {
 		time.Sleep(time.Second * 3)
 
-		if server.shouldRestartDeadLifeGuards && math.Mod(i, 4) == 0{
+		if server.shouldRestartDeadLifeGuards && math.Mod(i, 4) == 0 {
 			server.restartDeadLifeGuards()
 		}
 
@@ -283,6 +283,7 @@ func (server *LifeGuardServer) recreateRingProcedure() {
 }
 
 func (server *LifeGuardServer) getNextLifeGuard() {
+	println("Seeking next lifeGuard for id: ", server.id)
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	res, err := (*server.APIGateway).GetNextLifeGuard(ctx, &api_gateway.GetNextLifeGuardRequest{LifeGuardId: server.id})
 
@@ -306,7 +307,7 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 		return
 	}
 
-	if res.Port == -1 && res.Ip == "" {
+	if res.Port == -1 || res.Ip == "" {
 		if server.targetLifeGuard == server.yourAddress {
 			server.startElection()
 		}
@@ -314,6 +315,8 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 	}
 
 	coordinatorLifeGuard := res.Ip + ":" + strconv.Itoa(int(res.Port))
+
+	println("Coordinator is: " + coordinatorLifeGuard)
 
 	if coordinatorLifeGuard == server.yourAddress {
 		server.updateIsCoordinator(true)
