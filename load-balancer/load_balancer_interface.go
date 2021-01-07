@@ -22,7 +22,7 @@ import (
 )
 
 const tokenLength = 20
-const tokenTimeOutSeconds = 60 * 20
+const tokenTimeOutSeconds = 60 * 10
 const megaByte = 1000000
 const sizeLimit = megaByte * 1
 
@@ -74,7 +74,7 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 		return
 	}
 
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second * 4))
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second*4))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -441,14 +441,18 @@ func (serv *VideoConverterServer) Delete(ctx context.Context, in *videoconverter
 }
 
 func (serv *VideoConverterServer) ConversionStatus(ctx context.Context, in *videoconverter.ConversionStatusRequest) (*videoconverter.ConversionStatusResponse, error) {
-	if *(*serv.ActiveTokens)[in.StatusId].ConversionDone {
-		return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Done}, nil
-	}
-	if *(*serv.ActiveTokens)[in.StatusId].ConversionStarted {
-		if *(*serv.ActiveTokens)[in.StatusId].ConversionFailed {
-			return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Failed}, nil
+	//TODO: check this is not null
+
+	if _, ok := (*serv.ActiveTokens)[in.StatusId]; ok {
+		if *(*serv.ActiveTokens)[in.StatusId].ConversionDone {
+			return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Done}, nil
 		}
-		return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_InProgress}, nil
+		if *(*serv.ActiveTokens)[in.StatusId].ConversionStarted {
+			if *(*serv.ActiveTokens)[in.StatusId].ConversionFailed {
+				return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Failed}, nil
+			}
+			return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_InProgress}, nil
+		}
 	}
 	return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_NotStarted}, nil
 }
