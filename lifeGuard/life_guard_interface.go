@@ -307,7 +307,7 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 		return
 	}
 
-	if res.Port == -1 && res.Ip == "" {
+	if res.Port == -1 || res.Ip == "" {
 		if server.targetLifeGuard == server.yourAddress {
 			server.startElection()
 		}
@@ -315,6 +315,8 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 	}
 
 	coordinatorLifeGuard := res.Ip + ":" + strconv.Itoa(int(res.Port))
+
+	println("Coordinator is: " + coordinatorLifeGuard)
 
 	if coordinatorLifeGuard == server.yourAddress {
 		server.updateIsCoordinator(true)
