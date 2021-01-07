@@ -63,11 +63,11 @@ func main() {
 	}
 
 	//so that the channel will always be emptied
-	go func() {
+	//go func() {
 		for {
 			<-coordinatorStatus
 		}
-	}()
+	//}()
 
 	port := os.Args[2]
 	port = ":" + port
