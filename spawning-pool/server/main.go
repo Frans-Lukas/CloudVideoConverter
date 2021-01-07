@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -71,11 +72,19 @@ func createMultipleWorkers() {
 		numberOfVms := strconv.Itoa(numberOfVms)
 		go func() {
 			cmd := exec.Command(scriptPath, numberOfVms)
+			var out bytes.Buffer
+			var stderr bytes.Buffer
+			cmd.Stdout = &out
+			cmd.Stderr = &stderr
 			err := cmd.Run()
+
 			if err != nil {
-				log.Println("could not addWorker: " + err.Error())
+				log.Println("could not increaseNumberOfServices: " + out.String())
+				log.Println(err.Error(), ": ", stderr.String())
+			} else {
+				//log.Println(out.String())
+				println("Created new workers")
 			}
-			println("Created new worker")
 		}()
 		activeWorkers, err = strconv.Atoi(numberOfVms)
 		if err != nil {
@@ -89,14 +98,23 @@ func createMultipleWorkers() {
 func addWorker() {
 	scriptPath := "./scripts/tfScripts/SpawningPool/startSpawningPoolVM.sh"
 	numberOfVms := strconv.Itoa(activeWorkers + 1)
-	go func() {
-		cmd := exec.Command(scriptPath, numberOfVms)
-		err := cmd.Run()
-		if err != nil {
-			log.Println("could not addWorker: " + err.Error())
-		}
+
+	cmd := exec.Command(scriptPath, numberOfVms)
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+
+	if err != nil {
+		log.Println("could not increaseNumberOfServices: " + out.String())
+		log.Println(err.Error(), ": ", stderr.String())
+	} else {
+		//log.Println(out.String())
 		println("Created new worker")
-	}()
+	}
+
+
 	println("Started worker vm creation thread.")
 	println()
 	activeWorkers++

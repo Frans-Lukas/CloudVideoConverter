@@ -46,7 +46,17 @@ func main() {
 	if !video_converter.FileExists("video.mp4") {
 		storageClient.DownloadSampleVideos()
 	}
-	err = connectToCurrentLoadBalancer(apiConnection)
+	go func() {
+		workLoadGenerator(apiConnection, outputExtension)
+	}()
+	go func() {
+		workLoadGenerator(apiConnection, outputExtension)
+	}()
+	workLoadGenerator(apiConnection, outputExtension)
+}
+
+func workLoadGenerator(apiConnection api_gateway.APIGateWayClient, outputExtension string) {
+	err := connectToCurrentLoadBalancer(apiConnection)
 	if err != nil {
 		log.Fatalf("could not connect to current load balancer, retarting, %v", err.Error())
 
@@ -59,7 +69,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not requestConverison from current load balancer, retarting, %v", err.Error())
 	}
-
 	for {
 		time.Sleep(time.Second * 5)
 		err := connectToCurrentLoadBalancer(apiConnection)
@@ -70,14 +79,16 @@ func main() {
 		err = download(token, outputExtension)
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
+		if err != nil {
+			continue
+		}
 
-		loadBalancerConnection.MarkTokenAsComplete(ctx, &videoconverter.MarkTokenAsCompleteRequest{Token: token})
+		_, err = loadBalancerConnection.MarkTokenAsComplete(ctx, &videoconverter.MarkTokenAsCompleteRequest{Token: token})
 		if err == nil {
 			break
 		}
 	}
 	println("done uploading, converting and downloading videos")
-
 }
 
 func connectToCurrentLoadBalancer(apiConnection api_gateway.APIGateWayClient) error {
