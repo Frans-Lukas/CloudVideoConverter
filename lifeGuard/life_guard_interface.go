@@ -356,7 +356,6 @@ func (server *LifeGuardServer) setCoordinator() {
 	if err != nil {
 		println("setCoordinator: " + err.Error())
 		server.shouldSetCoordinator = false
-		server.updateIsCoordinator(false)
 		return
 	}
 
