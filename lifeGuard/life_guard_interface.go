@@ -7,6 +7,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
+	"math"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -66,10 +67,12 @@ func CreateNewLifeGuardServer(coordinatorStatus chan *bool, loadBalancerPort int
 
 func (server *LifeGuardServer) HandleLifeGuardDuties() {
 
+	i := 0.0
+
 	for {
 		time.Sleep(time.Second * 3)
 
-		if server.shouldRestartDeadLifeGuards {
+		if server.shouldRestartDeadLifeGuards && math.Mod(i, 4) == 0{
 			server.restartDeadLifeGuards()
 		}
 
@@ -99,6 +102,8 @@ func (server *LifeGuardServer) HandleLifeGuardDuties() {
 		if server.shouldStartElection {
 			server.startElection()
 		}
+
+		i++
 	}
 }
 
