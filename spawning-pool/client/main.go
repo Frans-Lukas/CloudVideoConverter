@@ -207,6 +207,11 @@ func download(token string, extension string) error {
 	request := videoconverter.DownloadRequest{Id: token}
 	stream, err := loadBalancerConnection.Download(ctx, &request)
 
+	if err != nil {
+		println("Failed to create download request, ", err.Error())
+		return err
+	}
+
 	buf := bytes.Buffer{}
 
 	for {
