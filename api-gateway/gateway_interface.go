@@ -102,6 +102,7 @@ func (serv *APIGatewayServer) AddLifeGuardNode(
 func (serv *APIGatewayServer) RemoveLifeGuardNode(
 	ctx context.Context, in *api_gateway.RemoveLifeGuardNodeRequest,
 ) (*api_gateway.RemoveLifeGuardNodeResponse, error) {
+	println("trying to delete lifeguard ", in.Ip, " port: ", in.Port)
 	for k, v := range *serv.lifeGuards {
 		if v.Port == int(in.Port) && v.Ip == in.Ip {
 			println("Deleting lifeGuard: " + in.Ip + ":" + strconv.Itoa(int(in.Port)) + " with id: " + strconv.Itoa(k))
@@ -111,11 +112,10 @@ func (serv *APIGatewayServer) RemoveLifeGuardNode(
 				serv.currentCoordinator = items.LifeGuard{Port: -1, Ip: ""}
 				serv.currentLoadBalancer = items.EndPoint{Ip: "", Port: -1}
 			}
-
-			break
+			return &api_gateway.RemoveLifeGuardNodeResponse{}, nil
 		}
 	}
-	return &api_gateway.RemoveLifeGuardNodeResponse{}, nil
+	return nil, errors.New("could not remove lifeguard")
 }
 
 func (serv *APIGatewayServer) SetLifeGuardCoordinator(
