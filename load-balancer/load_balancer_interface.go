@@ -74,7 +74,7 @@ func (serv *VideoConverterServer) UpdateActiveServices(address string) {
 		return
 	}
 
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithTimeout(time.Second * 4))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

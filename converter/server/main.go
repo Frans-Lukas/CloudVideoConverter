@@ -37,10 +37,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer()
+	serv := grpc.NewServer()
 
 	videoConverterServer := converter.CreateNewVideoConverterServiceServer(thisIp)
-	videoconverter.RegisterVideoConverterServiceServer(s, &videoConverterServer)
+	videoconverter.RegisterVideoConverterServiceServer(serv, &videoConverterServer)
 
 	go func() {
 		videoConverterServer.HandleConversionsLoop()
@@ -57,7 +57,7 @@ func main() {
 	PostServicePoint(ip, os.Args[2], c)
 	conn.Close()
 
-	if err := s.Serve(lis); err != nil {
+	if err := serv.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
@@ -66,6 +66,7 @@ func PostServicePoint(Ip string, Port string, c api_gateway.APIGateWayClient) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	port2, _ := strconv.Atoi(Port)
+	println("adding service endpoint to APIGateway with port: ", Port, " and IP: ", Ip)
 	_, err := c.AddServiceEndpoint(
 		ctx, &api_gateway.ServiceEndPoint{
 			Ip:   Ip,
