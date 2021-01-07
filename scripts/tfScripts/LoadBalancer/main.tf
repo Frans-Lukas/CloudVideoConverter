@@ -59,6 +59,7 @@ resource "google_compute_instance_from_machine_image" "tpl" {
       "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/APIGateway/startAPIGatewayVM.sh",
       "sudo /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancerWithoutAPIGateWay/startLoadBalancerVMsFromLifeGuard.sh 3",
       "cd /home/group9/CloudVideoConverter",
+      "sudo rm nohup.out",
       "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/LoadBalancer/startLoadBalancer.sh &",
       "sleep 1",
     ]
