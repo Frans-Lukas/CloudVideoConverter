@@ -121,6 +121,10 @@ func (serv *APIGatewayServer) RemoveLifeGuardNode(
 func (serv *APIGatewayServer) SetLifeGuardCoordinator(
 	ctx context.Context, in *api_gateway.SetLifeGuardCoordinatorRequest,
 ) (*api_gateway.SetLifeGuardCoordinatorResponse, error) {
+	if serv.currentCoordinator.Port != -1 || serv.currentCoordinator.Ip != "" {
+		return &api_gateway.SetLifeGuardCoordinatorResponse{}, errors.New("coordinator already set")
+	}
+
 	lifeGuard, found := (*serv.lifeGuards)[int(in.LifeGuardId)]
 
 	if !found {

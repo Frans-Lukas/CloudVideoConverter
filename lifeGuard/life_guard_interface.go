@@ -152,8 +152,8 @@ func (server *LifeGuardServer) Election(ctx context.Context, in *videoconverter.
 
 func (server *LifeGuardServer) Coordinator(ctx context.Context, in *videoconverter.CoordinatorRequest) (*videoconverter.CoordinatorResponse, error) {
 	if in.HighestProcessNumber == server.id {
-		println("is coordinator")
-		server.updateIsCoordinator(true)
+		println("should set is coordinator")
+		//server.updateIsCoordinator(true)
 		server.shouldSetCoordinator = true
 	}
 
@@ -308,7 +308,7 @@ func (server *LifeGuardServer) getLifeGuardCoordinator() {
 	}
 
 	if res.Port == -1 || res.Ip == "" {
-		println("Coordinator not set, starting election")
+		println("Coordinator not set")
 		server.startElection()
 		return
 	}
@@ -349,15 +349,17 @@ func (server *LifeGuardServer) removeTargetLifeGuard() {
 }
 
 func (server *LifeGuardServer) setCoordinator() {
+	println("Set coordinator to me")
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
 	_, err := (*server.APIGateway).SetLifeGuardCoordinator(ctx, &api_gateway.SetLifeGuardCoordinatorRequest{LifeGuardId: server.id, LoadBalancerPort: int32(server.loadBalancerPort)})
 
 	if err != nil {
 		println("setCoordinator: " + err.Error())
+		server.shouldSetCoordinator = false
 		return
 	}
 
-	server.shouldSetCoordinator = false
+	server.updateIsCoordinator(true)
 }
 
 func (server *LifeGuardServer) updateIsCoordinator(b bool) {
