@@ -191,13 +191,16 @@ func saveFile(fileName string, imageBytes *bytes.Buffer) error {
 }
 
 func (serv *VideoConverterServer) WorkManagementLoop() {
+	var count uint = 0
 	for {
 		// Update Clients
 		//println("updating services and queue")
 		serv.UpdateActiveServices(serv.apiGatewayAddress)
 		serv.PollActiveServices(serv.apiGatewayAddress)
-		PrintKeyValue("numberOfActiveServices", len(*serv.ActiveServices))
 		serv.handleQueueFromDB()
+		if count%20 == 0 {
+			PrintKeyValue("numberOfActiveServices", len(*serv.ActiveServices))
+		}
 
 		// Handle Videos
 		//println("sending work to clients")
@@ -220,6 +223,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 
 		// Handle Clients
 		serv.manageClients()
+		count++
 		time.Sleep(constants.WorkManagementLoopSleepTime)
 	}
 }
