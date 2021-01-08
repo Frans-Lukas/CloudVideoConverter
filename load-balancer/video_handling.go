@@ -90,13 +90,23 @@ func performMerge(videoParts []string, token string) {
 	command := "ffmpeg -f concat -safe 0 -i " + filePath + " -c copy " + destinationFile
 	println(command)
 	cmd := exec.Command("ffmpeg", "-f", "concat", "-safe", "0", "-i", filePath, "-c", "copy", destinationFile)
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
 	err := cmd.Run()
+
 	if err != nil {
-		log.Fatalf("could not pergormMerge: " + err.Error())
+		log.Println("could not performMerge: " + out.String())
+		log.Println(err.Error(), ": ", stderr.String())
+		return
+	} else {
+		log.Println("merged")
 	}
 	err = os.Rename(destinationFile, constants.LocalStorage+token+constants.FinishedConversionExtension)
 	if err != nil {
-		log.Fatalf("could not rename in performMerge: " + err.Error())
+		log.Println("could not rename in performMerge: " + err.Error())
 	}
 }
 
@@ -215,11 +225,19 @@ func getVideoSize(filePath string) int {
 func getVideoTimeInSeconds(filePath string) (float64, string) {
 	println(filePath)
 	cmd := exec.Command("ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", filePath)
+
 	var out bytes.Buffer
+	var stderr bytes.Buffer
 	cmd.Stdout = &out
+	cmd.Stderr = &stderr
 	err := cmd.Run()
+
 	if err != nil {
-		log.Fatalf(errors.New("failed to get video time in seconds").Error())
+		log.Println("could not getVideoTimeInSeconds: " + out.String())
+		log.Println(err.Error(), ": ", stderr.String())
+		return
+	} else {
+		log.Println(out.String())
 	}
 	timeString := out.String()
 	timeString = strings.Replace(timeString, "\n", "", -1)

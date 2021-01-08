@@ -119,7 +119,7 @@ func shutDown() {
 	cmd := exec.Command("/home/group9/CloudVideoConverter/scripts/VMDeleteSelf.sh")
 	err := cmd.Run()
 	if err != nil {
-		log.Fatalf("could not shutdown: " + err.Error())
+		log.Println("could not shutdown: " + err.Error())
 	}
 }
 
