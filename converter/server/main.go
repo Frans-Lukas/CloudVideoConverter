@@ -21,8 +21,8 @@ const (
 
 func main() {
 	println(len(os.Args))
-	if len(os.Args) != 4 {
-		println(errors.New("invalid command line arguments, use ./worker {thisIp} {port} {api-gateway ip:port}").Error())
+	if len(os.Args) != 5 {
+		println(errors.New("invalid command line arguments, use ./worker {thisIp} {port} {api-gateway ip:port} {name}").Error())
 		return
 	}
 
@@ -39,7 +39,7 @@ func main() {
 	}
 	serv := grpc.NewServer()
 
-	videoConverterServer := converter.CreateNewVideoConverterServiceServer(thisIp)
+	videoConverterServer := converter.CreateNewVideoConverterServiceServer(thisIp, os.Args[4])
 	videoconverter.RegisterVideoConverterServiceServer(serv, &videoConverterServer)
 
 	go func() {

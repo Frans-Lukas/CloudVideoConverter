@@ -40,6 +40,7 @@ type VideoConverterServer struct {
 	timeSinceVMCreationOrDeletion *time.Time
 	movingAverageList             *[]int
 	currentAveragePos             uint32
+	name                          string
 }
 
 type ConversionObjectInfo struct {
@@ -52,7 +53,7 @@ type VideoConverterClient struct {
 	address string
 }
 
-func CreateNewServer() VideoConverterServer {
+func CreateNewServer(name string) VideoConverterServer {
 	activeTokens := make(map[string]items.Token, 0)
 	conversionQueue := make([]ConversionObjectInfo, 0)
 	movingAverage := make([]int, 0)
@@ -71,6 +72,7 @@ func CreateNewServer() VideoConverterServer {
 		timeSinceVMCreationOrDeletion: &timer,
 		movingAverageList:             &movingAverage,
 		currentAveragePos:             0,
+		name:                          name,
 	}
 	return val
 }
@@ -208,6 +210,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		if count%20 == 0 {
 			PrintKeyValue("numberOfActiveServices", len(*serv.ActiveServices))
 			PrintKeyValue("sizeOfQueue", len(*serv.ConversionQueue))
+			PrintCPUUsage(serv.name)
 		}
 
 		// Handle Videos
@@ -387,9 +390,11 @@ func (serv *VideoConverterServer) Download(request *videoconverter.DownloadReque
 
 	//TODO load corresponding file from directory
 	file, err := os.Open(constants.LocalStorage + token + constants.FinishedConversionExtension)
+
 	if err != nil {
 		log.Fatalf("Download, Open failed: %v", err)
 	}
+	defer file.Close()
 
 	buf := make([]byte, constants.DownloadChunkSizeInBytes)
 
@@ -467,6 +472,8 @@ func (serv *VideoConverterServer) ConversionStatus(ctx context.Context, in *vide
 			}
 			return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_InProgress}, nil
 		}
+	} else {
+		return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_Failed}, nil
 	}
 	return &videoconverter.ConversionStatusResponse{Code: videoconverter.ConversionStatusCode_NotStarted}, nil
 }

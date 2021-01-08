@@ -110,14 +110,17 @@ func (cli *StorageClient) uploadFile(bkt *storage.BucketHandle, fileName string)
 	//open local file
 	println(constants.LocalStorage + fileName)
 	f, err := os.Open(constants.LocalStorage + fileName)
+	if err != nil {
+		println("invalid file!")
+		return
+	}
+	defer f.Close()
 	i, _ := f.Stat()
 	println("size of file: " + strconv.Itoa(int(i.Size())))
 
 	if err != nil {
 		log.Fatalf("failed to open local file before uploading: " + err.Error())
 	}
-
-	defer f.Close()
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -203,6 +206,7 @@ func (cli *StorageClient) DownloadSampleVideos() {
 		imagePath := constants.LocalStorage + attrs.Name
 		println("Download imagePath: ", imagePath)
 		f, err := os.Create(imagePath)
+		defer f.Close()
 		if err != nil {
 			log.Printf("DownloadSampleVideos, create file: %v", err)
 		}
@@ -210,7 +214,6 @@ func (cli *StorageClient) DownloadSampleVideos() {
 		if err != nil {
 			log.Printf("DownloadSampleVideos, write to file: %v", err)
 		}
-		f.Close()
 	}
 }
 

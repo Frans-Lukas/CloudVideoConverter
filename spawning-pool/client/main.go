@@ -82,8 +82,16 @@ func workLoadGenerator(apiConnection api_gateway.APIGateWayClient, outputExtensi
 	for {
 		time.Sleep(time.Second * 5)
 		err := connectToCurrentLoadBalancer(apiConnection)
-		loopUntilConverted(token)
 		if err != nil {
+			continue
+		}
+		errStr := loopUntilConverted(token)
+		if errStr != "" {
+			if errStr == "conversion failed" {
+				println("conversion failed")
+				return
+			}
+			println("failed to loop until converted, ", errStr)
 			continue
 		}
 		err = download(token, outputExtension)
@@ -122,26 +130,29 @@ func connectToCurrentLoadBalancer(apiConnection api_gateway.APIGateWayClient) er
 	return err
 }
 
-func loopUntilConverted(token string) error {
+func loopUntilConverted(token string) string {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 	status, err := loadBalancerConnection.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
 	if err != nil {
 		println(" conv check err: ", err.Error())
-		return err
+		return "error" + err.Error()
 	}
 	print("in progres..")
 	for status.Code != videoconverter.ConversionStatusCode_Done {
 		print(".")
 		ctx, cancel = context.WithTimeout(context.Background(), time.Minute)
 		status, err = loadBalancerConnection.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
+		if status.Code == videoconverter.ConversionStatusCode_Failed {
+			return "conversion failed"
+		}
 		if err != nil {
 			println("conv check err: ", err.Error())
-			return err
+			return "error" + err.Error()
 		}
 		time.Sleep(time.Second * 2)
 	}
-	return nil
+	return ""
 }
 
 func requestConversion(token string, outputType string) error {
@@ -258,12 +269,14 @@ func download(token string, extension string) error {
 	f, err := os.Create(constants.LocalStorage + "downloaded" + "." + extension)
 	if err != nil {
 		log.Println("Download, create file: %v", err)
+		f.Close()
 		return errors.New("Download, create file: " + err.Error())
 	}
 
 	_, err = f.Write(buf.Bytes())
 	if err != nil {
 		log.Println("Download, write to file: %v", err)
+		f.Close()
 		return errors.New("Download, write to file: " + err.Error())
 	}
 

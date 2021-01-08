@@ -41,8 +41,8 @@ const (
 
 func main() {
 
-	if len(os.Args) != 5 {
-		println(errors.New("invalid command line arguments, use ./loadBalancer {ip} {loadBalancerPort} {lifeGuardPort} {api-gateway ip:port}").Error())
+	if len(os.Args) != 6 {
+		println(errors.New("invalid command line arguments, use ./loadBalancer {ip} {loadBalancerPort} {lifeGuardPort} {api-gateway ip:port} {name}").Error())
 		return
 	}
 
@@ -81,7 +81,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	videoServer := video_converter.CreateNewServer()
+	videoServer := video_converter.CreateNewServer(os.Args[5])
 	videoconverter.RegisterVideoConverterLoadBalancerServer(s, &videoServer)
 
 	//1. Load active services

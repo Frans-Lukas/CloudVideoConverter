@@ -5,7 +5,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
+	"github.com/struCoder/pidusage"
 )
 
 const url = "https://api.moogsoft.ai/express/v1/integrations/metrics"
@@ -52,4 +54,16 @@ func readApiKey() {
 		return
 	}
 	apiKey = string(dat)
+}
+
+
+func PrintCPUUsage(vmName string){
+	pid := os.Getpid()
+	sysInfo, err := pidusage.GetStat(pid)
+	if err != nil{
+		println("failed to get CPU usage..")
+		return
+	}
+	PrintKeyValue(vmName, int(sysInfo.CPU))
+
 }

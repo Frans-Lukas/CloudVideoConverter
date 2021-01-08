@@ -7,6 +7,7 @@ require (
 	cloud.google.com/go/datastore v1.1.0
 	cloud.google.com/go/storage v1.12.0
 	github.com/golang/protobuf v1.4.3
+	github.com/struCoder/pidusage v0.1.3
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b
 	golang.org/x/sys v0.0.0-20210105210732-16f7687f5001 // indirect
 	google.golang.org/api v0.36.0

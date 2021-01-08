@@ -21,9 +21,10 @@ type VideoConverterServiceServer struct {
 	thisAddress       string
 	databaseClient    *video_converter.ConversionObjectsClient
 	storageClient     *video_converter.StorageClient
+	name              string
 }
 
-func CreateNewVideoConverterServiceServer(address string) VideoConverterServiceServer {
+func CreateNewVideoConverterServiceServer(address string, name string) VideoConverterServiceServer {
 	activeTokens := make(map[string]items.Token, 0)
 	dataBaseClient := video_converter.NewConversionObjectsClient()
 	storageClient := video_converter.CreateStorageClient()
@@ -32,6 +33,7 @@ func CreateNewVideoConverterServiceServer(address string) VideoConverterServiceS
 		databaseClient:    &dataBaseClient,
 		storageClient:     &storageClient,
 		thisAddress:       address,
+		name:              name,
 	}
 	return val
 }
@@ -146,6 +148,7 @@ func (serv *VideoConverterServiceServer) HandleConversionsLoop() {
 			}
 
 		}
+		video_converter.PrintCPUUsage(serv.name)
 		time.Sleep(time.Second * 5)
 	}
 }

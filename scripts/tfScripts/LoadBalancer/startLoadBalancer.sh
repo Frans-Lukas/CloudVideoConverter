@@ -7,13 +7,15 @@ sudo rm localStorage/*
 gcloud auth activate-service-account fast-blueprint-296210@appspot.gserviceaccount.com --key-file=/tmp/SSDNIA.json
 IP=$(gcloud compute instances describe api-gateway-0 --format='get(networkInterfaces[0].accessConfigs[0].natIP)' --zone=europe-north1-a)
 MY_IP=$(curl https://ipinfo.io/ip)
+NAME=$(curl http://metadata.google.internal/computeMetadata/v1/instance/hostname -H Metadata-Flavor:Google)
+
 
 echo $MY_IP
 
 while true
 do
     sudo pkill main
-    /usr/local/go/bin/go run load-balancer/server/main.go $MY_IP 50052 50054 "$IP:50051"
+    /usr/local/go/bin/go run load-balancer/server/main.go $MY_IP 50052 50054 "$IP:50051" $NAME
     echo "Server 'load balancer' crashed with exit code $?.  Respawning.."
     sleep 5
 done
