@@ -207,6 +207,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		serv.handleQueueFromDB()
 		if count%20 == 0 {
 			PrintKeyValue("numberOfActiveServices", len(*serv.ActiveServices))
+			PrintKeyValue("sizeOfQueue", len(*serv.ConversionQueue))
 		}
 
 		// Handle Videos
@@ -534,7 +535,7 @@ func (serv *VideoConverterServer) manageClients() {
 }
 
 func (serv *VideoConverterServer) shouldReduceNumberOfServices() bool {
-	serv.addToMovingAverageList(serv.originalQueueLen - len(*serv.ActiveServices))
+	serv.addToMovingAverageList(len(*serv.ActiveServices) - len(*serv.ConversionQueue))
 	// for real life scenarios, this check should be changed as we could receive ONE gigantic job that creates many vms.
 	if serv.currentAveragePos < 5 {
 		return false
@@ -645,7 +646,6 @@ func (serv *VideoConverterServer) handleQueueFromDB() {
 		}
 	}
 	serv.ConversionQueue = &newConversionQueue
-	PrintKeyValue("sizeOfQueue", len(*serv.ConversionQueue))
 }
 func (serv *VideoConverterServer) addToMovingAverageList(rest int) {
 	if serv.currentAveragePos >= NumberOfMovingAvgsToAccountFor {
