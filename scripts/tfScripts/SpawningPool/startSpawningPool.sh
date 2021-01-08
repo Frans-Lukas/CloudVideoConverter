@@ -9,7 +9,7 @@ echo "starting with IP: '$IP'"
 while true
 do
     sudo /usr/local/go/bin/go run spawning-pool/client/main.go $IP 50051
-    echo "service provider died, restarting..."
+    echo "spawning pool died, restarting..."
     sleep 5
 done
 

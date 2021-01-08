@@ -15,6 +15,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -46,20 +47,25 @@ func main() {
 	if !video_converter.FileExists("video.mp4") {
 		storageClient.DownloadSampleVideos()
 	}
-	go func() {
-		workLoadGenerator(apiConnection, outputExtension)
-	}()
-	go func() {
-		workLoadGenerator(apiConnection, outputExtension)
-	}()
-	workLoadGenerator(apiConnection, outputExtension)
+
+	var wg sync.WaitGroup
+
+	wg.Add(3)
+	go workLoadGenerator(apiConnection, outputExtension, &wg)
+	go workLoadGenerator(apiConnection, outputExtension, &wg)
+	go workLoadGenerator(apiConnection, outputExtension, &wg)
+	println("waiting for main to finish")
+	wg.Wait()
+	println("main complete")
 }
 
-func workLoadGenerator(apiConnection api_gateway.APIGateWayClient, outputExtension string) {
+func workLoadGenerator(apiConnection api_gateway.APIGateWayClient, outputExtension string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	println("starting workloadGenerator..")
 	err := connectToCurrentLoadBalancer(apiConnection)
+	println("connected to load balancer")
 	if err != nil {
 		log.Fatalf("could not connect to current load balancer, retarting, %v", err.Error())
-
 	}
 	token, err := upload("video.mp4")
 	if err != nil {

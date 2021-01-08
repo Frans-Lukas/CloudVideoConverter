@@ -210,9 +210,7 @@ func (cli *StorageClient) DownloadSampleVideos() {
 		if err != nil {
 			log.Printf("DownloadSampleVideos, write to file: %v", err)
 		}
-
 		f.Close()
-
 	}
 }
 
