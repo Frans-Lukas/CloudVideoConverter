@@ -23,7 +23,7 @@ import (
 )
 
 const tokenLength = 20
-const tokenTimeOutSeconds = 60 * 10
+const tokenTimeOutSeconds = 60 * 4
 const megaByte = 1000000
 const sizeLimit = megaByte * 1
 const NumberOfMovingAvgsToAccountFor = 5
