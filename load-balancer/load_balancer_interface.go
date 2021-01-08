@@ -230,7 +230,7 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		}
 
 		// Handle Clients
-		serv.manageClients()
+		go serv.manageClients()
 		count++
 		time.Sleep(constants.WorkManagementLoopSleepTime)
 	}
