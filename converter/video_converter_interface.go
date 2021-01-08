@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+const maxNumberOfSimulConversions = 2
+
 type VideoConverterServiceServer struct {
 	videoconverter.UnimplementedVideoConverterServiceServer
 	ActiveConversions *map[string]items.Token
@@ -95,7 +97,7 @@ func (serv *VideoConverterServiceServer) performConversion(app string, arg0 stri
 }
 
 func (serv *VideoConverterServiceServer) AvailableForWork(ctx context.Context, in *videoconverter.AvailableForWorkRequest) (*videoconverter.AvailableForWorkResponse, error) {
-	if *serv.activeConversions < 3 {
+	if *serv.activeConversions < maxNumberOfSimulConversions {
 		return &videoconverter.AvailableForWorkResponse{AvailableForWork: true}, nil
 	}
 	return &videoconverter.AvailableForWorkResponse{AvailableForWork: false}, nil
