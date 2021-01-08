@@ -143,12 +143,12 @@ func loopUntilConverted(token string) string {
 		print(".")
 		ctx, cancel = context.WithTimeout(context.Background(), time.Minute)
 		status, err = loadBalancerConnection.ConversionStatus(ctx, &videoconverter.ConversionStatusRequest{StatusId: token})
-		if status.Code == videoconverter.ConversionStatusCode_Failed {
-			return "conversion failed"
-		}
 		if err != nil {
 			println("conv check err: ", err.Error())
 			return "error" + err.Error()
+		}
+		if status.Code == videoconverter.ConversionStatusCode_Failed {
+			return "conversion failed"
 		}
 		time.Sleep(time.Second * 2)
 	}
