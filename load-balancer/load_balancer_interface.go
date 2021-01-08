@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc"
 	"io"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -25,6 +26,7 @@ const tokenLength = 20
 const tokenTimeOutSeconds = 60 * 10
 const megaByte = 1000000
 const sizeLimit = megaByte * 1
+const NumberOfMovingAvgsToAccountFor = 5
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
@@ -36,6 +38,8 @@ type VideoConverterServer struct {
 	storageClient                 *StorageClient
 	apiGatewayAddress             string
 	timeSinceVMCreationOrDeletion *time.Time
+	movingAverageList             *[]int
+	currentAveragePos             uint32
 }
 
 type ConversionObjectInfo struct {
@@ -51,6 +55,7 @@ type VideoConverterClient struct {
 func CreateNewServer() VideoConverterServer {
 	activeTokens := make(map[string]items.Token, 0)
 	conversionQueue := make([]ConversionObjectInfo, 0)
+	movingAverage := make([]int, 0)
 	activeServices := make(map[string]VideoConverterClient, 0)
 	dataBaseClient := NewConversionObjectsClient()
 	storageClient := CreateStorageClient()
@@ -64,6 +69,8 @@ func CreateNewServer() VideoConverterServer {
 		storageClient:                 &storageClient,
 		apiGatewayAddress:             "",
 		timeSinceVMCreationOrDeletion: &timer,
+		movingAverageList:             &movingAverage,
+		currentAveragePos:             0,
 	}
 	return val
 }
@@ -527,8 +534,18 @@ func (serv *VideoConverterServer) manageClients() {
 }
 
 func (serv *VideoConverterServer) shouldReduceNumberOfServices() bool {
-	diff := serv.originalQueueLen - (len(*serv.ActiveServices) / 2)
-	return diff <= 0
+	serv.addToMovingAverageList(serv.originalQueueLen - len(*serv.ActiveServices))
+	// for real life scenarios, this check should be changed as we could receive ONE gigantic job that creates many vms.
+	if serv.currentAveragePos < 5 {
+		return false
+	}
+	sum := 0
+	for _, v := range *serv.movingAverageList {
+		sum += v
+	}
+	sum = sum / len(*serv.movingAverageList)
+	println("moving average: ", sum)
+	return sum >= 2
 }
 
 func (serv *VideoConverterServer) shouldIncreaseNumberOfServices() bool {
@@ -629,4 +646,15 @@ func (serv *VideoConverterServer) handleQueueFromDB() {
 	}
 	serv.ConversionQueue = &newConversionQueue
 	PrintKeyValue("sizeOfQueue", len(*serv.ConversionQueue))
+}
+func (serv *VideoConverterServer) addToMovingAverageList(rest int) {
+	if serv.currentAveragePos >= NumberOfMovingAvgsToAccountFor {
+		(*serv.movingAverageList)[serv.currentAveragePos%NumberOfMovingAvgsToAccountFor] = rest
+	} else {
+		*serv.movingAverageList = append(*serv.movingAverageList, rest)
+	}
+	serv.currentAveragePos++
+	if serv.currentAveragePos == math.MaxUint32 {
+		serv.currentAveragePos = NumberOfMovingAvgsToAccountFor
+	}
 }
