@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-const maxNumberOfSimulConversions = 2
+const maxNumberOfSimulConversions = 1
 
 type VideoConverterServiceServer struct {
 	videoconverter.UnimplementedVideoConverterServiceServer
