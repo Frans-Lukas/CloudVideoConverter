@@ -19,7 +19,11 @@ func splitVideo(token string) error {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		log.Fatalf(errors.New("video to split does not exist").Error())
 	}
-	timeInSeconds, _ := getVideoTimeInSeconds(filePath)
+	timeInSeconds, s := getVideoTimeInSeconds(filePath)
+	if s == "" {
+		return errors.New("could not get video time in seconds")
+	}
+
 	size := getVideoSize(filePath)
 	numberOfSplits := int(math.Round(float64(size)/float64(sizeLimit) + 0.49))
 	println(numberOfSplits)
@@ -236,7 +240,7 @@ func getVideoTimeInSeconds(filePath string) (float64, string) {
 	if err != nil {
 		log.Println("could not getVideoTimeInSeconds: " + out.String())
 		log.Println(err.Error(), ": ", stderr.String())
-		return
+		return 0, ""
 	} else {
 		log.Println(out.String())
 	}
