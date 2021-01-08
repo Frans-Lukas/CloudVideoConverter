@@ -657,8 +657,12 @@ func (serv *VideoConverterServer) handleQueueFromDB() {
 				ConversionDone:    &isDone,
 				ConversionFailed:  &isFailed,
 			}
-		} else if time.Since(v.ConversionStartTime).Seconds() < tokenTimeOutSeconds {
-			serv.deleteTokenFromEverywhere(v.Token)
+		} else {
+			println("time since: ", time.Since(v.ConversionStartTime).Seconds())
+			println("tokenTimeout: ", tokenTimeOutSeconds)
+			if time.Since(v.ConversionStartTime).Seconds() < tokenTimeOutSeconds {
+				serv.deleteTokenFromEverywhere(v.Token)
+			}
 		}
 	}
 	serv.ConversionQueue = &newConversionQueue
