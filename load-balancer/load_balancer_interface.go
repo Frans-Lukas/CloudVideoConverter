@@ -373,7 +373,8 @@ func uploadFiles(fileNames []string) {
 
 func (server *VideoConverterServer) tokenIsInvalid(token string) bool {
 	if tokenCreationTime, ok := (*server.ActiveTokens)[token]; ok {
-		//println("Time since token was created: ", time.Since(*tokenCreationTime.CreationTime).Seconds())
+		println("Time since token was created: ", time.Since(*tokenCreationTime.CreationTime).Seconds())
+		println("in seconds: ", tokenTimeOutSeconds)
 		if time.Since(*tokenCreationTime.CreationTime).Seconds() < tokenTimeOutSeconds {
 			return false
 		}

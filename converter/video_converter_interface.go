@@ -87,8 +87,7 @@ func (serv *VideoConverterServiceServer) performConversion(app string, arg0 stri
 		log.Println(out.String())
 	}
 
-	file, err := os.Open(arg2)
-	defer file.Close()
+	err = os.Remove(arg1)
 	if err != nil {
 		println(err.Error())
 		return
