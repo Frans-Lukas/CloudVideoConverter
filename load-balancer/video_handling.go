@@ -100,7 +100,7 @@ func performMerge(videoParts []string, token string) {
 	if err != nil {
 		log.Println("could not performMerge: " + out.String())
 		log.Println(err.Error(), ": ", stderr.String())
-		DeleteFiles(token)
+		DeleteFiles("")
 		return
 	} else {
 		log.Println("merged")
