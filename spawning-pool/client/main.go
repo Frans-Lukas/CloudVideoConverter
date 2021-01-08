@@ -47,6 +47,7 @@ func main() {
 	if !video_converter.FileExists("video.mp4") {
 		storageClient.DownloadSampleVideos()
 	}
+	println("Downloaded video")
 
 	var wg sync.WaitGroup
 

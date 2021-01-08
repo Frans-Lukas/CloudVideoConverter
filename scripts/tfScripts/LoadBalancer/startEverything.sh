@@ -1,6 +1,6 @@
 #!/bin/bash
 cd ../LoadBalancerWithoutAPIGateWay
-../LoadBalancer/terraform destroy --auto-approve -var-file="../variables.tfvars" -var 'instance_count=3'
+../LoadBalancer/terraform destroy --auto-approve -var-file="../variables.tfvars"
 cd ../LoadBalancer
 ./terraform destroy --auto-approve -var-file="../variables.tfvars"
 ./terraform init
