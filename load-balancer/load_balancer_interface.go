@@ -512,6 +512,16 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 		for _, key := range keysToDelete {
 			delete(*serv.ActiveTokens, key)
 		}
+
+		_, parts := serv.databaseClient.GetFinishedParts()
+		for _, v := range parts {
+			println("time since: ", time.Since(v.ConversionStartTime).Seconds())
+			println("tokenTimeout: ", tokenTimeOutSeconds)
+			if time.Since(v.ConversionStartTime).Seconds() > tokenTimeOutSeconds {
+				serv.deleteTokenFromEverywhere(v.Token)
+			}
+		}
+
 		//fmt.Printf("map after deletion: %v", *serv.ActiveConversions)
 
 		time.Sleep(time.Second * 5)
@@ -656,12 +666,6 @@ func (serv *VideoConverterServer) handleQueueFromDB() {
 				ConversionStarted: &isStarted,
 				ConversionDone:    &isDone,
 				ConversionFailed:  &isFailed,
-			}
-		} else {
-			println("time since: ", time.Since(v.ConversionStartTime).Seconds())
-			println("tokenTimeout: ", tokenTimeOutSeconds)
-			if time.Since(v.ConversionStartTime).Seconds() < tokenTimeOutSeconds {
-				serv.deleteTokenFromEverywhere(v.Token)
 			}
 		}
 	}
