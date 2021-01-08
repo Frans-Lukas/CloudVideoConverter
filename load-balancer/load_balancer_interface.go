@@ -498,10 +498,10 @@ func GenerateRandomString() string {
 
 func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 	for {
-		//println("Checking active tokens: ")
+		println("Checking active tokens: ")
 		keysToDelete := make([]string, 0)
 		for token, _ := range *serv.ActiveTokens {
-			//println("checking if I can delete token: ", token)
+			println("checking if I can delete token: ", token)
 			if serv.tokenIsInvalid(token) {
 				println("deleting invalid token from everywhere.")
 				DeleteFiles(token)
