@@ -66,6 +66,9 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
+      "cd CloudVideoConverter",
+      "sudo git checkout .",
+      "sudo git pull",
       "sudo chmod +x /tmp/*",
       "sudo rm nohup.out",
       "sudo nohup /tmp/startSpawningPool.sh &",

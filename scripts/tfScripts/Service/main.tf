@@ -61,6 +61,9 @@ resource "google_compute_instance_from_machine_image" "tpl" {
 
   provisioner "remote-exec" {
     inline = [
+      "cd CloudVideoConverter",
+      "sudo git checkout .",
+      "sudo git pull",
       "sudo rm nohup.out",
       "sudo chmod +x /home/group9/CloudVideoConverter/scripts/tfScripts/Service/startService.sh",
       "sudo nohup /home/group9/CloudVideoConverter/scripts/tfScripts/Service/startService.sh &",
