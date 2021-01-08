@@ -526,10 +526,13 @@ func (serv *VideoConverterServer) SetApiGatewayAddress(address string) {
 }
 
 func (serv *VideoConverterServer) ManageClients() {
-	if serv.shouldReduceNumberOfServices() {
-		serv.reduceNumberOfServices()
-	} else if serv.shouldIncreaseNumberOfServices() {
-		serv.IncreaseNumberOfServices()
+	for {
+		if serv.shouldReduceNumberOfServices() {
+			serv.reduceNumberOfServices()
+		} else if serv.shouldIncreaseNumberOfServices() {
+			serv.IncreaseNumberOfServices()
+		}
+		time.Sleep(time.Second * 4)
 	}
 }
 
