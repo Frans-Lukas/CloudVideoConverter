@@ -504,10 +504,7 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 			println("checking if I can delete token: ", token)
 			if serv.tokenIsInvalid(token) {
 				println("deleting invalid token from everywhere.")
-				DeleteFiles(token)
-				serv.databaseClient.DeleteWithToken(token)
-				serv.storageClient.DeleteUnconvertedParts(token)
-				serv.storageClient.DeleteConvertedParts(token)
+				serv.deleteTokenFromEverywhere(token)
 				keysToDelete = append(keysToDelete, token)
 				break
 			}
@@ -519,6 +516,13 @@ func (serv *VideoConverterServer) DeleteTimedOutVideosLoop() {
 
 		time.Sleep(time.Second * 5)
 	}
+}
+
+func (serv *VideoConverterServer) deleteTokenFromEverywhere(token string) {
+	DeleteFiles(token)
+	serv.databaseClient.DeleteWithToken(token)
+	serv.storageClient.DeleteUnconvertedParts(token)
+	serv.storageClient.DeleteConvertedParts(token)
 }
 
 func (serv *VideoConverterServer) downloadAndMergeFiles(token string) {
@@ -653,6 +657,8 @@ func (serv *VideoConverterServer) handleQueueFromDB() {
 				ConversionDone:    &isDone,
 				ConversionFailed:  &isFailed,
 			}
+		} else if time.Since(v.ConversionStartTime).Seconds() < tokenTimeOutSeconds {
+			serv.deleteTokenFromEverywhere(v.Token)
 		}
 	}
 	serv.ConversionQueue = &newConversionQueue
