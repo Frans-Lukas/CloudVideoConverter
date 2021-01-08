@@ -73,7 +73,6 @@ func PrintCPUUsage(vmName string) {
 		} else {
 			sum += sysInfo.CPU
 		}
-		// do os.* stuff on the pid
 	}
 
 	PrintKeyValue(vmName, int(sum))

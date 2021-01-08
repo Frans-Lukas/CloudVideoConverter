@@ -22,18 +22,21 @@ type VideoConverterServiceServer struct {
 	databaseClient    *video_converter.ConversionObjectsClient
 	storageClient     *video_converter.StorageClient
 	name              string
+	activeConversions *int
 }
 
 func CreateNewVideoConverterServiceServer(address string, name string) VideoConverterServiceServer {
 	activeTokens := make(map[string]items.Token, 0)
 	dataBaseClient := video_converter.NewConversionObjectsClient()
 	storageClient := video_converter.CreateStorageClient()
+	numConvs := 0
 	val := VideoConverterServiceServer{
 		ActiveConversions: &activeTokens,
 		databaseClient:    &dataBaseClient,
 		storageClient:     &storageClient,
 		thisAddress:       address,
 		name:              name,
+		activeConversions: &numConvs,
 	}
 	return val
 }
@@ -92,15 +95,10 @@ func (serv *VideoConverterServiceServer) performConversion(app string, arg0 stri
 }
 
 func (serv *VideoConverterServiceServer) AvailableForWork(ctx context.Context, in *videoconverter.AvailableForWorkRequest) (*videoconverter.AvailableForWorkResponse, error) {
-	for _, v := range *serv.ActiveConversions {
-		if !*v.ConversionDone {
-			//TODO decide if inProgress is a good response
-			return &videoconverter.AvailableForWorkResponse{AvailableForWork: false}, nil
-		}
+	if *serv.activeConversions < 3 {
+		return &videoconverter.AvailableForWorkResponse{AvailableForWork: true}, nil
 	}
-
-	//TODO decide if notStarted is a good default response
-	return &videoconverter.AvailableForWorkResponse{AvailableForWork: true}, nil
+	return &videoconverter.AvailableForWorkResponse{AvailableForWork: false}, nil
 }
 
 func (serv *VideoConverterServiceServer) ShutDown(ctx context.Context, in *videoconverter.ShutDownRequest) (*videoconverter.ShutDownResponse, error) {
@@ -160,11 +158,17 @@ func (serv *VideoConverterServiceServer) actuallyStartConversion(fileName string
 	arg0 := "-i"
 	arg1 := filePath
 	arg2 := helpers.ChangeFileExtension(constants.LocalStorage+fileName, outputType)
-
+	*(*serv.ActiveConversions)[fileName].ConversionStarted = true
 	go func() {
+		*serv.activeConversions++
+		defer serv.lowerActiveConversions()
 		serv.downloadFileToConvert(fileName)
 		serv.performConversion(app, arg0, arg1, arg2, fileName)
 	}()
+}
+
+func (serv *VideoConverterServiceServer) lowerActiveConversions() {
+	*serv.activeConversions--
 }
 
 func DeleteFiles(prefix string) {
