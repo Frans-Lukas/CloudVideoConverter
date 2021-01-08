@@ -2,12 +2,12 @@ package video_converter
 
 import (
 	"bytes"
+	"github.com/mitchellh/go-ps"
+	"github.com/struCoder/pidusage"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
-	"github.com/struCoder/pidusage"
 )
 
 const url = "https://api.moogsoft.ai/express/v1/integrations/metrics"
@@ -56,14 +56,26 @@ func readApiKey() {
 	apiKey = string(dat)
 }
 
-
-func PrintCPUUsage(vmName string){
-	pid := os.Getpid()
-	sysInfo, err := pidusage.GetStat(pid)
-	if err != nil{
-		println("failed to get CPU usage..")
+func PrintCPUUsage(vmName string) {
+	processList, err := ps.Processes()
+	if err != nil {
+		log.Println("ps.Processes() Failed, are you using windows?")
 		return
 	}
-	PrintKeyValue(vmName, int(sysInfo.CPU))
+
+	// map ages
+	sum := 0.0
+	for _, process := range processList {
+
+		sysInfo, err := pidusage.GetStat(process.Pid())
+		if err != nil {
+			println("failed to get CPU usage..")
+		} else {
+			sum += sysInfo.CPU
+		}
+		// do os.* stuff on the pid
+	}
+
+	PrintKeyValue(vmName, int(sum))
 
 }
