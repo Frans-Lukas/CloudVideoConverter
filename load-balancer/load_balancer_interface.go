@@ -23,10 +23,10 @@ import (
 )
 
 const tokenLength = 20
-const tokenTimeOutSeconds = 60 * 4
+const tokenTimeOutSeconds = 60 * 10
 const megaByte = 1000000
 const sizeLimit = megaByte * 1
-const NumberOfMovingAvgsToAccountFor = 50
+const NumberOfMovingAvgsToAccountFor = 15
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
@@ -537,7 +537,8 @@ func (serv *VideoConverterServer) ManageClients() {
 		if serv.shouldReduceNumberOfServices() {
 			serv.reduceNumberOfServices()
 		} else if serv.shouldIncreaseNumberOfServices() {
-			serv.IncreaseNumberOfServices()
+			diff := len(*serv.ConversionQueue) - len(*serv.ActiveServices)
+			serv.IncreaseNumberOfServices(int(math.Min(float64(diff), 3)))
 		}
 		time.Sleep(time.Second * 4)
 	}
@@ -555,7 +556,7 @@ func (serv *VideoConverterServer) shouldReduceNumberOfServices() bool {
 	}
 	sum = sum / len(*serv.movingAverageList)
 	println("moving average: ", sum)
-	return sum >= 2
+	return sum >= 2 && time.Since(*serv.timeSinceVMCreationOrDeletion) > time.Second*30
 }
 
 func (serv *VideoConverterServer) shouldIncreaseNumberOfServices() bool {
@@ -599,10 +600,10 @@ func (serv *VideoConverterServer) reduceNumberOfServices() {
 	println("No service was shut down")
 }
 
-func (serv *VideoConverterServer) IncreaseNumberOfServices() {
+func (serv *VideoConverterServer) IncreaseNumberOfServices(numToCreate int) {
 	println("Starting new service")
 	scriptPath := "/home/group9/CloudVideoConverter/scripts/tfScripts/Service/startServiceVM.sh"
-	numberOfVms := strconv.Itoa(len(*serv.ActiveServices) + 1)
+	numberOfVms := strconv.Itoa(len(*serv.ActiveServices) + numToCreate)
 	cmd := exec.Command(scriptPath, numberOfVms)
 
 	var out bytes.Buffer
@@ -617,7 +618,6 @@ func (serv *VideoConverterServer) IncreaseNumberOfServices() {
 	} else {
 		log.Println(out.String())
 	}
-	serv.resetVMTimer()
 }
 
 func (serv *VideoConverterServer) enoughTimeSinceVMCreationOrDeletion() bool {
