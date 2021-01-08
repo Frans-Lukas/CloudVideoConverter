@@ -95,6 +95,8 @@ func main() {
 		videoServer.DeleteTimedOutVideosLoop()
 	}()
 
+	go videoServer.ManageClients()
+
 	go func() {
 		//videoServer.IncreaseNumberOfServices()
 		videoServer.WorkManagementLoop()

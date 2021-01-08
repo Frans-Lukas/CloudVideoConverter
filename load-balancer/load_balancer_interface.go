@@ -26,7 +26,7 @@ const tokenLength = 20
 const tokenTimeOutSeconds = 60 * 4
 const megaByte = 1000000
 const sizeLimit = megaByte * 1
-const NumberOfMovingAvgsToAccountFor = 5
+const NumberOfMovingAvgsToAccountFor = 50
 
 type VideoConverterServer struct {
 	videoconverter.UnimplementedVideoConverterLoadBalancerServer
@@ -230,7 +230,6 @@ func (serv *VideoConverterServer) WorkManagementLoop() {
 		}
 
 		// Handle Clients
-		go serv.manageClients()
 		count++
 		time.Sleep(constants.WorkManagementLoopSleepTime)
 	}
@@ -526,7 +525,7 @@ func (serv *VideoConverterServer) SetApiGatewayAddress(address string) {
 	serv.apiGatewayAddress = address
 }
 
-func (serv *VideoConverterServer) manageClients() {
+func (serv *VideoConverterServer) ManageClients() {
 	if serv.shouldReduceNumberOfServices() {
 		serv.reduceNumberOfServices()
 	} else if serv.shouldIncreaseNumberOfServices() {
